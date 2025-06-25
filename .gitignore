@@ -8,8 +8,8 @@ frontend/node_modules/
 frontend/dist/
 frontend/.env
 frontend/.env.local
-frontend/localhost-key.pem
-frontend/localhost.pem
+localhost-key.pem
+localhost.pem
 
 # backend
 backend/.gradle/
