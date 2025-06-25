@@ -17,14 +17,20 @@ export default defineConfig({
         theme_color: '#3f51b5',
         icons: [
           {
-            src: '/IMG_5860.jpg',
+            src: '/icon-192.png',
             sizes: '192x192',
-            type: 'image/jpeg'
+            type: 'image/png'
           },
           {
-            src: '/IMG_5860.jpg',
+            src: '/icon-512.png',
             sizes: '512x512',
-            type: 'image/jpeg'
+            type: 'image/png'
+          },
+          {
+            src: '/icon-180.png',
+            sizes: '180x180',
+            type: 'image/png',
+            purpose: 'any'
           }
         ]
       }
