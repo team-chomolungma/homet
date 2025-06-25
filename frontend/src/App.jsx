@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import Audio from "./assets/component/Audio.jsx";
+import Audio from "./component/Audio.jsx";
 
 function App() {
     const [message, setMessage] = useState('')

@@ -18,7 +18,11 @@ function Audio() {
         //インスタンスを作成、保存
         //メディアを収録する機能
         //MIMEタイプの設定
-        const mediaRecorder = new MediaRecorder(stream);
+
+        //os切り替え処理
+        const mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'audio/webm;codecs=opus'
+        });
         mediaRecorderRef.current = mediaRecorder;
         //配列初期化
         audioChunksRef.current = [];
