@@ -50,7 +50,19 @@ export default defineConfig({
         }
     },
     //ブラウザではglobalが未定義でエラー global=>windowに置き換え
+    //lamejs
     define: {
         global: 'window',
     },
+    optimizeDeps: {
+        include: ['lamejs'],
+    },
+    //@ffmpeg/ffmpeg
+    // define: {
+    //     'process.env.NODE_ENV': '"production"',
+    //     global: 'window',
+    // },
+    // optimizeDeps: {
+    //     include: ['@ffmpeg/ffmpeg'], // ← 明示的に含める
+    // },
 })
