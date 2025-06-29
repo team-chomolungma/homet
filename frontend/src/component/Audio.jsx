@@ -84,14 +84,14 @@ const Audio = () => {
         const formData = new FormData();
         formData.append('audio', mp3Blob, 'recording.mp3');
 
-        // try {
-        //     const response = await fetch('/upload', {
-        //         method: 'POST',
-        //         body: formData,
-        //     });
-        // } catch (err) {
-        //     console.error('Upload failed:', err);
-        // }
+        try {
+            await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+        } catch (err) {
+            console.error('Upload failed:', err);
+        }
 
         setRecording(false);
     };
@@ -107,11 +107,14 @@ const Audio = () => {
                 </Button>
             </Container>
             {audioUrl && (
-                <Container>
+                <>
+                    <p>撮りたて</p>
                     <audio src={audioUrl} controls/>
                     <Button>届ける</Button>
-                </Container>
+                </>
             )}
+            <p>publicフォルダ</p>
+            <audio src={'../public/recording.mp3'} controls/>
         </>
 
     );
