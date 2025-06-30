@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import Audio from './component/Audio.jsx';
 import axiosInstance from './lib/axios';
+import OneSignalPush from './component/OneSignalPush.jsx';
 
 
 // import OneSignalPush from './component/OneSignalPush.jsx';
@@ -20,6 +21,7 @@ function App() {
 
     return (
         <div>
+            <OneSignalPush/>
             {message}
             <Audio/>
         </div>
