@@ -18,15 +18,15 @@ export default defineConfig(({mode}) => {
 
     // 環境がdevelopmentか判断(https付与すべきか判断したい)
     //Herokuは自動でやってくれるからもうまんたい
-    const Local = env.VITE_APP_ENV === 'development'
+    // const Local = env.VITE_APP_ENV === 'development'
 
-    let httpsConfig = false
-    if (Local) {
-        httpsConfig = {
-            key: fs.readFileSync('../localhost-key.pem'),
-            cert: fs.readFileSync('../localhost.pem')
-        }
-    }
+    // let httpsConfig = false
+    // if (Local) {
+    //     httpsConfig = {
+    //         key: fs.readFileSync('../localhost-key.pem'),
+    //         cert: fs.readFileSync('../localhost.pem')
+    //     }
+    // }
 
     return {
         plugins: [
