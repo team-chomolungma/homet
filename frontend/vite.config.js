@@ -1,4 +1,3 @@
-// Viteの設定ファイル
 import {defineConfig, loadEnv} from 'vite'
 import react from '@vitejs/plugin-react'
 import {VitePWA} from 'vite-plugin-pwa'
@@ -21,6 +20,14 @@ export default defineConfig(({mode}) => {
     //Herokuは自動でやってくれるからもうまんたい
     const Local = env.VITE_APP_ENV === 'development'
 
+    let httpsConfig = false
+    if (Local) {
+        httpsConfig = {
+            key: fs.readFileSync('../localhost-key.pem'),
+            cert: fs.readFileSync('../localhost.pem')
+        }
+    }
+
     return {
         plugins: [
             react(),
@@ -34,37 +41,19 @@ export default defineConfig(({mode}) => {
                     background_color: '#ffffff',
                     theme_color: '#3f51b5',
                     icons: [
-                        {
-                            src: '/icon-192.png',
-                            sizes: '192x192',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icon-512.png',
-                            sizes: '512x512',
-                            type: 'image/png'
-                        },
-                        {
-                            src: '/icon-180.png',
-                            sizes: '180x180',
-                            type: 'image/png',
-                            purpose: 'any'
-                        }
+                        {src: '/icon-192.png', sizes: '192x192', type: 'image/png'},
+                        {src: '/icon-512.png', sizes: '512x512', type: 'image/png'},
+                        {src: '/icon-180.png', sizes: '180x180', type: 'image/png', purpose: 'any'}
                     ]
                 }
             })
         ],
         server: {
-            host: true,
-            https: Local
-                ? {
-                    key: fs.readFileSync('../localhost-key.pem'),
-                    cert: fs.readFileSync('../localhost.pem')
-                }
-                : false,
+            host: true,         // ローカルIPでもアクセスできるようにしとく
+            https: httpsConfig, // 開発環境のみhttpsを設定
             proxy: {
                 '/api': {
-                    target: env.VITE_API_URL,
+                    target: env.VITE_API_URL, // バックエンドのURLに転送
                     changeOrigin: true
                 }
             }
