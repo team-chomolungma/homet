@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import RequestPush from './RequestPush';
+
 
 function OneSignalPush() {
     useEffect(() => {
@@ -13,7 +13,7 @@ function OneSignalPush() {
 
     }, []);
 
-    return <RequestPush></RequestPush>;
+    return null;
 }
 
 export default OneSignalPush;

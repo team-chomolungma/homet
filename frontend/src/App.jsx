@@ -1,13 +1,15 @@
 import {useEffect, useState} from 'react'
-import axios from 'axios'
 import Audio from './component/Audio.jsx';
-import OneSignalPush from './component/OneSignalPush.jsx';
+import axiosInstance from './lib/axios';
+
+
+// import OneSignalPush from './component/OneSignalPush.jsx';
 
 function App() {
     const [message, setMessage] = useState('')
 
     useEffect(() => {
-        axios.get('/api')
+        axiosInstance.get('/api')
             .then(res => {
                 setMessage(res.data)
             })
@@ -20,7 +22,6 @@ function App() {
         <div>
             {message}
             <Audio/>
-            <OneSignalPush/>
         </div>
     )
 }

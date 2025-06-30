@@ -49,8 +49,10 @@ export default defineConfig(({mode}) => {
             })
         ],
         server: {
-            host: true,         // ローカルIPでもアクセスできるようにしとく
-            https: httpsConfig, // 開発環境のみhttpsを設定
+            // host: true,
+            // https: httpsConfig, // 開発環境のみhttpsを設定
+            host: false,
+            https: false, // 開発環境のみhttpsを設定
             proxy: {
                 '/api': {
                     target: env.VITE_API_URL, // バックエンドのURLに転送
