@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
 import Audio from './component/Audio.jsx';
+import Audio1 from './component/Audio1.jsx';
 
 function App() {
     const [message, setMessage] = useState('')
@@ -19,6 +20,7 @@ function App() {
         <div>
             {message}
             <Audio/>
+            {/*<Audio1/>*/}
         </div>
     )
 }

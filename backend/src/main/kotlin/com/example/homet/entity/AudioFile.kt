@@ -13,10 +13,14 @@ class AudioFile(
     val filename: String,
 
     @Column(nullable = false)
-    val username: String,
+    val sender_id: String,
+
+    @Column(nullable = false)
+    val receiver_id: String,
 
     @Column(nullable = false)
     val s3key: String,
+
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

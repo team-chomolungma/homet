@@ -16,6 +16,12 @@ const Audio = () => {
     //MP3の再生URLを保存
     const [audioUrl, setAudioUrl] = useState(null)
 
+    //署名付きURL
+    const [s3Url, sets3Url] = useState(null)
+
+    //録音とPOST処理を分けるための引数用
+    const [mp3Blob, setMp3Blob] = useState(null);
+
     //録音関係
     const recorderRef = useRef(null)
     const audioContextRef = useRef(null)
@@ -75,46 +81,76 @@ const Audio = () => {
 
         //mp3
         const mp3Blob = new Blob(mp3Data, {type: 'audio/mp3'});
+        setMp3Blob(mp3Blob);
 
         //URL.createObjectURL()でaudioに渡すURLになる
         const mp3URL = URL.createObjectURL(mp3Blob);
         setAudioUrl(mp3URL)
 
 
+        setRecording(false);
+    };
+
+    const sendVoice = async () => {
+
         const formData = new FormData();
         formData.append('audio', mp3Blob, 'recording.mp3');
+        formData.append('senderUser', 'A');
+        formData.append('receiverUser', 'C');
 
         try {
-            await fetch('/api/upload', {
+            await fetch('/api/homet/voice', {
                 method: 'POST',
                 body: formData,
-            });
+            }).then(data => console.log(data, 'postできた'))
         } catch (err) {
             console.error('Upload failed:', err);
         }
 
-        setRecording(false);
-    };
+    }
 
+    const getUrl = () => {
+        try {
+            fetch('/api/homet/voice-data/2')
+                .then(res => res.json())
+                .then(data => {
+                    sets3Url(data.url)
+                    console.log(data.url)
+                })
+        } catch (err) {
+            console.error('Get failed:', err);
+        }
+
+    }
+
+
+    // console.log(s3Url)
     return (
         <>
-            <p>Audio2</p>
+            <p>Audio1</p>
             <Container>
                 <Button
                     onClick={recording ? stopRecording : startRecording}
                 >
                     {recording ? 'STOP' : 'START'}
                 </Button>
+                <Button onClick={sendVoice}>届ける</Button>
             </Container>
-            {audioUrl && (
+            {/*{audioUrl && (*/}
+            {/*    <>*/}
+            {/*        <p>撮りたて</p>*/}
+            {/*        <audio src={audioUrl} controls/>*/}
+            {/*    </>*/}
+            {/*)}*/}
+            <Button onClick={getUrl}>再生したのを取りに行く</Button>
+            {s3Url && (
                 <>
-                    <p>撮りたて</p>
-                    <audio src={audioUrl} controls/>
-                    <Button>届ける</Button>
+                    <p>S3の再生</p>
+                    <audio src={s3Url} controls/>
                 </>
             )}
-            <p>publicフォルダ</p>
-            <audio src={'../public/recording.mp3'} controls/>
+            {/*<p>publicフォルダ</p>*/}
+            {/*<audio src={'../public/recording.mp3'} controls/>*/}
         </>
 
     );
