@@ -23,20 +23,16 @@ function OneSignalPush() {
                         window.OneSignalInitialized = true;
                     }
 
-                    // 初期取得
-                    const isEnabled = await OneSignal.isPushNotificationsEnabled();
-                    const uid = await OneSignal.getUserId();
+                    const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
+                    const uid = await OneSignal.getUserId?.();
                     setEnabled(isEnabled);
                     setUserId(uid);
 
-                    // 状態変化のリスナー追加
                     OneSignal.on('notificationPermissionChange', async () => {
-                        const updated = await OneSignal.isPushNotificationsEnabled();
+                        const updated = await OneSignal.isPushNotificationsEnabled?.();
                         setEnabled(updated);
                     });
-
                 } catch (e) {
-                    console.error('❌ OneSignal呼び出し失敗:', e);
                     setError(e.message || 'Unknown error');
                 }
             })();
