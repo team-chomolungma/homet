@@ -5,7 +5,7 @@ const SendNotificationButton = () => {
     const sendNotification = async () => {
         const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfycyu6hdxjuzymgf6ecqhfusahyxwu54vz43y3hrut6ybn3dltid2vmme6o2dlptoam4xwinb2xjkq'; // ←安全な場所に保管するべき
         const appId = '05282da3-68ed-47b9-b3c2-1267595c8b09';
-        const targetPlayerId = 'f64849bb-08fe-4407-a2f3-b7ce32dec667'; // ←対象ユーザーID（ダッシュボードで確認）
+        const targetPlayerId = '8187ac7c-b29d-4f13-a69d-ce4678ec3663'; // ← Subscription ID に変更
 
         try {
             const response = await axios.post(
