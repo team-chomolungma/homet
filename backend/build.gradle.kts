@@ -20,6 +20,8 @@ repositories {
 }
 
 dependencies {
+    implementation("org.postgresql:postgresql:42.7.3")
+    implementation("me.paulschwarz:spring-dotenv:2.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -27,7 +29,6 @@ dependencies {
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.681")
     implementation("io.awspring.cloud:spring-cloud-aws:2.3.0")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-    runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     runtimeOnly("org.postgresql:postgresql")
