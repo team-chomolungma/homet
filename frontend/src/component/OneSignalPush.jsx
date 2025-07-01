@@ -31,7 +31,7 @@ function OneSignalPush() {
                 }
             })();
         });
-    }, []);
+    }, [enabled, userId, error]);
 
     return (
         <div style={{padding: '1rem', backgroundColor: '#eee', fontFamily: 'monospace'}}>
