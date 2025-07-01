@@ -1,12 +1,15 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 
 function OneSignalPush() {
+    const [enabled, setEnabled] = useState(null);
+    const [userId, setUserId] = useState(null);
+    const [error, setError] = useState(null);
+
     useEffect(() => {
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         window.OneSignalDeferred.push(function (OneSignal) {
             (async () => {
                 try {
-                    //OneSignal初期化
                     await OneSignal.init({
                         appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
                         notifyButton: {enable: true},
@@ -17,20 +20,26 @@ function OneSignalPush() {
                         },
                     });
 
-                    //状態チェック
-                    const enabled = await OneSignal.isPushNotificationsEnabled();
-                    console.log('🔔 通知許可状態:', enabled);
+                    const isEnabled = await OneSignal.isPushNotificationsEnabled();
+                    const uid = await OneSignal.getUserId();
 
-                    const userId = await OneSignal.getUserId();
-                    console.log('🆔 OneSignal User ID:', userId);
+                    setEnabled(isEnabled);
+                    setUserId(uid);
                 } catch (e) {
                     console.error('❌ OneSignal呼び出し失敗:', e);
+                    setError(e.message || 'Unknown error');
                 }
             })();
         });
     }, []);
 
-    return null;
+    return (
+        <div style={{padding: '1rem', backgroundColor: '#eee', fontFamily: 'monospace'}}>
+            <div>通知許可状態: {enabled === null ? '読み込み中...' : enabled ? '✅ 許可済み' : '❌ 未許可'}</div>
+            <div>User ID: {userId || '未取得'}</div>
+            {error && <div style={{color: 'red'}}>エラー: {error}</div>}
+        </div>
+    );
 }
 
 export default OneSignalPush;
