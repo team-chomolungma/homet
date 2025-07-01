@@ -10,28 +10,38 @@ function OneSignalPush() {
         window.OneSignalDeferred.push(function (OneSignal) {
             (async () => {
                 try {
-                    await OneSignal.init({
-                        appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
-                        notifyButton: {enable: true},
-                        allowLocalhostAsSecureOrigin: true,
-                        autoResubscribe: true,
-                        promptOptions: {
-                            enableWelcomeNotification: false,
-                        },
-                    });
+                    if (!window.OneSignalInitialized) {
+                        await OneSignal.init({
+                            appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
+                            notifyButton: {enable: true},
+                            allowLocalhostAsSecureOrigin: true,
+                            autoResubscribe: true,
+                            promptOptions: {
+                                enableWelcomeNotification: false,
+                            },
+                        });
+                        window.OneSignalInitialized = true;
+                    }
 
+                    // 初期取得
                     const isEnabled = await OneSignal.isPushNotificationsEnabled();
                     const uid = await OneSignal.getUserId();
-
                     setEnabled(isEnabled);
                     setUserId(uid);
+
+                    // 状態変化のリスナー追加
+                    OneSignal.on('notificationPermissionChange', async () => {
+                        const updated = await OneSignal.isPushNotificationsEnabled();
+                        setEnabled(updated);
+                    });
+
                 } catch (e) {
                     console.error('❌ OneSignal呼び出し失敗:', e);
                     setError(e.message || 'Unknown error');
                 }
             })();
         });
-    }, [enabled, userId, error]);
+    }, []);
 
     return (
         <div style={{padding: '1rem', backgroundColor: '#eee', fontFamily: 'monospace'}}>
