@@ -24,8 +24,13 @@ function OneSignalPush() {
                     }
 
                     // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
-                    const uid = await OneSignal.getUserId?.();
-                    setUserId(uid);
+                    // const uid = await OneSignal.getUserId?.();
+                    // setUserId(uid);
+
+                    OneSignal.getUserId().then(function (userId) {
+                        console.log('✅ OneSignal ID:', userId);
+                        setUserId(userId);
+                    });
 
                     OneSignal.on('notificationPermissionChange', async () => {
                         const updated = await OneSignal.isPushNotificationsEnabled?.();
