@@ -1,12 +1,20 @@
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
-import App from './App.jsx'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import StartForm from './component/StartForm.jsx';
+import LoginForm from './component/safety/LoginForm.jsx';
+import Signup from './component/safety/Signup.jsx';
+import './global.css';
+
 
 createRoot(document.getElementById('root')).render(
-    <App/>
-
-//sdk初期化二重防止でStrictMode無効にしています
-// <StrictMode>
-//     <App />
-// </StrictMode>
+    <StrictMode>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<StartForm/>}/> {/* 最初 */}
+                <Route path="/login" element={<LoginForm/>}/> {/* ログイン */}
+                <Route path="/signup" element={<Signup/>}/> {/* 新規作成 */}
+            </Routes>
+        </BrowserRouter>
+    </StrictMode>
 )
