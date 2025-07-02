@@ -25,7 +25,7 @@ function App() {
             <OneSignalPush/>
             <SendNotificationButton/>
             {message}
-            <Audio/>
+            {/*<Audio/>*/}
         </div>
     )
 }

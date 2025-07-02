@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: dev
+
+#cloud:
+#  aws:
+#    credentials:
+#      access-key: ${AWS_ACCESS_KEY_ID}
+#      secret-key: ${AWS_SECRET_ACCESS_KEY}
+#    region:
+#      static: us-east-1
+#    stack:
+#      auto: false
+
+application:
+  bucket:
+    name: homet-audio-mp3

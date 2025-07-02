@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import {VitePWA} from 'vite-plugin-pwa'
 import fs from 'fs'
 
+
 export default defineConfig(({mode}) => {
     //環境読み取り
     const env = loadEnv(mode, process.cwd(), '')
@@ -59,6 +60,14 @@ export default defineConfig(({mode}) => {
                     changeOrigin: true
                 }
             }
-        }
+        },
+        //ブラウザではglobalが未定義でエラー global=>windowに置き換え
+        //lamejs
+        define: {
+            global: 'window',
+        },
+        optimizeDeps: {
+            include: ['lamejs'],
+        },
     }
 })

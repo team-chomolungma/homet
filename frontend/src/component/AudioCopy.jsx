@@ -3,17 +3,21 @@
 
 import React, {useState, useRef} from 'react';
 import Recorder from 'recorder-js';
-import kimeranian from '../assets/kimeranian.png'
-import StopCircleIcon from '@mui/icons-material/StopCircle';
-import AdjustIcon from '@mui/icons-material/Adjust';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import SendIcon from '@mui/icons-material/Send';
+//import lamejs from 'lamejs';
+//import {Mp3Encoder} from 'lamejs';
 
-import {Button, Container, Stack, Typography} from '@mui/material';
+
+import {Button, Container} from '@mui/material';
 
 const AudioCopy = () => {
 
     const [recording, setRecording] = useState(false)
+
+    //MP3の再生URLを保存
+    const [audioUrl, setAudioUrl] = useState(null)
+
+    //署名付きURL
+    const [s3Url, sets3Url] = useState(null)
 
     //録音とPOST処理を分けるための引数用
     const [mp3Blob, setMp3Blob] = useState(null);
@@ -81,6 +85,8 @@ const AudioCopy = () => {
 
         //URL.createObjectURL()でaudioに渡すURLになる
         const mp3URL = URL.createObjectURL(mp3Blob);
+        setAudioUrl(mp3URL)
+
 
         setRecording(false);
     };
@@ -103,30 +109,48 @@ const AudioCopy = () => {
 
     }
 
+    const getUrl = () => {
+        try {
+            fetch('/api/homet/voice-data/2')
+                .then(res => res.json())
+                .then(data => {
+                    sets3Url(data.url)
+                    console.log(data.url)
+                })
+        } catch (err) {
+            console.error('Get failed:', err);
+        }
+
+    }
+
+
+    // console.log(s3Url)
     return (
         <>
+            <p>Audio1</p>
             <Container>
-                <img src={kimeranian} style={{height: 300, width: 300}}/>
                 <Button
                     onClick={recording ? stopRecording : startRecording}
                 >
                     {recording ? 'STOP' : 'START'}
                 </Button>
-                <Typography color={'#878484'}>ボタンをタップして録音してください</Typography>
-                <Stack direction={'row'} spacing={3}>
-                    <RefreshIcon sx={{height: 50, width: 50, color: '#F24B32',}}/>
-
-                    {recording ? (
-                        <AdjustIcon sx={{height: 150, width: 150, color: '#F24B32'}}/>
-                    ) : (
-                        <StopCircleIcon sx={{height: 150, width: 150, color: '#229C60'}}/>
-                    )}
-
-                    <SendIcon sx={{height: 50, width: 50, color: '#567DE6'}} onClick={sendVoice}/>
-                </Stack>
+                <Button onClick={sendVoice}>届ける</Button>
             </Container>
-
-
+            {/*{audioUrl && (*/}
+            {/*    <>*/}
+            {/*        <p>撮りたて</p>*/}
+            {/*        <audio src={audioUrl} controls/>*/}
+            {/*    </>*/}
+            {/*)}*/}
+            <Button onClick={getUrl}>再生したのを取りに行く</Button>
+            {s3Url && (
+                <>
+                    <p>S3の再生</p>
+                    <audio src={s3Url} controls/>
+                </>
+            )}
+            {/*<p>publicフォルダ</p>*/}
+            {/*<audio src={'../public/recording.mp3'} controls/>*/}
         </>
 
     );

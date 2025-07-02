@@ -6,7 +6,7 @@ import LoginForm from './component/safety/LoginForm.jsx';
 import Signup from './component/safety/Signup.jsx';
 import './global.css';
 
-
+window.global = window;
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <BrowserRouter>

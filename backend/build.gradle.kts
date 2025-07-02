@@ -26,9 +26,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    runtimeOnly("com.h2database:h2")
+    implementation("com.amazonaws:aws-java-sdk-s3:1.12.681")
+    implementation("io.awspring.cloud:spring-cloud-aws:2.3.0")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    runtimeOnly("org.postgresql:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
