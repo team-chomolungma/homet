@@ -15,16 +15,17 @@ class AwsS3Config {
     @Bean
     fun amazonS3(): AmazonS3 {
 
-        val dotenv = dotenv {
-            directory = "./"
-            ignoreIfMissing = true
-        }
+//        val dotenv = dotenv {
+//            directory = "./"
+//            ignoreIfMissing = true
+//        }
 
-        val accessKey = dotenv["AWS_ACCESS_KEY_ID"] ?: throw IllegalArgumentException("AWS_ACCESS_KEY_ID is not set")
-        val secretKey =
-            dotenv["AWS_SECRET_ACCESS_KEY"] ?: throw IllegalArgumentException("AWS_SECRET_ACCESS_KEY is not set")
-
-        System.getenv("AWS_SECRET_ACCESS_KEY") ?: throw IllegalArgumentException("AWS_SECRET_ACCESS_KEY is not set")
+//        val accessKey = dotenv["AWS_ACCESS_KEY_ID"] ?: throw IllegalArgumentException("AWS_ACCESS_KEY_ID is not set")
+//        val secretKey =
+//            dotenv["AWS_SECRET_ACCESS_KEY"] ?: throw IllegalArgumentException("AWS_SECRET_ACCESS_KEY is not set")
+        val accessKey = System.getenv("AWS_ACCESS_KEY_ID") ?: throw IllegalArgumentException("AWS_ACCESS_KEY_ID is not set")
+        val secretKey = System.getenv("AWS_SECRET_ACCESS_KEY") ?: throw IllegalArgumentException("AWS_SECRET_ACCESS_KEY is not set")
+//        System.getenv("AWS_SECRET_ACCESS_KEY") ?: throw IllegalArgumentException("AWS_SECRET_ACCESS_KEY is not set")
 
         val credentials = BasicAWSCredentials(accessKey, secretKey)
 
