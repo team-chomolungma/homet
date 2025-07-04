@@ -1,40 +1,41 @@
 import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Box, Button, Typography} from '@mui/material';
+import {Box, Typography} from '@mui/material';
 
-export default function StartForm() {
+function StartForm() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // const timer = setTimeout(() => {
-        //         navigate('/login');
-        //     },
-        //     1000);
-        //
-        // // クリーンアップ関数でタイマー解除
-        // return () => clearTimeout(timer);
+        const timer = setTimeout(() => {
+            navigate('/start');
+        }, 1000);
+
+        return () => clearTimeout(timer);
     }, [navigate]);
 
     return (
         <Box
             sx={{
                 height: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',//横中央
+                flexDirection: 'column',//縦中央
             }}
         >
             <Box
                 component="img"
                 src="/run.png"
-                alt="Homet logo"
+                alt="ホメラニアンの画像"
                 sx={{
                     width: 180,
                     height: 180,
-                    // objectFit: 'contain',
                 }}
             />
             <Typography
                 sx={{
-                    fontSize: 48,
-                    lineHeight: '54px',
+                    fontSize: 40,
+                    lineHeight: '53px',
                     color: '#333333',
                 }}
             >
@@ -43,3 +44,6 @@ export default function StartForm() {
         </Box>
     );
 }
+
+
+export default StartForm
