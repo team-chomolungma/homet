@@ -41,5 +41,5 @@ data class VoiceFile(
 
     @CreatedDate
     @Column(name="sent_at", updatable = false)
-    val sentAt: Instant? = null,
+    var sentAt: Instant? = null,
 )

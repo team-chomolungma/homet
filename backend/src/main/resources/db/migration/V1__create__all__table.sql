@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" bigserial NOT NULL UNIQUE,
-	"userID" varchar(100) NOT NULL UNIQUE,
+	"user_id" varchar(100) NOT NULL UNIQUE,
 	"displayname" varchar(100) NOT NULL,
 	"password_hash" varchar(255) NOT NULL,
 	"created_at" timestamp with time zone NOT NULL,

@@ -19,8 +19,8 @@ data class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(nullable = false, length = 100, unique = true)
-    val userID: String,
+    @Column(name="user_id",nullable = false, length = 100, unique = true)
+    val userId: String,
 
     @Column(nullable = false, length = 100)
     val displayname: String,
@@ -30,5 +30,5 @@ data class User(
 
     @CreatedDate
     @Column(name="created_at", updatable = false)
-    val createdAt: Instant? = null,
+    var createdAt: Instant? = null,
 )

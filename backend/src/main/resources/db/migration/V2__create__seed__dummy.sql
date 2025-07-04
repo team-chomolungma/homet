@@ -1,4 +1,4 @@
-INSERT INTO "users" ("userID", "displayname", "password_hash", "created_at") VALUES
+INSERT INTO "users" ("user_id", "displayname", "password_hash", "created_at") VALUES
 ('akira123', 'あきら', '$2a$10$GjI9T3/OSVzGvKFRWvCh3O.uehR5kjeHqcd4yt7zYERxfhLDw5L8e', NOW()),
 ('satuki123', 'さつき', '$2a$10$EiO/7/O2EUd111KUVNLGE.8.SxaC.JO1ExBJx.gw3IJeUE9BimiEm', NOW()),
 ('minato123', 'みなと', '$2a$10$NVr/GpRiCzK6oUH6eTesee7bHI09dyVSZ2ynZrsIDiwcUZRKEG7o.', NOW()),
