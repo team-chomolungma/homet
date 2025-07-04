@@ -18,7 +18,7 @@ import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 @Service
-class AuthService(
+data class AuthService(
     private val userRepository: UserRepository,
     private val playerService: PlayerService,
     private val sessionRepository: SessionRepository,
