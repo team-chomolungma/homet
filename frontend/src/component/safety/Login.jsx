@@ -1,50 +1,42 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
     IconButton,
     TextField,
     Typography,
-    InputAdornment
+    InputAdornment,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {useNavigate} from 'react-router-dom';
-import login from './Login.jsx';
+import axios from 'axios';
 
-function Signup() {
+function Login() {
     const navigate = useNavigate();
 
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
-    const [userName, setUserName] = useState('');
     const [userIdError, setUserIdError] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
-    const [userNameError, setUserNameError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
-    // ユーザーIDの重複チェック（onBlur）
-    const checkUserIdDuplicate = async () => {
-        if (!userId.trim()) return;
-        try {
-            const res = await fetch(`/api/users/search?userID=${encodeURIComponent(userId)}`);
-            if (res.ok) {
-                const data = await res.json();
-                if (data.exists) {
-                    setUserIdError('このユーザーIDはすでに使われています');
-                } else {
-                    setUserIdError('');
-                }
-            }
-        } catch (err) {
-            console.error('重複チェック失敗', err);
-        }
-    };
+    //自動ログイン処理
+    useEffect(() => {
+        axios
+            .get('/api/auth/session', {withCredentials: true})
+            .then((res) => {
+                navigate('/home'); //セッション有効ならログインスキップ
+            })
+            .catch(() => {
+                // セッション無効なら何もしない
+            });
+    }, [navigate]);
 
-    const handleSubmit = async (e) => {
+    // フォーム送信処理
+    const handleSubmit = (e) => {
         e.preventDefault();
-
         let hasError = false;
 
         if (!userId.trim()) {
@@ -57,48 +49,24 @@ function Signup() {
         if (!password.trim()) {
             setPasswordError('パスワードを入力してください');
             hasError = true;
-        } else if (password.length === 6) {
-            setPasswordError('6文字で入力してください');
-            hasError = true;
-        } else if (/^[a-zA-Z0-9]+$/.test(password)) {
-            console.log(password.length)
-            setPasswordError('英数字のみで入力してください');
-            hasError = true;
         } else {
             setPasswordError('');
         }
 
-        if (!userName.trim()) {
-            setUserNameError('ユーザー名を入力してください');
-            hasError = true;
-        } else {
-            setUserNameError('');
-        }
-
         if (!hasError) {
-            try {
-                const res = await fetch('/api/auth/signup', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        userID: userId,
-                        displayname: userName,
-                        password: password,
-                        playerID: 'dummy-player-id'
-                    }),
+            axios
+                .post(
+                    '/api/auth/login',
+                    {userID: userId, password},
+                    {withCredentials: true}
+                ).then((res) => {
+                navigate('/home');
+            })
+                .catch((err) => {
+                    if (err.response?.status === 401) {
+                        setPasswordError('ユーザーIDまたはパスワードが間違っています');
+                    }
                 });
-
-                if (res.ok) {
-                    navigate('/home');
-                } else if (res.status === 409) {
-                    setUserIdError('このユーザーIDは既に使われています');
-                } else {
-                    alert('登録に失敗しました');
-                }
-            } catch (err) {
-                console.error('サインアップ失敗', err);
-            }
         }
     };
 
@@ -139,18 +107,25 @@ function Signup() {
                         width: '100%',
                     }}
                 >
-                    <Typography sx={{fontSize: 40, lineHeight: '53px', color: '#333333'}}>
+                    <Typography
+                        sx={{
+                            fontSize: 40,
+                            lineHeight: '53px',
+                            color: '#333333',
+                        }}
+                    >
                         Homet
                     </Typography>
 
+                    {/* ユーザーID */}
                     <Box sx={{width: 300}}>
                         <Typography sx={{fontSize: 16, mb: 0.5}}>ユーザーID</Typography>
                         <TextField
                             fullWidth
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
-                            onBlur={checkUserIdDuplicate}
                             error={!!userIdError}
+                            placeholder="英数字"
                             variant="outlined"
                             sx={{
                                 backgroundColor: '#fff',
@@ -176,6 +151,7 @@ function Signup() {
                         </Typography>
                     </Box>
 
+                    {/* パスワード */}
                     <Box sx={{width: 300}}>
                         <Typography sx={{fontSize: 16, color: '#333', mt: 3}}>
                             パスワード
@@ -221,59 +197,27 @@ function Signup() {
                         </Typography>
                     </Box>
 
-                    <Box sx={{width: 300}}>
-                        <Typography sx={{fontSize: 16, color: '#333', mt: 4}}>
-                            ユーザー名
-                        </Typography>
-                        <TextField
-                            fullWidth
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value)}
-                            error={!!userNameError}
-                            variant="outlined"
+                    {/* ログインボタン */}
+                    <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                        <Button
+                            type="submit"
+                            variant="contained"
                             sx={{
-                                backgroundColor: '#fff',
-                                borderRadius: 1,
-                                '& .MuiOutlinedInput-root': {
-                                    fontSize: 18,
-                                    height: 48,
-                                },
-                            }}
-                        />
-                        <Typography
-                            sx={{
-                                fontSize: 12,
-                                mt: '2px',
-                                minHeight: '1.5em',
-                                color: userNameError ? '#e53935' : 'transparent',
-                                backgroundColor: '#fff1f3',
-                                pl: 1,
-                                borderRadius: 1,
+                                mt: 4,
+                                width: 228,
+                                height: 76,
+                                borderRadius: '999px',
+                                fontSize: 18,
+                                backgroundColor: '#e94e8a',
                             }}
                         >
-                            {userNameError || '　'}
-                        </Typography>
+                            ログイン
+                        </Button>
                     </Box>
-
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{
-                            mt: 4,
-                            width: 228,
-                            height: 76,
-                            borderRadius: '999px',
-                            fontSize: 18,
-                            backgroundColor: '#e94e8a',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        アカウント作成
-                    </Button>
                 </Box>
             </Box>
         </Box>
     );
 }
 
-export default Signup;
+export default Login;
