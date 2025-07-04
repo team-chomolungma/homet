@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react'
-import Audio from './component/Audio.jsx';
 import axiosInstance from './lib/axios';
 import OneSignalPush from './component/OneSignalPush.jsx';
 import SendNotificationButton from './component/SendNotificationButton.jsx';
@@ -25,7 +24,6 @@ function App() {
             <OneSignalPush/>
             <SendNotificationButton/>
             {message}
-            {/*<Audio/>*/}
         </div>
     )
 }
