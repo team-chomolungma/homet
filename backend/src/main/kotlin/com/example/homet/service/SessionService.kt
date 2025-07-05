@@ -1,5 +1,6 @@
 package com.example.homet.service
 
+import com.example.homet.dto.GetUser
 import com.example.homet.dto.LoginRequest
 import com.example.homet.dto.LoginResponse
 import com.example.homet.dto.SessionData
@@ -43,6 +44,17 @@ data class SessionService(
 
         return SessionResponse(
             userID = findUser!!.userId,
+            displayname = findUser.displayname
+        )
+    }
+
+    fun getUser(token: String): GetUser {
+        val session = sessionRepository.findByToken(token)
+        val findUser = userRepository.findByIdOrNull(session!!.userDbId)
+
+        return GetUser(
+            id = findUser!!.id,
+            userID = findUser.userId,
             displayname = findUser.displayname
         )
     }

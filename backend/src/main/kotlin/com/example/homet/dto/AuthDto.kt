@@ -22,6 +22,12 @@ data class SessionResponse(
     val displayname: String
 )
 
+data class GetUser(
+    val id: Long,
+    val userID: String,
+    val displayname: String
+)
+
 data class SignupRequest(
     val userID: String,
     val displayname: String,
