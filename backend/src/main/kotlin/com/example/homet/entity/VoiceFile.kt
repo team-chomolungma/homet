@@ -37,7 +37,7 @@ data class VoiceFile(
 
 
     @Column(name="play_flag",nullable = false)
-    val playFlag: Boolean = true,
+    var playFlag: Boolean = true,
 
     @CreatedDate
     @Column(name="sent_at", updatable = false)
