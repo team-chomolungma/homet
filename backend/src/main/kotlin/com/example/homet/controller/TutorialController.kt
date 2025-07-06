@@ -14,7 +14,7 @@ data class TutorialController(
 ){
     @GetMapping
     fun getTutorialVoice(): ResponseEntity<Any> {
-        val result = voiceFileService.getUrlFromS3(0L)
+        val result = voiceFileService.getUrlFromS3(0L,0L)
         return when {
             result == null -> ResponseEntity(HttpStatus.NOT_FOUND)
             result.isBlank() -> ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE)
