@@ -7,6 +7,7 @@ import com.example.homet.dto.SignupResponse
 import com.example.homet.entity.Player
 import com.example.homet.repository.PlayerRepository
 import com.example.homet.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -23,6 +24,15 @@ data class PlayerService(
         )
         return runCatching {
             playerRepository.save(player)
+        }
+    }
+
+    fun getPlayer(userId: Long): String? {
+        val findPlayer = playerRepository.findByIdOrNull(userId)
+        if(findPlayer != null){
+            return findPlayer.playerId
+        }else{
+            return null
         }
     }
 }
