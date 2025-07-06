@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.example.homet.dto.VoiceFileRequest
+import com.example.homet.dto.VoiceFileResponse
 import com.example.homet.entity.VoiceFile
 import com.example.homet.repository.VoiceFileRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile
 @Service
 data class VoiceFileService(
     private val voiceFileRepository: VoiceFileRepository,
+    private val userService: UserService,
     private val amazonS3: AmazonS3,
     ){
 
@@ -92,9 +94,6 @@ data class VoiceFileService(
 
     fun upadtePlayHistory(userDbId:Long,voiceFileId: Long): String{
         val voiceFile = voiceFileRepository.findByIdOrNull(voiceFileId)
-        println(voiceFile)
-        println("userDbId: $userDbId")
-        println("voiceFileId: $voiceFileId")
         if(voiceFile != null && voiceFile.receiverId == userDbId){
             if(voiceFile.firstPlayedAt != null){
                 return "ALREADY_EXISTS"
@@ -109,5 +108,31 @@ data class VoiceFileService(
         }else{
             return "NOT_FOUND"
         }
+    }
+
+    fun getVoiceDataListForMine(userDbId:Long): List<VoiceFileResponse>{
+        val voiceFiles = voiceFileRepository.findByReceiverId(userDbId)
+        if(voiceFiles == null){
+            return emptyList()
+        }
+        val threshold = Instant.now().minus(72, ChronoUnit.HOURS)
+        val updateVoiceFile = voiceFiles.map { voiceFile ->
+            voiceFile.firstPlayedAt?.let{ firstPlayedAt ->
+                if(firstPlayedAt.isBefore(threshold)){
+                    voiceFile.playFlag = false
+                    voiceFileRepository.save(voiceFile)
+                }
+            }
+            val findUser = userService.searchUsersByDbID(voiceFile.senderId)
+            VoiceFileResponse(
+                id = voiceFile.id,
+                sender_id = voiceFile.senderId,
+                diplayname = findUser!!.displayname,
+                sent_at = voiceFile.sentAt,
+                first_played_at = voiceFile.firstPlayedAt,
+                play_flag = voiceFile.playFlag,
+            )
+        }
+        return updateVoiceFile
     }
 }

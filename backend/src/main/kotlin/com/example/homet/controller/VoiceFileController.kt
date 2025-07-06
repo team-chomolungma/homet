@@ -2,6 +2,7 @@ package com.example.homet.controller
 
 import com.example.homet.dto.VoiceFileIdRequest
 import com.example.homet.dto.VoiceFileRequest
+import com.example.homet.dto.VoiceFileResponse
 import com.example.homet.entity.VoiceFile
 import com.example.homet.service.PlayerService
 import com.example.homet.service.SessionService
@@ -88,5 +89,14 @@ data class VoiceFileController(
             result == "SUCCESS" -> ResponseEntity(HttpStatus.CREATED)
             else -> ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
         }
+    }
+
+    @GetMapping("/voice-list")
+    fun getVoiceFileListForMine(
+        @CookieValue("SESSION_TOKEN") token: String,
+    ):ResponseEntity<Map<String,List<VoiceFileResponse>>> {
+        val myId = sessionService.getUser(token).id
+        val result = voiceFileService.getVoiceDataListForMine(myId)
+        return ResponseEntity.ok().body(mapOf("result" to result))
     }
 }
