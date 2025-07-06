@@ -20,4 +20,4 @@ data class VoiceFileResponse(
     val sent_at: Instant?,
     val first_played_at: Instant?,
     val play_flag: Boolean,
-    )
+)
