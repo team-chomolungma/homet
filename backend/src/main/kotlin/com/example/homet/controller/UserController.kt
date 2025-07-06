@@ -17,7 +17,7 @@ class UserController(
     fun seachUser(
         @RequestParam userID: String
     ): ResponseEntity<Map<String,List<Map<String,Any>?>>> {
-        val result = userService.searchUsers(userID)
+        val result = userService.searchUsersByUserID(userID)
         val data = if(result != null) listOf(result) else emptyList()
         return ResponseEntity.ok().body(mapOf("result" to data))
     }
