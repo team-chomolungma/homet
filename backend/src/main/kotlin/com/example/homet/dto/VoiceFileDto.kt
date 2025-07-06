@@ -7,3 +7,7 @@ data class VoiceFileRequest(
     val sender_id: Long,
     val receiver_id: Long,
 )
+
+data class VoiceFileIdRequest(
+    val voice_file_id: Long,
+)

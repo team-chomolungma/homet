@@ -1,5 +1,6 @@
 package com.example.homet.controller
 
+import com.example.homet.dto.VoiceFileIdRequest
 import com.example.homet.dto.VoiceFileRequest
 import com.example.homet.entity.VoiceFile
 import com.example.homet.service.PlayerService
@@ -72,5 +73,20 @@ data class VoiceFileController(
         val myId = sessionService.getUser(token).id
         val count = voiceFileService.postCount(myId)
         return ResponseEntity.ok().body(mapOf("count" to count))
+    }
+
+    @PostMapping("/play-history")
+    fun postPlayHistory(
+        @CookieValue("SESSION_TOKEN") token: String,
+        @RequestBody request: VoiceFileIdRequest,
+    ): ResponseEntity<Any> {
+        val myId = sessionService.getUser(token).id
+        val result = voiceFileService.upadtePlayHistory(myId, request.voice_file_id)
+        return when {
+            result == "ALREADY_EXISTS" -> ResponseEntity(HttpStatus.CONFLICT)
+            result == "NOT_FOUND" -> ResponseEntity(HttpStatus.NOT_FOUND)
+            result == "SUCCESS" -> ResponseEntity(HttpStatus.CREATED)
+            else -> ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR)
+        }
     }
 }

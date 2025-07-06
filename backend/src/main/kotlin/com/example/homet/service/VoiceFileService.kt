@@ -89,4 +89,25 @@ data class VoiceFileService(
             return 0L
         }
     }
+
+    fun upadtePlayHistory(userDbId:Long,voiceFileId: Long): String{
+        val voiceFile = voiceFileRepository.findByIdOrNull(voiceFileId)
+        println(voiceFile)
+        println("userDbId: $userDbId")
+        println("voiceFileId: $voiceFileId")
+        if(voiceFile != null && voiceFile.receiverId == userDbId){
+            if(voiceFile.firstPlayedAt != null){
+                return "ALREADY_EXISTS"
+            }
+            try {
+                voiceFile.firstPlayedAt = Instant.now()
+                voiceFileRepository.save(voiceFile)
+                return "SUCCESS"
+            }catch (e: Exception){
+                return "ERROR"
+            }
+        }else{
+            return "NOT_FOUND"
+        }
+    }
 }
