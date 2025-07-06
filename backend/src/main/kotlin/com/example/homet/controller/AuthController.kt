@@ -2,6 +2,7 @@ package com.example.homet.controller
 
 import com.example.homet.dto.LoginRequest
 import com.example.homet.dto.LoginResponse
+import com.example.homet.dto.SessionData
 import com.example.homet.dto.SessionResponse
 import com.example.homet.dto.SignupRequest
 import com.example.homet.dto.SignupResponse
@@ -27,22 +28,37 @@ data class AuthController(
     private val authService: AuthService,
     private val sessionService: SessionService,
 ) {
+    val profile = System.getenv("SPRING_PROFILES_ACTIVE")
+    val isLocal = profile == "development"
 
+    fun setCookie(session: SessionData):ResponseCookie{
+        val maxAge = Duration.between(Instant.now(),session.expireAt).seconds
+        val cookie = ResponseCookie.from("SESSION_TOKEN", session.token)
+            .httpOnly(true)
+            .secure(!isLocal)
+            .sameSite("Lax")
+            .maxAge(maxAge)
+            .path("/")
+            .build()
+        return cookie
+    }
+
+    fun delCookie():ResponseCookie{
+        val cookie = ResponseCookie.from("SESSION_TOKEN", "")
+            .httpOnly(true)
+            .secure(!isLocal)
+            .sameSite("Lax")
+            .maxAge(0)
+            .path("/")
+            .build()
+        return cookie
+    }
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<LoginResponse> {
         val result = authService.login(request)
         if(result != null) {
             val session = sessionService.createSession(result.userID)
-            val maxAge = Duration.between(Instant.now(),session.expireAt).seconds
-            val profile = System.getenv("SPRING_PROFILES_ACTIVE")
-            val isLocal = profile == "development"
-            val cookie = ResponseCookie.from("SESSION_TOKEN", session.token)
-                .httpOnly(true)
-                .secure(!isLocal)
-                .sameSite("Lax")
-                .maxAge(maxAge)
-                .path("/")
-                .build()
+            val cookie = setCookie(session)
             return ResponseEntity.ok()
                 .header("Set-Cookie",cookie.toString())
                 .body(result)
@@ -56,16 +72,7 @@ data class AuthController(
         val result = authService.signup(request)
         if(result != null) {
             val session = sessionService.createSession(result.userID)
-            val maxAge = Duration.between(Instant.now(),session.expireAt).seconds
-            val profile = System.getenv("SPRING_PROFILES_ACTIVE")
-            val isLocal = profile == "development"
-            val cookie = ResponseCookie.from("SESSION_TOKEN", session.token)
-                .httpOnly(true)
-                .secure(!isLocal)
-                .sameSite("Lax")
-                .path("/")
-                .maxAge(maxAge)
-                .build()
+            val cookie = setCookie(session)
             return ResponseEntity.ok()
                 .header("Set-Cookie",cookie.toString())
                 .body(result)
@@ -80,15 +87,7 @@ data class AuthController(
         }
         val result = authService.logout(token)
         if(result.isSuccess){
-            val profile = System.getenv("SPRING_PROFILES_ACTIVE")
-            val isLocal = profile == "development"
-            val cookie = ResponseCookie.from("SESSION_TOKEN", token)
-                .httpOnly(true)
-                .secure(!isLocal)
-                .sameSite("Lax")
-                .maxAge(0)
-                .path("/")
-                .build()
+            val cookie = delCookie()
             return ResponseEntity.ok()
                 .header("Set-Cookie",cookie.toString())
                 .build()
@@ -106,15 +105,7 @@ data class AuthController(
             val finduser = sessionService.getUserFromSession(token)
             return ResponseEntity.ok().body(finduser)
         }else{
-            val profile = System.getenv("SPRING_PROFILES_ACTIVE")
-            val isLocal = profile == "development"
-            val cookie = ResponseCookie.from("SESSION_TOKEN", "")
-                .httpOnly(true)
-                .secure(!isLocal)
-                .sameSite("Lax")
-                .maxAge(0)
-                .path("/")
-                .build()
+            val cookie = delCookie()
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .header("Set-Cookie",cookie.toString())
                 .build()
