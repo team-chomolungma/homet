@@ -6,6 +6,13 @@ INSERT INTO "users" ("user_id", "displayname", "password_hash", "created_at") VA
 ('natsuko123', 'なつこ', '$2a$10$Z1q/VIaPJuVOnl7szKylSu.xxq4vXJfPRwRS1nqnjg3lMRZvv7khe', NOW()),
 ('urasho', 'うら', '$2a$10$5gXu8F3DsIYWlQwzDgnBReSfgXFpAFo1QDhVHXrCqb1/I7IfB./Li', NOW());
 
+INSERT INTO "players" ("user_id","player_id","created_at") VALUES
+(1,'dummy1',NOW()),
+(2,'dummy2',NOW()),
+(3,'dummy3',NOW()),
+(4,'dummy4',NOW()),
+(5,'dummy5',NOW()),
+(6,'dummy_ura_後で修正',NOW());
 
 INSERT INTO "friends" ("user_id","friend_id","approved", "created_at") VALUES
 (6, 1, true, NOW()),
