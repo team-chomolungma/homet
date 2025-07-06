@@ -23,11 +23,10 @@ data class VoiceFileService(
     private val userService: UserService,
     private val amazonS3: AmazonS3,
     ){
-
+    val bucketName = System.getenv("S3_BUCKET_NAME")
     fun getVoiceAllFiles(): List<VoiceFile>{
         return voiceFileRepository.findAll()
     }
-
     fun getUrlFromS3(voiceFileId: Long,userDbId:Long): String? {
         val s3Key = if(voiceFileId == 0L) {
             "audio/tutorial.mp3"
@@ -44,7 +43,7 @@ data class VoiceFileService(
         val expiredAt = Date.from(Instant.now().plus(60, ChronoUnit.MINUTES))
 
         try{
-            val url = amazonS3.generatePresignedUrl("homet-audio-mp3", s3Key, expiredAt)
+            val url = amazonS3.generatePresignedUrl(bucketName, s3Key, expiredAt)
             return url.toString()
         }catch (e: AmazonServiceException){
             println("failed to download audio file(AmazonServiceException): ${e.message}")
@@ -62,7 +61,7 @@ data class VoiceFileService(
 
         return runCatching {
             amazonS3.putObject(
-                PutObjectRequest("homet-audio-mp3", s3Key, file.inputStream, ObjectMetadata().apply {
+                PutObjectRequest(bucketName, s3Key, file.inputStream, ObjectMetadata().apply {
                     contentType = file.contentType ?: "audio/mp3"
                     contentLength = file.size
                 })
