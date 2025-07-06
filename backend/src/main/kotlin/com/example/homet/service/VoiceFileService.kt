@@ -75,7 +75,18 @@ data class VoiceFileService(
             )
             voiceFileRepository.save(voice)
         }
-
-
+    }
+    fun postCount(userDbId:Long): Long{
+        val todayStart = Instant.now().truncatedTo(ChronoUnit.DAYS)
+        val todayEnd = todayStart.plus(1, ChronoUnit.DAYS)
+        val voiceFiles = voiceFileRepository.findBySenderId(userDbId)
+        if(voiceFiles != null) {
+            val result = voiceFiles.filter {
+                it.sentAt!!.isAfter(todayStart) && it.sentAt!!.isBefore(todayEnd)
+            }
+            return result.size.toLong()
+        }else{
+            return 0L
+        }
     }
 }

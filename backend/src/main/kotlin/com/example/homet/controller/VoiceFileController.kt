@@ -42,9 +42,12 @@ data class VoiceFileController(
     @PostMapping("/voice")
     fun postVoiceFile(
         @RequestParam("file") file: MultipartFile,
-        @RequestParam("sender_id") senderId: Long,
+//        @RequestParam("sender_id") senderId: Long,
         @RequestParam("receiver_id") receiverId: Long,
+        @CookieValue("SESSION_TOKEN") token: String
     ): ResponseEntity<Any> {
+        // 相談中、API修正していいならこのまま
+        val senderId = sessionService.getUser(token).id
         val request = VoiceFileRequest(
             file = file,
             sender_id = senderId,
@@ -61,5 +64,13 @@ data class VoiceFileController(
         }else{
             return ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE)
         }
+    }
+    @GetMapping("/voice/limit-status")
+    fun getSendCount(
+        @CookieValue("SESSION_TOKEN") token: String
+    ):ResponseEntity<Any> {
+        val myId = sessionService.getUser(token).id
+        val count = voiceFileService.postCount(myId)
+        return ResponseEntity.ok().body(mapOf("count" to count))
     }
 }
