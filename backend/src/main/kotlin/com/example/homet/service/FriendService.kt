@@ -37,4 +37,8 @@ data class FriendService(
             frinedRepository.save(friend)
         }
     }
+    fun getSentFriendRequests(userDbId: Long):List<Long>{
+        val requestFriends = frinedRepository.findAllByUserDbId(userDbId).filter { it.approved }
+        return requestFriends.map { it.friendDbId }
+    }
 }

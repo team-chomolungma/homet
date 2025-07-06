@@ -4,6 +4,7 @@ import com.example.homet.dto.VoiceFileIdRequest
 import com.example.homet.dto.VoiceFileRequest
 import com.example.homet.dto.VoiceFileResponse
 import com.example.homet.entity.VoiceFile
+import com.example.homet.service.FriendService
 import com.example.homet.service.PlayerService
 import com.example.homet.service.SessionService
 import com.example.homet.service.VoiceFileService
@@ -25,7 +26,8 @@ import kotlin.collections.mapOf
 data class VoiceFileController(
     private val voiceFileService: VoiceFileService,
     private val playerService: PlayerService,
-    private val sessionService: SessionService
+    private val sessionService: SessionService,
+    private val friendService: FriendService
 ){
     @GetMapping("/voice-data/{voice-file-id}")
     fun getVoiceFileData(
@@ -44,11 +46,9 @@ data class VoiceFileController(
     @PostMapping("/voice")
     fun postVoiceFile(
         @RequestParam("file") file: MultipartFile,
-//        @RequestParam("sender_id") senderId: Long,
         @RequestParam("receiver_id") receiverId: Long,
         @CookieValue("SESSION_TOKEN") token: String
     ): ResponseEntity<Any> {
-        // 相談中、API修正していいならこのまま
         val senderId = sessionService.getUser(token).id
         val request = VoiceFileRequest(
             file = file,
@@ -62,6 +62,11 @@ data class VoiceFileController(
 
         val result = voiceFileService.putVoiceForS3(request)
         if(result.isSuccess){
+            val friendList = friendService.getSentFriendRequests(senderId)
+            val exists = friendList.any{ it == receiverId }
+            if(!exists){
+                friendService.createFriend(senderId, receiverId)
+            }
             return ResponseEntity.ok().body(mapOf("playerID" to playerId))
         }else{
             return ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE)
