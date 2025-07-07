@@ -138,23 +138,24 @@ export default function AudioListen() {
                         alt="speechBubblePlaying"
                     />
                 )}
-
-
-                <Box>
-                    <img src={whiteCircle} style={{height: 283, width: 283, position: 'absolute'}} alt="whiteCircle"/>
-                    {playing === 'after' ? (
-                        <img src={hohoemian} style={{height: 300, width: 300, position: 'relative'}}
-                             alt="giraranian"/>
+t="giraranian"/>
                     ) : (
                         <img src={giraranian} style={{height: 300, width: 300, position: 'relative'}}
-                             alt="giraranian"/>
+
+
+                        <Box>
+                            <img src={whiteCircle} style={{height: 283, width: 283, position: 'absolute'}} alt="whiteCircle"/>
+                            {playing === 'after' ? (
+                                <img src={hohoemian} style={{height: 300, width: 300, position: 'relative'}}
+                                     al     alt="giraranian"/>
                     )}
 
 
                 </Box>
 
                 <Box>
-                    <audio src={location.state.url} ref={audioRef}/>
+                    {/*<audio src={location.state.url} ref={audioRef}/>*/}
+                    <audio src={'url'} ref={audioRef}/>
 
                     {playing === 'before' && (
                         <img
