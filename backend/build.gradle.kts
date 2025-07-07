@@ -20,8 +20,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.postgresql:postgresql:42.7.3")
-    implementation("me.paulschwarz:spring-dotenv:2.2.0")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
+//    implementation("org.postgresql:postgresql:42.7.3")
+//    implementation("me.paulschwarz:spring-dotenv:2.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -33,6 +35,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     runtimeOnly("org.postgresql:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.springframework.security:spring-security-core")
+
 }
 
 kotlin {
