@@ -1,11 +1,11 @@
-import {Box, Container, FormControl, FormHelperText, OutlinedInput, Stack, TextField, Typography} from '@mui/material';
+import {Box, FormControl, FormHelperText, OutlinedInput, Stack, Typography} from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import React, {useRef, useState} from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import NavigationBar from '../NavigationBar.jsx';
-import axios from 'axios';
 import UserIcon from '../UserIcon.jsx';
 import {useNavigate} from 'react-router-dom';
+import axiosInstance from '../../lib/axios.js';
 
 export default function AddFriend() {
     const inputRef = useRef(null);
@@ -18,7 +18,7 @@ export default function AddFriend() {
     //No5  { result: [{ id,displayname }]
     const userSearch = async (userId) => {
         if (!userId) return;
-        const response = await axios.get(`/api/users/search${userId}`)
+        const response = await axiosInstance.get(`/api/users/search${userId}`)
         setSearchResult(response.result)
     }
 

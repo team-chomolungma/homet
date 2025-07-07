@@ -2,10 +2,10 @@ import {Box, Container, Stack, Typography} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
-import axios from 'axios';
 import UserIcon from '../UserIcon.jsx';
 import NavigationBar from '../NavigationBar.jsx';
 import Loading from '../Loading.jsx';
+import axiosInstance from '../../lib/axios.js';
 
 export default function Friendlist() {
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ export default function Friendlist() {
     // No13 {result: [{id,displayname}...]}
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get('/api/friend');
+            const response = await axiosInstance.get('/api/friend');
             if (response.status === 200) {
                 setFriendList(response.result);
                 setRes(true);

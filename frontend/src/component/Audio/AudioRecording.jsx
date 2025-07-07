@@ -13,9 +13,9 @@ import {Box, Container, Stack, Typography} from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {useNavigate, useLocation} from 'react-router-dom';
 import UserIcon from '../UserIcon.jsx';
-import axios from 'axios';
 import Loading from '../Loading.jsx';
 import Pulse from '../Pulse.jsx';
+import axiosInstance from '../../lib/axios.js';
 
 const COUNT_MS = 15;
 
@@ -114,7 +114,7 @@ const AudioRecording = () => {
             const receiverId = location.state.receiver_id;
             formData.append('file', mp3Blob, 'recording.mp3');
             formData.append('receiver_id', receiverId.toString());
-            const response = await axios.post('/api/homet/voice', formData,
+            const response = await axiosInstance.post('/api/homet/voice', formData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',

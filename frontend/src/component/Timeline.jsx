@@ -5,10 +5,10 @@ import React, {useEffect, useState} from 'react';
 import read from '../../public/icons/read.png'
 import unread from '../../public/icons/unread.png'
 import {useNavigate} from 'react-router-dom';
-import axios from 'axios';
 import Loading from './Loading.jsx';
 import {format, isYesterday} from 'date-fns';
 import {ja} from 'date-fns/locale';
+import axiosInstance from '../lib/axios.js';
 
 export default function Timeline() {
 
@@ -21,7 +21,7 @@ export default function Timeline() {
     //No11 [{id,sender_id,displayname,sent_at,first_played_at,play_flag}...]}
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get('/api/homet/voice-list');
+            const response = await axiosInstance.get('/api/homet/voice-list');
             if (response.status === 200) {
                 const list = response.result;
 
@@ -57,7 +57,7 @@ export default function Timeline() {
 
     // No12 idでurl取得
     const getUrl = async (sender_id, voice_file_id, displayname) => {
-        const response = await axios.get(`/api/homet/voice-data/${voice_file_id}`);
+        const response = await axiosInstance.get(`/api/homet/voice-data/${voice_file_id}`);
         if (response.status === 200) {
             navigate('/voice-data', {
                 state: {
