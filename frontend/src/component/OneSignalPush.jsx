@@ -23,9 +23,10 @@ function OneSignalPush() {
                         window.OneSignalInitialized = true;
                     }
 
-                    const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
-
-                    setUserId(playerId);
+                    OneSignal.getUserId().then(function (userId) {
+                        console.log('✅ OneSignal ID:', userId);
+                        setUserId(userId);
+                    });
 
                     OneSignal.on('notificationPermissionChange', async () => {
                         const updated = await OneSignal.isPushNotificationsEnabled?.();
@@ -43,3 +44,41 @@ function OneSignalPush() {
 }
 
 export default OneSignalPush;
+
+// useEffect(() => {
+//     window.OneSignalDeferred = window.OneSignalDeferred || [];
+//     window.OneSignalDeferred.push(function (OneSignal) {
+//         (async () => {
+//             try {
+//                 if (!window.OneSignalInitialized) {
+//                     await OneSignal.init({
+//                         appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
+//                         notifyButton: {enable: true},
+//                         allowLocalhostAsSecureOrigin: true,
+//                         autoResubscribe: true,
+//                         promptOptions: {
+//                             enableWelcomeNotification: false,
+//                         },
+//                     });
+//                     window.OneSignalInitialized = true;
+//                 }
+//
+//                 // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
+//                 // const uid = await OneSignal.getUserId?.();
+//                 // setUserId(uid);
+//
+//                 OneSignal.getUserId().then(function (userId) {
+//                     console.log('✅ OneSignal ID:', userId);
+//                     setUserId(userId);
+//                 });
+//
+//                 OneSignal.on('notificationPermissionChange', async () => {
+//                     const updated = await OneSignal.isPushNotificationsEnabled?.();
+//                     setEnabled(updated);
+//                 });
+//             } catch (e) {
+//                 setError(e.message || 'Unknown error');
+//             }
+//         })();
+//     });
+// }, []);
