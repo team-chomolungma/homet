@@ -71,7 +71,11 @@ data class GroupController(
         @RequestBody request: MemberRequest,
         @CookieValue("SESSION_TOKEN") token: String
     ):ResponseEntity<GroupResponse>{
-        val finalMembers = filteredFriends(token,request.memberID)
+        val myId = sessionService.getUser(token).id
+        var finalMembers = filteredFriends(token,request.memberID)
+        if(!request.memberID.contains(myId)){
+            finalMembers = finalMembers.filterNot{it in listOf(myId) }
+        }
         val result = groupService.deleteMember(request.groupID,finalMembers)
         if(result == null){
             return ResponseEntity(HttpStatus.BAD_REQUEST)
