@@ -33,7 +33,8 @@ export default defineConfig(({mode}) => {
         plugins: [
             react(),
             VitePWA({
-                registerType: 'autoUpdate',
+                registerType: 'prompt', // ← 自動登録させない
+                injectRegister: 'auto', // 自分で registerSW() する場合 'script'
                 manifest: {
                     name: 'Homet',
                     short_name: 'Homet',
