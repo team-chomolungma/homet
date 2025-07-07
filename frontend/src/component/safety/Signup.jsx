@@ -118,46 +118,31 @@ function Signup() {
     useEffect(() => {
         const initOneSignal = async () => {
             try {
-                if (!window.OneSignal) {
-                    console.error('OneSignalが読み込まれていません');
-                    return;
-                }
-
-                if (!window.OneSignalInitialized) {
-                    await window.OneSignal.init({
-                        appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
-                        serviceWorkerPath: '/OneSignalSDKWorker.js',
-                        serviceWorkerUpdaterPath: '/OneSignalSDKUpdaterWorker.js',
-                        promptOptions: {
-                            slidedown: {
-                                enabled: true,
-                                actionMessage: '通知を受け取りますか？',
-                                acceptButtonText: 'はい',
-                                cancelButtonText: 'いいえ'
-                            }
+                await window.OneSignal.init({
+                    appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
+                    serviceWorkerPath: '/OneSignalSDKWorker.js',
+                    serviceWorkerUpdaterPath: '/OneSignalSDKUpdaterWorker.js',
+                    promptOptions: {
+                        slidedown: {
+                            enabled: true,
+                            actionMessage: '通知を受け取りますか？',
+                            acceptButtonText: 'はい',
+                            cancelButtonText: 'いいえ'
                         }
-                    });
-                    window.OneSignalInitialized = true;
-                }
+                    }
+                });
 
                 const user = await window.OneSignal.getUser();
-                const id = user?.id;
-
-                if (id) {
-                    console.log('✅ UserID:', id);
-                    setplayerId(id);
-                } else {
-                    console.warn('UserID が取得できませんでした');
-                }
-
+                console.log('✅ user:', user);
+                console.log('✅ playerId:', user.id);
+                setplayerId(user.id);
             } catch (e) {
-                console.error('OneSignal 初期化エラー:', e.message || e);
+                console.error('OneSignal 初期化エラー:', e);
             }
         };
 
         initOneSignal();
     }, []);
-
 
     return (
         <Box
