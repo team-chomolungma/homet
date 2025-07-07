@@ -4,7 +4,7 @@ INSERT INTO "users" ("user_id", "displayname", "password_hash", "created_at") VA
 ('minato123', 'みなと', '$2a$10$NVr/GpRiCzK6oUH6eTesee7bHI09dyVSZ2ynZrsIDiwcUZRKEG7o.', NOW()),
 ('masaharu123', 'まさはる', '$2a$10$8S3AZXZ/12BZEC9sBlwii.i4v5urx8Tn7q4qKAV9drhWsJzXh/ODm', NOW()),
 ('natsuko123', 'なつこ', '$2a$10$Z1q/VIaPJuVOnl7szKylSu.xxq4vXJfPRwRS1nqnjg3lMRZvv7khe', NOW()),
-('urasho', 'うら', '$2a$10$5gXu8F3DsIYWlQwzDgnBReSfgXFpAFo1QDhVHXrCqb1/I7IfB./Li', NOW());
+('urasho', 'うら', '$2a$10$Bs1pNb0c8YP7VDPOk4sVaOZh9eXWNN7gPRaFMaqNSjhsdgqaawlCy', NOW());
 
 INSERT INTO "players" ("user_id","player_id","created_at") VALUES
 (1,'dummy1',NOW()),
