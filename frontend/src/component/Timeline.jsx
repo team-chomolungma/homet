@@ -23,7 +23,7 @@ export default function Timeline() {
         const fetchData = async () => {
             const response = await axiosInstance.get('/api/homet/voice-list');
             if (response.status === 200) {
-                const list = response.result;
+                const list = response.result || [];
 
                 const groupList = {};
 
