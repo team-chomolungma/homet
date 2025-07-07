@@ -10,22 +10,30 @@ import AudioListen from './component/Audio/AudioListen.jsx';
 import Timeline from './component/Timeline.jsx'
 import './global.css';
 import Home from './component/Home.jsx';
+import {AuthProvider} from './component/safety/AuthContext.jsx'
+import SessionChecker from './component/safety/SessionChecker.jsx';
+import OneSignalPush from './component/OneSignalPush.jsx';
 
 
 window.global = window;
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<StartForm/>}/> {/* 最初 */}
-                <Route path="/start" element={<Start/>}/> {/* start */}
-                <Route path="/login" element={<Login/>}/> {/* login */}
-                <Route path="/signup" element={<Signup/>}/> {/* 新規作成 */}
-                <Route path="/home" element={<Home/>}/> {/* 新規作成 */}
-                <Route path="/voice" element={<AudioRecording/>}/> {/* 新規作成 */}
-                <Route path="/voice-data" element={<AudioListen/>}/>
-                <Route path="/timeline" element={<Timeline/>}/>
-            </Routes>
+            <AuthProvider>
+                <SessionChecker>
+                    <OneSignalPush/>
+                    <Routes>
+                        <Route path="/" element={<StartForm/>}/> {/* 最初 */}
+                        <Route path="/start" element={<Start/>}/> {/* start */}
+                        <Route path="/login" element={<Login/>}/> {/* login */}
+                        <Route path="/signup" element={<Signup/>}/> {/* 新規作成 */}
+                        <Route path="/home" element={<Home/>}/> {/* 新規作成 */}
+                        <Route path="/voice" element={<AudioRecording/>}/> {/* 新規作成 */}
+                        <Route path="/voice-data" element={<AudioListen/>}/>
+                        <Route path="/timeline" element={<Timeline/>}/>
+                    </Routes>
+                </SessionChecker>
+            </AuthProvider>
         </BrowserRouter>
     </StrictMode>
 )

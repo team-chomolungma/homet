@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -11,7 +11,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {useNavigate} from 'react-router-dom';
-import login from './Login.jsx';
+import axiosInstance from '../../lib/axios.js';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 function Signup() {
     const navigate = useNavigate();
@@ -23,29 +25,36 @@ function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [userNameError, setUserNameError] = useState('');
+    const [playerId, setplayerId] = useState(null)
+    const [security, setSecurity] = useState(false);
 
-    // ユーザーIDの重複チェック（onBlur）
+    // ユーザーIDの重複チェック（入力欄からフォーカスが外れたタイミングしてます）
     const checkUserIdDuplicate = async () => {
         if (!userId.trim()) return;
         try {
-            const res = await fetch(`/api/users/search?userID=${encodeURIComponent(userId)}`);
-            if (res.ok) {
-                const data = await res.json();
-                if (data.exists) {
-                    setUserIdError('このユーザーIDはすでに使われています');
-                } else {
-                    setUserIdError('');
-                }
+            const res = await axiosInstance.get(`/api/users/search?userID=${userId}`);
+            const data = res.data;
+
+            if (data.result && data.result.length > 0) {
+                setUserIdError('このユーザーIDはすでに使われています');
+            } else {
+                setUserIdError('');
             }
         } catch (err) {
             console.error('重複チェック失敗', err);
         }
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         let hasError = false;
+
+        if (!playerId) {
+            alert('OneSignalの初期化中です。少し待ってからもう一度お試しください。');
+            return;
+        }
 
         if (!userId.trim()) {
             setUserIdError('ユーザーIDを入力してください');
@@ -57,12 +66,8 @@ function Signup() {
         if (!password.trim()) {
             setPasswordError('パスワードを入力してください');
             hasError = true;
-        } else if (password.length === 6) {
-            setPasswordError('6文字で入力してください');
-            hasError = true;
-        } else if (/^[a-zA-Z0-9]+$/.test(password)) {
-            console.log(password.length)
-            setPasswordError('英数字のみで入力してください');
+        } else if (!/^[a-zA-Z0-9]{6}$/.test(password)) {
+            setPasswordError('6文字の英数字で入力してください');
             hasError = true;
         } else {
             setPasswordError('');
@@ -71,36 +76,84 @@ function Signup() {
         if (!userName.trim()) {
             setUserNameError('ユーザー名を入力してください');
             hasError = true;
+        } else if (!/^[^\x01-\x7E]+$/.test(userName)) {
+            setUserNameError('全角文字のみで入力してください');
+            hasError = true;
+        } else if (Array.from(userName).length >= 6) {
+            setUserNameError('全角6文字以下で入力してください');
+            hasError = true;
         } else {
             setUserNameError('');
         }
 
+        if (!security) {
+            return
+        }
+
         if (!hasError) {
             try {
-                const res = await fetch('/api/auth/signup', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        userID: userId,
-                        displayname: userName,
-                        password: password,
-                        playerID: 'dummy-player-id'
-                    }),
+                const res = await axiosInstance.post('/api/auth/signup', {
+                    userID: userId,
+                    displayname: userName,
+                    password: password,
+                    playerID: playerId
                 });
 
-                if (res.ok) {
+                if (res.status === 200) {
                     navigate('/home');
-                } else if (res.status === 409) {
-                    setUserIdError('このユーザーIDは既に使われています');
                 } else {
-                    alert('登録に失敗しました');
+                    alert('予期せぬエラー');
                 }
             } catch (err) {
-                console.error('サインアップ失敗', err);
+                if (err.response?.status === 409) {
+                    alert('新規アカウント作成失敗　　時間をあけてもう一度お試しください');
+                } else {
+                    console.error('サインアップ失敗', err);
+                    alert('予期せぬエラー');
+                }
             }
         }
     };
+
+
+    useEffect(() => {
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        window.OneSignalDeferred.push(function (OneSignal) {
+            (async () => {
+                try {
+                    if (!window.OneSignalInitialized) {
+                        await OneSignal.init({
+                            appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
+                            notifyButton: {enable: true},
+                            allowLocalhostAsSecureOrigin: true,
+                            autoResubscribe: true,
+                            promptOptions: {
+                                enableWelcomeNotification: false,
+                            },
+                        });
+                        window.OneSignalInitialized = true;
+                    }
+
+                    // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
+                    // const uid = await OneSignal.getUserId?.();
+                    // setUserId(uid);
+
+                    const playerId = await OneSignal.getUserId();
+                    console.log('✅ OneSignal ID:', playerId);
+                    setplayerId(playerId);
+
+
+                    //UIに通知許可してください見たいな表示を出すためにステータス管理できる
+                    // OneSignal.on('notificationPermissionChange', async () => {
+                    //     const updated = await OneSignal.isPushNotificationsEnabled?.();
+                    //     setEnabled(updated);
+                    // });
+                } catch (e) {
+                    console.log(e.message || 'Unknown error');
+                }
+            })();
+        });
+    }, []);
 
     return (
         <Box
@@ -160,6 +213,7 @@ function Signup() {
                                     height: 48,
                                 },
                             }}
+                            placeholder="英数字で入力"
                         />
                         <Typography
                             sx={{
@@ -205,6 +259,7 @@ function Signup() {
                                     borderRadius: 1,
                                 },
                             }}
+                            placeholder="6文字の英数字で入力"
                         />
                         <Typography
                             sx={{
@@ -239,6 +294,7 @@ function Signup() {
                                     height: 48,
                                 },
                             }}
+                            placeholder="全角6文字以下で入力"
                         />
                         <Typography
                             sx={{
@@ -250,27 +306,39 @@ function Signup() {
                                 pl: 1,
                                 borderRadius: 1,
                             }}
+
                         >
                             {userNameError || '　'}
                         </Typography>
                     </Box>
-
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={security}
+                                onChange={(e) => setSecurity(e.target.checked)}
+                            />
+                        }
+                        label="個人情報の取り扱いに同意します"
+                    />
                     <Button
+                        disabled={!security}
                         type="submit"
                         variant="contained"
                         sx={{
-                            mt: 4,
+                            // mt: 2,
                             width: 228,
                             height: 76,
-                            borderRadius: '999px',
-                            fontSize: 18,
-                            backgroundColor: '#e94e8a',
+                            borderRadius: '20px',
+                            fontSize: 24,
+                            backgroundColor: '#DA63A5',
                             justifyContent: 'center',
                         }}
                     >
                         アカウント作成
                     </Button>
+
                 </Box>
+
             </Box>
         </Box>
     );

@@ -15,21 +15,20 @@ export default function NavigationBar() {
                 src={homeIcon}
                 alt="home icon"
                 style={{width: 60, height: 43}}
-
-            />} onClick={() => navigate('/home')}
-            />
+                onClick={() => navigate('/home')}
+            />}/>
             <BottomNavigationAction label="timeline" icon={<img
                 src={pawsIcon}
                 alt="paws icon"
                 style={{width: 60, height: 43}}
-            />} onClick={() => navigate('/timeline')}
-            />
+                onClick={() => navigate('/timeline')}
+            />}/>
             <BottomNavigationAction label="friend" icon={<img
                 src={friendIcon}
                 alt="friend icon"
                 style={{width: 60, height: 43}}
-            />} //onClick={() => navigate('/friend')}
-            />
+                onClick={() => navigate('/friendlist')}
+            />}/>
         </BottomNavigation>
     );
 }

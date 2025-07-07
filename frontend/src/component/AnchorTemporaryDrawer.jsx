@@ -10,8 +10,34 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
+import axiosInstance from '../lib/axios.js';
+import {useNavigate} from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
+import {useAuth} from './safety/AuthContext.jsx';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
 
 export default function AnchorTemporaryDrawer() {
+    const {user} = useAuth();
+    const navigate = useNavigate();
+    const handleNavigate = (path) => {
+        if (path === 'ログアウト') {
+            const processingLogout = async () => {
+                try {
+                    await axiosInstance.get('/api/auth/logout');
+
+                    alert('ログアウトしました。');
+                    navigate('/'); //ログアウト後/に遷移
+                } catch (err) {
+                    alert('ログアウト失敗');
+                    console.error(err);
+                }
+            };
+            processingLogout();
+        }
+
+    };
     const [state, setState] = React.useState({
         top: false,
         left: false,
@@ -32,13 +58,25 @@ export default function AnchorTemporaryDrawer() {
             role="presentation"
         >
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton onClick={toggleDrawer(anchor, false)}>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
-                            </ListItemIcon>
-                            <ListItemText primary={text}/>
+                {[
+                    {text: `ユーザーID:\n${user?.myUserID}`, icon: <FingerprintIcon/>},
+                    {text: `ユーザーネーム:\n${user?.myDisplayname}`, icon: <AccountCircleIcon/>},
+                    {
+                        text: 'ログアウト',
+                        path: 'ログアウト',
+                        icon: <LogoutIcon/>,
+                    },
+                ].map((obj, index) => (
+                    <ListItem key={obj.text} disablePadding>
+                        <ListItemButton onClick={() => handleNavigate(obj.path)}>
+                            {obj.icon && <ListItemIcon>{obj.icon}</ListItemIcon>}
+                            <ListItemText
+                                primary={
+                                    <Box sx={{whiteSpace: 'pre-line'}}>
+                                        {obj.text}
+                                    </Box>
+                                }
+                            />
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -50,23 +88,25 @@ export default function AnchorTemporaryDrawer() {
         <div>
             {['right'].map((anchor) => (
                 <React.Fragment key={anchor}>
-                    <Button
-                        variant="text"
-                        sx={{
-                            backgroundColor: 'transparent',
-                            borderRadius: '24px',
-                            px: 2,
-                            py: 2,
-                            minWidth: '80px',
-                            height: '40px',
-                            '&:hover': {
+                    {!state[anchor] && (
+                        <Button
+                            variant="text"
+                            sx={{
                                 backgroundColor: 'transparent',
-                            },
-                        }}
-                        onClick={toggleDrawer(anchor, true)}
-                    >
-                        <MenuIcon sx={{color: 'gray'}}/>
-                    </Button>
+                                borderRadius: '24px',
+                                px: 2,
+                                py: 2,
+                                minWidth: '80px',
+                                height: '40px',
+                                '&:hover': {
+                                    backgroundColor: 'transparent',
+                                },
+                            }}
+                            onClick={toggleDrawer(anchor, true)}
+                        >
+                            <MenuIcon sx={{color: 'gray'}}/>
+                        </Button>
+                    )}
                     <Drawer
                         anchor={anchor}
                         open={state[anchor]}
