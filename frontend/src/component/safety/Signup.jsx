@@ -116,32 +116,17 @@ function Signup() {
     };
 
     useEffect(() => {
-        const initOneSignal = async () => {
+        const fetchPlayerId = async () => {
             try {
-                await window.OneSignal.init({
-                    appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
-                    serviceWorkerPath: '/OneSignalSDKWorker.js',
-                    serviceWorkerUpdaterPath: '/OneSignalSDKUpdaterWorker.js',
-                    promptOptions: {
-                        slidedown: {
-                            enabled: true,
-                            actionMessage: '通知を受け取りますか？',
-                            acceptButtonText: 'はい',
-                            cancelButtonText: 'いいえ'
-                        }
-                    }
-                });
-
                 const user = await window.OneSignal.getUser();
                 console.log('✅ user:', user);
-                console.log('✅ playerId:', user.id);
                 setplayerId(user.id);
             } catch (e) {
-                console.error('OneSignal 初期化エラー:', e);
+                console.error('Player ID 取得エラー:', e);
             }
         };
 
-        initOneSignal();
+        fetchPlayerId();
     }, []);
 
     return (

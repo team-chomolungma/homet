@@ -16,23 +16,23 @@ function OneSignalPush() {
                             notifyButton: {enable: true},
                             allowLocalhostAsSecureOrigin: true,
                             autoResubscribe: true,
-                            promptOptions: {
-                                enableWelcomeNotification: false,
+                            welcomeNotification: {
+                                disable: true,
                             },
                         });
                         window.OneSignalInitialized = true;
                     }
 
-                    OneSignal.getUserId().then(function (userId) {
-                        console.log('✅ OneSignal ID:', userId);
-                        setUserId(userId);
-                    });
+                    const user = await OneSignal.getUser();
+                    console.log('✅ OneSignal ID:', user.id);
+                    setUserId(user.id);
 
                     OneSignal.on('notificationPermissionChange', async () => {
                         const updated = await OneSignal.isPushNotificationsEnabled?.();
                         setEnabled(updated);
                     });
                 } catch (e) {
+                    console.error('OneSignal Error:', e);
                     setError(e.message || 'Unknown error');
                 }
             })();
@@ -41,6 +41,5 @@ function OneSignalPush() {
 
     return null;
 }
-
 
 export default OneSignalPush;
