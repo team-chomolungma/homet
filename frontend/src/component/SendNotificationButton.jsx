@@ -3,9 +3,13 @@ import axios from 'axios';
 
 const SendNotificationButton = () => {
     const sendNotification = async () => {
-        const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfycyu6hdxjuzymgf6ecqhfusahyxwu54vz43y3hrut6ybn3dltid2vmme6o2dlptoam4xwinb2xjkq'; // ←安全な場所に保管するべき
+        const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfq6vhgea6cukwnss7ufphfinobfa3rbt7cyt2mr6gyulny4pxvn65kiwatqm3pw7vnkeqaxmifyfoy'; // ←安全な場所に保管するべき
         const appId = '05282da3-68ed-47b9-b3c2-1267595c8b09';
-        const targetPlayerId = '1c61e7a1-b386-4b1b-8f94-184a4d92424c'; // ← Subscription ID に変更
+        const targetPlayerId = 'c90f7e1d-e6a9-4cc0-bf33-2ad7c8c3dd78'; // ← Subscription ID に変更
+        //プライベート
+        // 1ea93d84-e3f8-4c0e-a4e0-1418d09aa9a2
+        //会社携帯
+        // 8187ac7c-b29d-4f13-a69d-ce4678ec3663
         try {
             const response = await axios.post(
                 'https://onesignal.com/api/v1/notifications',
@@ -14,7 +18,8 @@ const SendNotificationButton = () => {
                     include_player_ids: [targetPlayerId],
                     headings: {en: '📢 お知らせ'},
                     contents: {en: '通知が届きました！'},
-                    url: 'https://homet-frontend-699a294558eb.herokuapp.com/', // 通知をタップしたときのURL
+                    url: 'https://homet-onesignal-test-6a11abc942d3.herokuapp.com/', // 通知をタップしたときのURL
+                    priority: 10, // Android用優先度（即時通知）
                 },
                 {
                     headers: {
