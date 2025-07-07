@@ -95,7 +95,6 @@ function Signup() {
             try {
                 const res = await axiosInstance.post('/api/auth/signup', {
                     userID: userId,
-                    displayname: userName,
                     password: password,
                     playerID: playerId
                 });
@@ -130,16 +129,22 @@ function Signup() {
                         appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
                         serviceWorkerPath: '/OneSignalSDKWorker.js',
                         serviceWorkerUpdaterPath: '/OneSignalSDKUpdaterWorker.js',
+                        promptOptions: {
+                            slidedown: {
+                                enabled: true,
+                                actionMessage: '通知を受け取りますか？',
+                                acceptButtonText: 'はい',
+                                cancelButtonText: 'いいえ'
+                            }
+                        }
                     });
                     window.OneSignalInitialized = true;
                 }
 
-                await window.OneSignal.showSlidedownPrompt(); // 通知許可プロンプト
+                const id = await window.OneSignal.getUserId();
+                console.log('✅ UserID:', id);
+                setplayerId(id);
 
-                window.OneSignal.getUserId().then((id) => {
-                    console.log('✅ UserID:', id);
-                    setplayerId(id);
-                });
             } catch (e) {
                 console.error('OneSignal 初期化エラー:', e.message || e);
             }
