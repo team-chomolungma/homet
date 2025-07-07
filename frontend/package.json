@@ -23,6 +23,7 @@
     "lamejs": "^1.2.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-onesignal": "^3.2.3",
     "react-router-dom": "^7.6.3",
     "recorder-js": "^1.0.7",
     "serve": "^14.2.4",
