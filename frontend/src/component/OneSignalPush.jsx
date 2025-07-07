@@ -23,7 +23,7 @@ function OneSignalPush() {
                         window.OneSignalInitialized = true;
                     }
 
-                    const user = await OneSignal.getUserId();
+                    const user = await OneSignal.getUser();
                     console.log('✅ OneSignal ID:', user.id);
                     setUserId(user.id);
 
