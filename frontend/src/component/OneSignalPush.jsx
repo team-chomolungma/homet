@@ -16,12 +16,16 @@ function OneSignalPush() {
                             notifyButton: {enable: true},
                             allowLocalhostAsSecureOrigin: true,
                             autoResubscribe: true,
-                            welcomeNotification: {
-                                disable: true,
+                            promptOptions: {
+                                enableWelcomeNotification: false,
                             },
                         });
                         window.OneSignalInitialized = true;
                     }
+
+                    // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
+                    // const uid = await OneSignal.getUserId?.();
+                    // setUserId(uid);
 
                     OneSignal.getUserId().then(function (userId) {
                         console.log('✅ OneSignal ID:', userId);
@@ -33,17 +37,23 @@ function OneSignalPush() {
                         setEnabled(updated);
                     });
                 } catch (e) {
-                    console.error('OneSignal Error:', e);
                     setError(e.message || 'Unknown error');
                 }
             })();
         });
     }, []);
 
-    return null;
+    return (
+        <div style={{padding: '1rem', backgroundColor: '#eee', fontFamily: 'monospace'}}>
+            <div>通知許可状態: {enabled === null ? '読み込み中...' : enabled ? '✅ 許可済み' : '❌ 未許可'}</div>
+            <div>User ID: {userId || '未取得'}</div>
+            {error && <div style={{color: 'red'}}>エラー: {error}</div>}
+        </div>
+    );
 }
 
 export default OneSignalPush;
+
 
 // useEffect(() => {
 //     window.OneSignalDeferred = window.OneSignalDeferred || [];
