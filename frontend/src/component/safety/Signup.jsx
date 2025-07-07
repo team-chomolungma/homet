@@ -121,8 +121,8 @@ function Signup() {
             let retries = 5;
             while (retries > 0) {
                 try {
-                    // const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
-                    const playerId = '1a71c458-c4fb-49d7-b02e-9d1e901f1ff2'
+                    const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
+                    // const playerId = '1a71c458-c4fb-49d7-b02e-9d1e901f1ff2'
 
 
                     if (playerId) {
