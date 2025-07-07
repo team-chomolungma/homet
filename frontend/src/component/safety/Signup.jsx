@@ -119,9 +119,9 @@ function Signup() {
         const fetchPlayerId = async () => {
             for (let i = 0; i < 5; i++) {
                 try {
-                    const user = await window.OneSignal.getUser();
-                    if (user?.id) {
-                        setplayerId(user.id);
+                    const id = await window.OneSignal.User.getId();
+                    if (id) {
+                        setplayerId(id);
                         return;
                     }
                 } catch (e) {
