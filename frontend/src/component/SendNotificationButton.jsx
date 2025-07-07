@@ -18,7 +18,8 @@ const SendNotificationButton = () => {
                     include_player_ids: [targetPlayerId],
                     headings: {en: '📢 お知らせ'},
                     contents: {en: '通知が届きました！'},
-                    url: 'https://homet-frontend-699a294558eb.herokuapp.com/', // 通知をタップしたときのURL
+                    url: 'https://homet-onesignal-test-6a11abc942d3.herokuapp.com/', // 通知をタップしたときのURL
+                    priority: 10, // Android用優先度（即時通知）
                 },
                 {
                     headers: {
