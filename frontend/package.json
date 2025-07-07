@@ -17,6 +17,8 @@
     "@mui/icons-material": "^7.1.2",
     "@mui/material": "^7.1.2",
     "axios": "^1.10.0",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.0",
     "graphology": "^0.26.0",
     "lamejs": "^1.2.1",
     "react": "^19.1.0",
