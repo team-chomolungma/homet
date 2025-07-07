@@ -14,6 +14,7 @@ import {useNavigate} from 'react-router-dom';
 import axiosInstance from '../../lib/axios.js';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import OneSignal from 'react-onesignal';
 
 function Signup() {
     const navigate = useNavigate();
@@ -117,43 +118,46 @@ function Signup() {
 
 
     useEffect(() => {
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        window.OneSignalDeferred.push(function (OneSignal) {
-            (async () => {
-                try {
-                    if (!window.OneSignalInitialized) {
-                        await OneSignal.init({
-                            appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
-                            notifyButton: {enable: true},
-                            allowLocalhostAsSecureOrigin: true,
-                            autoResubscribe: true,
-                            promptOptions: {
-                                enableWelcomeNotification: false,
-                            },
-                        });
-                        window.OneSignalInitialized = true;
-                    }
-
-                    // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
-                    // const uid = await OneSignal.getUserId?.();
-                    // setUserId(uid);
-
-                    const playerId = await OneSignal.getUserId();
-                    console.log('✅ OneSignal ID:', playerId);
-                    setplayerId(playerId);
-
-
-                    //UIに通知許可してください見たいな表示を出すためにステータス管理できる
-                    // OneSignal.on('notificationPermissionChange', async () => {
-                    //     const updated = await OneSignal.isPushNotificationsEnabled?.();
-                    //     setEnabled(updated);
-                    // });
-                } catch (e) {
-                    console.log(e.message || 'Unknown error');
+        const initOneSignal = async () => {
+            try {
+                if (!window.OneSignalInitialized) {
+                    await OneSignal.init({
+                        appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
+                        notifyButton: {enable: true},
+                        allowLocalhostAsSecureOrigin: true,
+                        autoResubscribe: true,
+                        promptOptions: {
+                            enableWelcomeNotification: false,
+                        },
+                        serviceWorkerPath: '/OneSignalSDKWorker.js',
+                        serviceWorkerUpdaterPath: '/OneSignalSDKUpdaterWorker.js',
+                    });
+                    window.OneSignalInitialized = true;
                 }
-            })();
-        });
+
+                // ✅ 最初の取得
+                let id = await OneSignal.getUserId();
+                console.log('✅ OneSignal ID:', id);
+                setplayerId(id);
+
+                // ✅ 取得できなければリトライ（最大3回）
+                let retry = 0;
+                while (!id && retry < 3) {
+                    await new Promise(res => setTimeout(res, 1000)); // 1秒待つ
+                    id = await OneSignal.getUserId();
+                    retry++;
+                    console.log(`🔁 Retry #${retry}:`, id);
+                    if (id) setplayerId(id);
+                }
+
+            } catch (e) {
+                console.error('OneSignal 初期化エラー:', e.message || e);
+            }
+        };
+
+        initOneSignal();
     }, []);
+
 
     return (
         <Box
@@ -321,11 +325,10 @@ function Signup() {
                         label="個人情報の取り扱いに同意します"
                     />
                     <Button
-                        disabled={!security}
+                        disabled={!security || !playerId}
                         type="submit"
                         variant="contained"
                         sx={{
-                            // mt: 2,
                             width: 228,
                             height: 76,
                             borderRadius: '20px',
@@ -334,7 +337,7 @@ function Signup() {
                             justifyContent: 'center',
                         }}
                     >
-                        アカウント作成
+                        {playerId ? 'アカウント作成' : '初期化中...'}
                     </Button>
 
                 </Box>
