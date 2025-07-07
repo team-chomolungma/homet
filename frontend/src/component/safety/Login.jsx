@@ -5,56 +5,53 @@ import {
     IconButton,
     TextField,
     Typography,
-    InputAdornment
+    InputAdornment,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {useNavigate} from 'react-router-dom';
 import axiosInstance from '../../lib/axios.js';
+import {useAuth} from './AuthContext.jsx';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-function Signup() {
+function Login() {
+    const {setUser} = useAuth();
     const navigate = useNavigate();
 
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
-    const [userName, setUserName] = useState('');
     const [userIdError, setUserIdError] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
-    const [userNameError, setUserNameError] = useState('');
-    const [playerId, setplayerId] = useState(null)
-    const [security, setSecurity] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    // ユーザーIDの重複チェック（入力欄からフォーカスが外れたタイミングしてます）
-    const checkUserIdDuplicate = async () => {
-        if (!userId.trim()) return;
-        try {
-            const res = await axiosInstance.get(`/api/users/search?userID=${userId}`);
-            const data = res.data;
-
-            if (data.result && data.result.length > 0) {
-                setUserIdError('このユーザーIDはすでに使われています');
-            } else {
-                setUserIdError('');
+    //マウント時自動ログイン処理
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const res = await axiosInstance.get('/api/auth/session');
+                if (res.status === 200) {
+                    const {userID, displayname} = res.data; // レスポンスされるオブジェクトをセット{ userID, displayname }
+                    setUser({myUserID: userID, myDisplayname: displayname});
+                    console.log('セッション有効です');
+                    navigate('/home');
+                }
+            } catch (err) {
+                if (err.response?.status === 401) {
+                    console.log('未ログイン状態')
+                } else {
+                    console.error('予期しないエラー', err);
+                }
             }
-        } catch (err) {
-            console.error('重複チェック失敗', err);
-        }
-    };
+        };
+        checkSession();
+    }, [navigate]);
 
-
+    // フォーム送信処理
     const handleSubmit = async (e) => {
-        e.preventDefault();
-
+        e.preventDefault();//リロード防止
         let hasError = false;
-
-        if (!playerId) {
-            alert('OneSignalの初期化中です。少し待ってからもう一度お試しください。');
-            return;
-        }
 
         if (!userId.trim()) {
             setUserIdError('ユーザーIDを入力してください');
@@ -73,87 +70,32 @@ function Signup() {
             setPasswordError('');
         }
 
-        if (!userName.trim()) {
-            setUserNameError('ユーザー名を入力してください');
-            hasError = true;
-        } else if (!/^[^\x01-\x7E]+$/.test(userName)) {
-            setUserNameError('全角文字のみで入力してください');
-            hasError = true;
-        } else if (Array.from(userName).length >= 6) {
-            setUserNameError('全角6文字以下で入力してください');
-            hasError = true;
-        } else {
-            setUserNameError('');
-        }
+        if (hasError) return;
 
-        if (!security) {
-            return
-        }
-
-        if (!hasError) {
-            try {
-                const res = await axiosInstance.post('/api/auth/signup', {
-                    userID: userId,
-                    displayname: userName,
-                    password: password,
-                    playerID: playerId
-                });
-
-                if (res.status === 200) {
-                    navigate('/home');
-                } else {
-                    alert('予期せぬエラー');
-                }
-            } catch (err) {
-                if (err.response?.status === 409) {
-                    alert('新規アカウント作成失敗　　時間をあけてもう一度お試しください');
-                } else {
-                    console.error('サインアップ失敗', err);
-                    alert('予期せぬエラー');
-                }
+        try {
+            const res = await axiosInstance.post('/api/auth/login', {
+                userID: userId,
+                password: password,
+            });
+            if (res.status === 200) {
+                const {userID, displayname} = res.data;
+                setUser({myUserID: userID, myDisplayname: displayname});
+                navigate('/home');
+            }
+        } catch (err) {
+            if (err.response?.status === 401) {
+                setPasswordError('ユーザーIDまたはパスワードが間違っています');
+            } else {
+                // // ⚡️⚡️本番では削除
+                // const {userID, displayname} = {userID: 123456, displayname: 'うめちゃん'}
+                // setUser({myUserID: userID, myDisplayname: displayname});
+                // navigate('/home');
+                // //ここまで
+                console.error('予期しないエラー', err);
             }
         }
     };
 
-
-    useEffect(() => {
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        window.OneSignalDeferred.push(function (OneSignal) {
-            (async () => {
-                try {
-                    if (!window.OneSignalInitialized) {
-                        await OneSignal.init({
-                            appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
-                            notifyButton: {enable: true},
-                            allowLocalhostAsSecureOrigin: true,
-                            autoResubscribe: true,
-                            promptOptions: {
-                                enableWelcomeNotification: false,
-                            },
-                        });
-                        window.OneSignalInitialized = true;
-                    }
-
-                    // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
-                    // const uid = await OneSignal.getUserId?.();
-                    // setUserId(uid);
-
-                    const playerId = await OneSignal.getUserId();
-                    console.log('✅ OneSignal ID:', playerId);
-                    setplayerId(playerId);
-
-
-                    //UIに通知許可してください見たいな表示を出すためにステータス管理できる
-                    // OneSignal.on('notificationPermissionChange', async () => {
-                    //     const updated = await OneSignal.isPushNotificationsEnabled?.();
-                    //     setEnabled(updated);
-                    // });
-                } catch (e) {
-                    console.log(e.message || 'Unknown error');
-                }
-            })();
-        });
-    }, []);
 
     return (
         <Box
@@ -202,7 +144,6 @@ function Signup() {
                             fullWidth
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
-                            onBlur={checkUserIdDuplicate}
                             error={!!userIdError}
                             variant="outlined"
                             sx={{
@@ -276,57 +217,13 @@ function Signup() {
                         </Typography>
                     </Box>
 
-                    <Box sx={{width: 300}}>
-                        <Typography sx={{fontSize: 16, color: '#333', mt: 4}}>
-                            ユーザー名
-                        </Typography>
-                        <TextField
-                            fullWidth
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value)}
-                            error={!!userNameError}
-                            variant="outlined"
-                            sx={{
-                                backgroundColor: '#fff',
-                                borderRadius: 1,
-                                '& .MuiOutlinedInput-root': {
-                                    fontSize: 18,
-                                    height: 48,
-                                },
-                            }}
-                            placeholder="全角6文字以下で入力"
-                        />
-                        <Typography
-                            sx={{
-                                fontSize: 12,
-                                mt: '2px',
-                                minHeight: '1.5em',
-                                color: userNameError ? '#e53935' : 'transparent',
-                                backgroundColor: '#fff1f3',
-                                pl: 1,
-                                borderRadius: 1,
-                            }}
 
-                        >
-                            {userNameError || '　'}
-                        </Typography>
-                    </Box>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={security}
-                                onChange={(e) => setSecurity(e.target.checked)}
-                            />
-                        }
-                        label="個人情報の取り扱いに同意します"
-                    />
                     <Button
-                        disabled={!security}
                         type="submit"
                         variant="contained"
                         sx={{
                             // mt: 2,
-                            width: 228,
+                            width: 156,
                             height: 76,
                             borderRadius: '20px',
                             fontSize: 24,
@@ -334,7 +231,7 @@ function Signup() {
                             justifyContent: 'center',
                         }}
                     >
-                        アカウント作成
+                        ログイン
                     </Button>
 
                 </Box>
@@ -344,4 +241,4 @@ function Signup() {
     );
 }
 
-export default Signup;
+export default Login;

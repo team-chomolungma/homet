@@ -6,10 +6,6 @@ const SendNotificationButton = () => {
         const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfycyu6hdxjuzymgf6ecqhfusahyxwu54vz43y3hrut6ybn3dltid2vmme6o2dlptoam4xwinb2xjkq'; // ←安全な場所に保管するべき
         const appId = '05282da3-68ed-47b9-b3c2-1267595c8b09';
         const targetPlayerId = '1ea93d84-e3f8-4c0e-a4e0-1418d09aa9a2'; // ← Subscription ID に変更
-        //プライベート
-        // 1ea93d84-e3f8-4c0e-a4e0-1418d09aa9a2
-        //会社携帯
-        // 8187ac7c-b29d-4f13-a69d-ce4678ec3663
         try {
             const response = await axios.post(
                 'https://onesignal.com/api/v1/notifications',
