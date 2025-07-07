@@ -80,17 +80,21 @@ function Home() {
             }
         };
     }, []);
-    
     return (
         <Box
             sx={{
-                position: 'relative',
+                minHeight: '100vh',
                 width: '100%',
-                height: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
                 overflow: 'hidden',
+                backgroundColor: '#FFF1F4',
+                position: 'relative',
             }}
         >
-            {/* Drawer固定 */}
+            {/* Drawer */}
             <Box
                 sx={{
                     position: 'fixed',
@@ -102,68 +106,57 @@ function Home() {
                 <AnchorTemporaryDrawer/>
             </Box>
 
-            {/* メイン表示エリア */}
-            <Box sx={{position: 'relative', zIndex: 1, lineHeight: 0}}>
-                {/* 背景画像1 */}
-                <Box
-                    component="img"
-                    src="/ホメット星.png"
-                    alt="背景画像1"
-                    sx={{
-                        display: 'block',
-                        width: '100%',
-                        height: 'auto',
-                        margin: 0,
-                        padding: 0,
-                    }}
-                />
-                <Box
-                    component="img"
-                    src="/home%20homeraniann.png"
-                    alt="背景画像2"
-                    sx={{
-                        display: 'block',
-                        width: '90%',
-                        height: 'auto',
-                        margin: 0,
-                        padding: 0,
-                    }}
-                />
+            {/* 背景画像1 */}
+            <Box
+                component="img"
+                src="/ホメット星.png"
+                alt="背景画像1"
+                sx={{
+                    width: '100%',
+                    height: 'auto',
+                    objectFit: 'cover',
+                }}
+            />
 
-                {/* グラフ */}
-                <Box
-                    ref={containerRef}
-                    onClick={fetchFriends}
-                    sx={{
-                        position: 'absolute',
-                        top: '8px',
-                        left: '50%',
-                        transform: 'translateX(-61%)',
-                        width: '900px',
-                        height: '500px',
-                        zIndex: 10,
-                        pointerEvents: 'auto',
-                    }}
-                />
+            {/* 背景画像2（適切な最大幅＋中央寄せ） */}
+            <Box
+                component="img"
+                src="/home%20homeraniann.png"
+                alt="背景画像2"
+                sx={{
+                    width: '80%',
+                    maxWidth: '500px',
+                    height: '80%',
+                    objectFit: 'contain',
+                    mb: 2,
+                }}
+            />
 
+            {/* グラフ */}
+            <Box
+                ref={containerRef}
+                onClick={fetchFriends}
+                sx={{
+                    width: '100%',
+                    maxWidth: '600px',
+                    height: '300px',
+                    zIndex: 10,
+                    mb: 4,
+                }}
+            />
 
-            </Box>
-
+            {/* ホメットボタン（画面に収まるサイズに） */}
             <Button
                 variant="contained"
                 sx={{
-                    position: 'absolute',
-                    bottom: '100px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
                     backgroundColor: '#DA63A5',
                     borderRadius: '24px',
-                    width: '142px',
-                    height: '67px',
+                    width: '200px',
+                    height: '56px',
                     fontWeight: 'bold',
-                    fontSize: '24px',
+                    fontSize: '20px',
                     textTransform: 'none',
-                    zIndex: 20,
+                    mb: 8,
                 }}
                 onClick={() => navigate('/friendlist')}
             >
@@ -171,9 +164,20 @@ function Home() {
             </Button>
 
             {/* ナビゲーションバー */}
-            <NavigationBar/>
+            <Box
+                sx={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    zIndex: 999,
+                }}
+            >
+                <NavigationBar/>
+            </Box>
         </Box>
     );
+
 
 }
 
