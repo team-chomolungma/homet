@@ -11,9 +11,13 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../lib/axios.js';
+import {useAuth} from './AuthContext.jsx';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 function Login() {
+    const {setUser} = useAuth();
     const navigate = useNavigate();
 
     const [userId, setUserId] = useState('');
@@ -22,21 +26,31 @@ function Login() {
     const [passwordError, setPasswordError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    //自動ログイン処理
+    //マウント時自動ログイン処理
     useEffect(() => {
-        axios
-            .get('/api/auth/session', {withCredentials: true})
-            .then((res) => {
-                navigate('/home'); //セッション有効ならログインスキップ
-            })
-            .catch(() => {
-                // セッション無効なら何もしない
-            });
+        const checkSession = async () => {
+            try {
+                const res = await axiosInstance.get('/api/auth/session');
+                if (res.status === 200) {
+                    const {userID, displayname} = res.data; // レスポンスされるオブジェクトをセット{ userID, displayname }
+                    setUser({myUserID: userID, myDisplayname: displayname});
+                    console.log('セッション有効です');
+                    navigate('/home');
+                }
+            } catch (err) {
+                if (err.response?.status === 401) {
+                    console.log('未ログイン状態')
+                } else {
+                    console.error('予期しないエラー', err);
+                }
+            }
+        };
+        checkSession();
     }, [navigate]);
 
     // フォーム送信処理
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();//リロード防止
         let hasError = false;
 
         if (!userId.trim()) {
@@ -49,26 +63,39 @@ function Login() {
         if (!password.trim()) {
             setPasswordError('パスワードを入力してください');
             hasError = true;
+        } else if (!/^[a-zA-Z0-9]{6}$/.test(password)) {
+            setPasswordError('6文字の英数字で入力してください');
+            hasError = true;
         } else {
             setPasswordError('');
         }
 
-        if (!hasError) {
-            axios
-                .post(
-                    '/api/auth/login',
-                    {userID: userId, password},
-                    {withCredentials: true}
-                ).then((res) => {
+        if (hasError) return;
+
+        try {
+            const res = await axiosInstance.post('/api/auth/login', {
+                userID: userId,
+                password: password,
+            });
+            if (res.status === 200) {
+                const {userID, displayname} = res.data;
+                setUser({myUserID: userID, myDisplayname: displayname});
                 navigate('/home');
-            })
-                .catch((err) => {
-                    if (err.response?.status === 401) {
-                        setPasswordError('ユーザーIDまたはパスワードが間違っています');
-                    }
-                });
+            }
+        } catch (err) {
+            if (err.response?.status === 401) {
+                setPasswordError('ユーザーIDまたはパスワードが間違っています');
+            } else {
+                // // ⚡️⚡️本番では削除
+                // const {userID, displayname} = {userID: 123456, displayname: 'うめちゃん'}
+                // setUser({myUserID: userID, myDisplayname: displayname});
+                // navigate('/home');
+                // //ここまで
+                console.error('予期しないエラー', err);
+            }
         }
     };
+
 
     return (
         <Box
@@ -107,17 +134,10 @@ function Login() {
                         width: '100%',
                     }}
                 >
-                    <Typography
-                        sx={{
-                            fontSize: 40,
-                            lineHeight: '53px',
-                            color: '#333333',
-                        }}
-                    >
+                    <Typography sx={{fontSize: 40, lineHeight: '53px', color: '#333333'}}>
                         Homet
                     </Typography>
 
-                    {/* ユーザーID */}
                     <Box sx={{width: 300}}>
                         <Typography sx={{fontSize: 16, mb: 0.5}}>ユーザーID</Typography>
                         <TextField
@@ -125,7 +145,6 @@ function Login() {
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
                             error={!!userIdError}
-                            placeholder="英数字"
                             variant="outlined"
                             sx={{
                                 backgroundColor: '#fff',
@@ -135,6 +154,7 @@ function Login() {
                                     height: 48,
                                 },
                             }}
+                            placeholder="英数字で入力"
                         />
                         <Typography
                             sx={{
@@ -151,7 +171,6 @@ function Login() {
                         </Typography>
                     </Box>
 
-                    {/* パスワード */}
                     <Box sx={{width: 300}}>
                         <Typography sx={{fontSize: 16, color: '#333', mt: 3}}>
                             パスワード
@@ -181,6 +200,7 @@ function Login() {
                                     borderRadius: 1,
                                 },
                             }}
+                            placeholder="6文字の英数字で入力"
                         />
                         <Typography
                             sx={{
@@ -197,24 +217,25 @@ function Login() {
                         </Typography>
                     </Box>
 
-                    {/* ログインボタン */}
-                    <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            sx={{
-                                mt: 4,
-                                width: 228,
-                                height: 76,
-                                borderRadius: '999px',
-                                fontSize: 18,
-                                backgroundColor: '#e94e8a',
-                            }}
-                        >
-                            ログイン
-                        </Button>
-                    </Box>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{
+                            // mt: 2,
+                            width: 156,
+                            height: 76,
+                            borderRadius: '20px',
+                            fontSize: 24,
+                            backgroundColor: '#DA63A5',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        ログイン
+                    </Button>
+
                 </Box>
+
             </Box>
         </Box>
     );
