@@ -120,36 +120,26 @@ function Signup() {
     useEffect(() => {
         const initOneSignal = async () => {
             try {
+                if (!window.OneSignal) {
+                    console.error('OneSignalが読み込まれていません');
+                    return;
+                }
+
                 if (!window.OneSignalInitialized) {
-                    await OneSignal.init({
+                    await window.OneSignal.init({
                         appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
-                        notifyButton: {enable: true},
-                        allowLocalhostAsSecureOrigin: true,
-                        autoResubscribe: true,
-                        promptOptions: {
-                            enableWelcomeNotification: false,
-                        },
                         serviceWorkerPath: '/OneSignalSDKWorker.js',
                         serviceWorkerUpdaterPath: '/OneSignalSDKUpdaterWorker.js',
                     });
                     window.OneSignalInitialized = true;
                 }
 
-                // ✅ 最初の取得
-                let id = await OneSignal.getUserId();
-                console.log('✅ OneSignal ID:', id);
-                setplayerId(id);
+                await window.OneSignal.showSlidedownPrompt(); // 通知許可プロンプト
 
-                // ✅ 取得できなければリトライ（最大3回）
-                let retry = 0;
-                while (!id && retry < 3) {
-                    await new Promise(res => setTimeout(res, 1000)); // 1秒待つ
-                    id = await OneSignal.getUserId();
-                    retry++;
-                    console.log(`🔁 Retry #${retry}:`, id);
-                    if (id) setplayerId(id);
-                }
-
+                window.OneSignal.getUserId().then((id) => {
+                    console.log('✅ UserID:', id);
+                    setplayerId(id);
+                });
             } catch (e) {
                 console.error('OneSignal 初期化エラー:', e.message || e);
             }
@@ -337,7 +327,7 @@ function Signup() {
                             justifyContent: 'center',
                         }}
                     >
-                        {playerId ? 'アカウント作成' : '初期化中...'}
+                        {playerId ? 'アカウント作成' : '情報取得...'}
                     </Button>
 
                 </Box>
