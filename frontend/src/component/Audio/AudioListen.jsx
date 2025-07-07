@@ -73,6 +73,7 @@ export default function AudioListen() {
             setCurrentTime(current);        // 再生終了時に after に移行
             //duration　全体の長さ  currentTime　現在の再生位置    =>duration　再生位置が全体の長さまで到達したか
             //再生終了したか？
+
             if (audio.duration && audio.currentTime >= audio.duration) {
                 setPlaying('after');
                 firstPlay()
