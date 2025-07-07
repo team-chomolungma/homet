@@ -120,15 +120,16 @@ function Signup() {
             let retries = 5;
             while (retries > 0) {
                 try {
-                    const id = await window.OneSignal.User.getId(); // ✅ v6の正しいAPI
-                    if (id) {
-                        console.log('✅ Player ID:', id);
-                        setplayerId(id);
+                    const user = await window.OneSignal?.getUser?.();
+                    if (user?.id) {
+                        console.log('✅ Player ID:', user.id);
+                        setplayerId(user.id);
                         return;
                     }
                 } catch (e) {
                     console.error(`Player ID 取得エラー（残り${retries}回）:`, e);
                 }
+
                 await new Promise((r) => setTimeout(r, 1000));
                 retries--;
             }
@@ -137,6 +138,7 @@ function Signup() {
 
         fetchPlayerId();
     }, []);
+
 
     return (
         <Box
