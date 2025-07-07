@@ -14,14 +14,19 @@ data class AuthFilter(
 ): OncePerRequestFilter() {
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val path = request.servletPath
-        return path.startsWith("/api/auth/login")
-                || path.startsWith("/api/auth/signup")
+        return request.method.equals("OPTIONS", ignoreCase = true) ||
+                path.startsWith("/api/auth/login") || path.startsWith("/api/auth/signup")
     }
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ){
+        // プリフライトリクエストは無条件で許可
+        if (request.method.equals("OPTIONS", ignoreCase = true)) {
+            response.status = HttpServletResponse.SC_OK
+            return
+        }
         val token = request.cookies?.find{it.name == "SESSION_TOKEN"}?.value?.takeIf { it.isNotBlank() }
 
         if(token == null || !sessionService.isValidSession(token)) {
