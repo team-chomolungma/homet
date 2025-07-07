@@ -120,10 +120,11 @@ function Signup() {
             let retries = 5;
             while (retries > 0) {
                 try {
-                    const user = await window.OneSignal?.getUser?.();
-                    if (user?.id) {
-                        console.log('✅ Player ID:', user.id);
-                        setplayerId(user.id);
+                    const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
+
+                    if (playerId) {
+                        console.log('✅ Player ID:', playerId);
+                        setplayerId(playerId);
                         return;
                     }
                 } catch (e) {
