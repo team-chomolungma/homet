@@ -117,12 +117,17 @@ function Signup() {
 
     useEffect(() => {
         const fetchPlayerId = async () => {
-            try {
-                const user = await window.OneSignal.getUser();
-                console.log('✅ user:', user);
-                setplayerId(user.id);
-            } catch (e) {
-                console.error('Player ID 取得エラー:', e);
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const user = await window.OneSignal.getUser();
+                    if (user?.id) {
+                        setplayerId(user.id);
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Player ID 取得エラー:', e);
+                }
+                await new Promise((r) => setTimeout(r, 1000));
             }
         };
 
