@@ -20,12 +20,10 @@ const SendNotificationButton = () => {
                     contents: {en: '通知が届きました！'},
                     url: 'https://homet-onesignal-test-6a11abc942d3.herokuapp.com/', // 通知をタップしたときのURL
                     priority: 10, // Android用優先度（即時通知）
+                    channel_for_external_user_ids: 'push',
                 },
                 {
-                    headers: {
-                        Authorization: `Basic ${restApiKey}`,
-                        'Content-Type': 'application/json',
-                    },
+                    headers: {Authorization: `Basic ${restApiKey}`, 'Content-Type': 'application/json'}
                 }
             );
             alert('通知を送信しました');
