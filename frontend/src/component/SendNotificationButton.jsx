@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const SendNotificationButton = () => {
     const sendNotification = async () => {
-        const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfq6vhgea6cukwnss7ufphfinobfa3rbt7cyt2mr6gyulny4pxvn65kiwatqm3pw7vnkeqaxmifyfoy'; // ←安全な場所に保管するべき
+        const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfycyu6hdxjuzymgf6ecqhfusahyxwu54vz43y3hrut6ybn3dltid2vmme6o2dlptoam4xwinb2xjkq'; // ←安全な場所に保管するべき
         const appId = '05282da3-68ed-47b9-b3c2-1267595c8b09';
         const targetPlayerId = 'd92cb065-0f5f-4dda-8732-1893845573b6'; // ← Subscription ID に変更
         //プライベート
@@ -20,10 +20,12 @@ const SendNotificationButton = () => {
                     contents: {en: '通知が届きました！'},
                     url: 'https://homet-onesignal-test-6a11abc942d3.herokuapp.com/', // 通知をタップしたときのURL
                     priority: 10, // Android用優先度（即時通知）
-                    channel_for_external_user_ids: 'push',
                 },
                 {
-                    headers: {Authorization: `Basic ${restApiKey}`, 'Content-Type': 'application/json'}
+                    headers: {
+                        Authorization: `Basic ${restApiKey}`,
+                        'Content-Type': 'application/json',
+                    },
                 }
             );
             alert('通知を送信しました');
