@@ -25,7 +25,7 @@ export default function AnchorTemporaryDrawer() {
         if (path === 'ログアウト') {
             const processingLogout = async () => {
                 try {
-                    await axiosInstance.get('/api/auth/logout');
+                    await axiosInstance.post('/api/auth/logout');
 
                     alert('ログアウトしました。');
                     navigate('/'); //ログアウト後/に遷移
