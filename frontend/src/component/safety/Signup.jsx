@@ -117,18 +117,22 @@ function Signup() {
 
     useEffect(() => {
         const fetchPlayerId = async () => {
-            for (let i = 0; i < 5; i++) {
+            let retries = 5;
+            while (retries > 0) {
                 try {
-                    const id = await window.OneSignal.User.getId();
+                    const id = await window.OneSignal.User.getId(); // ✅ v6の正しいAPI
                     if (id) {
+                        console.log('✅ Player ID:', id);
                         setplayerId(id);
                         return;
                     }
                 } catch (e) {
-                    console.error('Player ID 取得エラー:', e);
+                    console.error(`Player ID 取得エラー（残り${retries}回）:`, e);
                 }
                 await new Promise((r) => setTimeout(r, 1000));
+                retries--;
             }
+            console.warn('Player ID を取得できませんでした');
         };
 
         fetchPlayerId();
