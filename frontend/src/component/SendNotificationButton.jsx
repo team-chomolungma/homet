@@ -5,7 +5,7 @@ const SendNotificationButton = () => {
     const sendNotification = async () => {
         const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfq6vhgea6cukwnss7ufphfinobfa3rbt7cyt2mr6gyulny4pxvn65kiwatqm3pw7vnkeqaxmifyfoy'; // ←安全な場所に保管するべき
         const appId = '05282da3-68ed-47b9-b3c2-1267595c8b09';
-        const targetPlayerId = 'c90f7e1d-e6a9-4cc0-bf33-2ad7c8c3dd78'; // ← Subscription ID に変更
+        const targetPlayerId = 'd92cb065-0f5f-4dda-8732-1893845573b6'; // ← Subscription ID に変更
         //プライベート
         // 1ea93d84-e3f8-4c0e-a4e0-1418d09aa9a2
         //会社携帯
