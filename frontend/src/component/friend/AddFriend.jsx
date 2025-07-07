@@ -12,18 +12,14 @@ export default function AddFriend() {
     const [inputValue, setInputValue] = useState('');
     const navigate = useNavigate();
 
-    //ダミー
-    const [searchResult, setSearchResult] = useState([
-        {'id': 1, 'displayname': 'うら'}
-    ])
 
-    // const [searchResult, setSearchResult] = useState()
+    const [searchResult, setSearchResult] = useState()
 
     //No5  { result: [{ id,displayname }]
     const userSearch = async (userId) => {
         if (!userId) return;
-        // const response = await axios.get(`/api/users/search${userId}`)
-        // setSearchResult(response.result)
+        const response = await axios.get(`/api/users/search${userId}`)
+        setSearchResult(response.result)
     }
 
     return (

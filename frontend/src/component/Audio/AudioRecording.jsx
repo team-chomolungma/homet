@@ -104,54 +104,32 @@ const AudioRecording = () => {
         setRecording('recorded');
     };
 
-    //ダミー
-    const sendVoice = async () => {
-        setReq(true)
-        const formData = new FormData();
-        formData.append('audio', mp3Blob, 'recording.mp3');
-        formData.append('senderUser', 'A');
-        formData.append('receiverUser', 'C');
-
-        try {
-            await fetch('/api/homet/voice', {
-                method: 'POST',
-                body: formData,
-            }).then(data => console.log(data, 'postできた'))
-        } catch (err) {
-            console.error('Upload failed:', err);
-        } finally {
-            setReq(false);
-            navigate('/voice-after')
-        }
-
-    }
-
 
     //No8 Header: Content-Type:multiport/form-data
     // Body:{file,receiver_id}
-    // const sendVoice = async () => {
-    //     setReq(true)
-    //     try {
-    //         const formData = new FormData();
-    //         const receiverId = location.state.receiver_id;
-    //         formData.append('file', mp3Blob, 'recording.mp3');
-    //         formData.append('receiver_id', receiverId.toString());
-    //         const response = await axios.post('/api/homet/voice', formData,
-    //             {
-    //                 headers: {
-    //                     'Content-Type': 'multipart/form-data',
-    //                 },
-    //             })
-    //         if (response.status === 200) {
-    //             console.log('送信成功')
-    //         }
-    //     } catch (err) {
-    //         console.error('送信失敗', err)
-    //     } finally {
-    //         setReq(false)
-    //         navigate('/voice-after')
-    //     }
-    // }
+    const sendVoice = async () => {
+        setReq(true)
+        try {
+            const formData = new FormData();
+            const receiverId = location.state.receiver_id;
+            formData.append('file', mp3Blob, 'recording.mp3');
+            formData.append('receiver_id', receiverId.toString());
+            const response = await axios.post('/api/homet/voice', formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
+            if (response.status === 200) {
+                console.log('送信成功')
+            }
+        } catch (err) {
+            console.error('送信失敗', err)
+        } finally {
+            setReq(false)
+            navigate('/voice-after')
+        }
+    }
 
     const reshoot = () => {
         setRecording('idle')

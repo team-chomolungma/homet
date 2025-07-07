@@ -11,7 +11,6 @@ import speechBubbleAfter from '../../../public/speechBubble/after.png';
 import React, {useState, useRef, useEffect} from 'react';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {useNavigate, useLocation} from 'react-router-dom';
-import Loading from '../Loading.jsx';
 import axios from 'axios';
 
 
@@ -33,21 +32,6 @@ export default function AudioListen() {
 
     const [duration, setDuration] = useState(0);
 
-    //ダミー　urlを取得してくるのは/timeline
-    const getUrl = () => {
-        try {
-            fetch('/api/homet/voice-data/5')
-                .then(res => res.json())
-                .then(data => {
-                    sets3Url(data.url)
-                })
-
-        } catch (err) {
-            console.error('Get failed:', err);
-        }
-
-    }
-
 
     //手紙をクリック→getUrlして音声が読み込まれたら再生する
     useEffect(() => {
@@ -61,19 +45,19 @@ export default function AudioListen() {
         };
 
         //初回再生 No10
-        // const firstPlay = async () => {
-        //     const response = axios.post('/api/homet/play-history',
-        //         {
-        //             voice_file_id: location.state.voice_file_id
-        //         })
-        //     if ((await response).status === 201) {
-        //         console.log('初回再生')
-        //     } else if ((await response).status === 409) {
-        //         console.log('2回目以降')
-        //     } else if (response.status === 404) {
-        //         console.log('存在しないId')
-        //     }
-        // }
+        const firstPlay = async () => {
+            const response = axios.post('/api/homet/play-history',
+                {
+                    voice_file_id: location.state.voice_file_id
+                })
+            if ((await response).status === 201) {
+                console.log('初回再生')
+            } else if ((await response).status === 409) {
+                console.log('2回目以降')
+            } else if (response.status === 404) {
+                console.log('存在しないId')
+            }
+        }
 
         const onTimeUpdate = () => {
             const current = Math.floor(audio.currentTime);
@@ -82,7 +66,7 @@ export default function AudioListen() {
             //再生終了したか？
             if (audio.duration && audio.currentTime >= audio.duration) {
                 setPlaying('after');
-                // firstPlay()
+                firstPlay()
             }
 
         };
@@ -100,7 +84,6 @@ export default function AudioListen() {
     }, [s3Url]);
 
     const handlePlay = () => {
-        getUrl()
         if (audioRef.current) {
             audioRef.current.currentTime = 0;
             setCurrentTime(0);
@@ -171,9 +154,7 @@ export default function AudioListen() {
                 </Box>
 
                 <Box>
-                    {/*ダミー*/}
-                    <audio src={s3Url} ref={audioRef}/>
-                    {/*<audio src={location.state.url} ref={audioRef}/>*/}
+                    <audio src={location.state.url} ref={audioRef}/>
 
                     {playing === 'before' && (
                         <img
