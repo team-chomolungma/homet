@@ -22,7 +22,7 @@ export default function UserIcon({displayname}) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     textAlign: 'center',
-                }}>{displayname.toString().slice(0, 1)}</Typography>
+                }}>{displayname?.toString().slice(0, 1)}</Typography>
                 <Typography sx={{fontSize: 14}}>{displayname}</Typography>
             </Stack>
         </>

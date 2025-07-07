@@ -8,9 +8,9 @@ export default function Loading() {
     const location = useLocation();
 
     //1秒後に自動で画面遷移
-    setTimeout(() => {
-        navigate(`/${location.state.pass}`)
-    }, 1000)
+    // setTimeout(() => {
+    //     navigate(`/${location.state.pass}`)
+    // }, 1000)
 
     return (
         <>

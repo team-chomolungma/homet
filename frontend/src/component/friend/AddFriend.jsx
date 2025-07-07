@@ -13,7 +13,7 @@ export default function AddFriend() {
     const navigate = useNavigate();
 
 
-    const [searchResult, setSearchResult] = useState()
+    const [searchResult, setSearchResult] = useState([])
 
     //No5  { result: [{ id,displayname }]
     const userSearch = async (userId) => {

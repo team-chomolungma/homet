@@ -13,6 +13,9 @@ import Home from './component/Home.jsx';
 import {AuthProvider} from './component/safety/AuthContext.jsx'
 import SessionChecker from './component/safety/SessionChecker.jsx';
 import OneSignalPush from './component/OneSignalPush.jsx';
+import AddFriend from './component/friend/AddFriend.jsx';
+import Friendlist from './component/friend/Friendlist.jsx';
+import AudioSendAfter from './component/Audio/AudioSendAfter.jsx';
 
 
 window.global = window;
@@ -30,7 +33,10 @@ createRoot(document.getElementById('root')).render(
                         <Route path="/home" element={<Home/>}/> {/* 新規作成 */}
                         <Route path="/voice" element={<AudioRecording/>}/> {/* 新規作成 */}
                         <Route path="/voice-data" element={<AudioListen/>}/>
+                        <Route path="/voice-after" element={<AudioSendAfter/>}/>
                         <Route path="/timeline" element={<Timeline/>}/>
+                        <Route path="/friendlist" element={<Friendlist/>}/>
+                        <Route path="/addfriend" element={<AddFriend/>}/>
                     </Routes>
                 </SessionChecker>
             </AuthProvider>

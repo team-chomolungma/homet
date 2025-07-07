@@ -20,6 +20,7 @@ import UserIcon from '../UserIcon.jsx';
 export default function AudioListen() {
     const navigate = useNavigate();
     const location = useLocation();
+    console.log(location.state.url)
 
     const audioRef = useRef(null);
 
@@ -33,11 +34,18 @@ export default function AudioListen() {
 
     const [duration, setDuration] = useState(0);
 
-
+    console.log(location.state.url)
     //手紙をクリック→getUrlして音声が読み込まれたら再生する
     useEffect(() => {
+        console.log(2)
+
+        if (location.state?.url) {
+            sets3Url(location.state.url);  // ★ これが必要
+        }
         if (!s3Url || !audioRef.current) return;
 
+
+        console.log(3)
         const audio = audioRef.current;
 
         const onLoadedMetadata = () => {
@@ -65,6 +73,7 @@ export default function AudioListen() {
             setCurrentTime(current);        // 再生終了時に after に移行
             //duration　全体の長さ  currentTime　現在の再生位置    =>duration　再生位置が全体の長さまで到達したか
             //再生終了したか？
+
             if (audio.duration && audio.currentTime >= audio.duration) {
                 setPlaying('after');
                 firstPlay()
@@ -82,7 +91,7 @@ export default function AudioListen() {
                 audioRef.current.removeEventListener('timeupdate', onTimeUpdate);
             }
         };
-    }, [s3Url]);
+    }, []);
 
     const handlePlay = () => {
         if (audioRef.current) {
@@ -167,63 +176,63 @@ export default function AudioListen() {
                         />
                     )}
                 </Box>
+                <Box>
+                    <audio src={location.state.url} ref={audioRef}/>
+
+                    {playing === 'before' && (
+                        <img
+                            onClick={handlePlay}
+                            src={playIcon}
+                            alt="playIcon"
+                        />
+                    )}
+                    {playing === 'playing' && (
+                        <img
+                            src={playingIcon}
+                            alt="playingIcon"
+                        />
+                    )}
+                    {playing === 'after' && (
+                        <img
+                            src={playingIcon}
+                            alt="playingIcon"
+                        />
+                    )}
+                    {playing === 'sendback' && (
+                        <Button sx={{
+                            bgcolor: '#DA63A5',
+                            color: 'white',
+                            height: 76,
+                            width: 156,
+                            borderRadius: 5,
+                            fontSize: 24
+                        }}
+                                onClick={() => navigate('/voice', {
+                                    state: {
+                                        receiver_id: location.state.receiver_id,
+                                        displayname: location.state.displayname
+                                    }
+                                })}>ホメット</Button>
+                    )}
+
+
+                </Box>
+                {playing !== 'sendback' && (
+                    <Typography sx={{fontSize: '24px', fontWeight: 'bold'}} color="#878484">
+                        {(() => {
+                            const time = playing === 'playing' ? currentTime : duration;
+                            if (playing === 'playing') {
+                                return time < 10 ? `0 0 : 0 ${time}` : `0 0 : ${time.toString().slice(0, 1)} ${time.toString().slice(-1)}`;
+                            } else {
+                                return duration < 10 ? `0 0 : 0 ${duration}` : `0 0 : ${duration.toString().slice(0, 1)} ${duration.toString().slice(-1)}`;
+                            }
+                        })()}
+
+                    </Typography>
+                )}
             </Box>
 
 
-            <Box>
-                <audio src={location.state.url} ref={audioRef}/>
-
-                {playing === 'before' && (
-                    <img
-                        onClick={handlePlay}
-                        src={playIcon}
-                        alt="playIcon"
-                    />
-                )}
-                {playing === 'playing' && (
-                    <img
-                        src={playingIcon}
-                        alt="playingIcon"
-                    />
-                )}
-                {playing === 'after' && (
-                    <img
-                        src={playingIcon}
-                        alt="playingIcon"
-                    />
-                )}
-                {playing === 'sendback' && (
-                    <Button sx={{
-                        bgcolor: '#DA63A5',
-                        color: 'white',
-                        height: 76,
-                        width: 156,
-                        borderRadius: 5,
-                        fontSize: 24
-                    }}
-                            onClick={() => navigate('/voice', {
-                                state: {
-                                    receiver_id: location.state.receiver_id,
-                                    displayname: location.state.displayname
-                                }
-                            })}>ホメット</Button>
-                )}
-
-
-            </Box>
-            {playing !== 'sendback' && (
-                <Typography sx={{fontSize: '24px', fontWeight: 'bold'}} color="#878484">
-                    {(() => {
-                        const time = playing === 'playing' ? currentTime : duration;
-                        if (playing === 'playing') {
-                            return time < 10 ? `0 0 : 0 ${time}` : `0 0 : ${time.toString().slice(0, 1)} ${time.toString().slice(-1)}`;
-                        } else {
-                            return duration < 10 ? `0 0 : 0 ${duration}` : `0 0 : ${duration.toString().slice(0, 1)} ${duration.toString().slice(-1)}`;
-                        }
-                    })()}
-
-                </Typography>
-            )}
             <NavigationBar/>
 
         </>
