@@ -115,7 +115,6 @@ function Signup() {
         }
     };
 
-
     useEffect(() => {
         const initOneSignal = async () => {
             try {
@@ -141,9 +140,15 @@ function Signup() {
                     window.OneSignalInitialized = true;
                 }
 
-                const id = await window.OneSignal.getUserId();
-                console.log('✅ UserID:', id);
-                setplayerId(id);
+                const user = await window.OneSignal.getUser();
+                const id = user?.id;
+
+                if (id) {
+                    console.log('✅ UserID:', id);
+                    setplayerId(id);
+                } else {
+                    console.warn('UserID が取得できませんでした');
+                }
 
             } catch (e) {
                 console.error('OneSignal 初期化エラー:', e.message || e);
