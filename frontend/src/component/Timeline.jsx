@@ -23,7 +23,7 @@ export default function Timeline() {
         const fetchData = async () => {
             const response = await axiosInstance.get('/api/homet/voice-list');
             if (response.status === 200) {
-                const list = response.result || [];
+                const list = response.data.result;
 
                 const groupList = {};
 
@@ -46,7 +46,6 @@ export default function Timeline() {
                     }
                     groupList[groupKey].push(post);
                 });
-
                 setVoiceList(groupList);
                 setRes(true);
             }
@@ -61,7 +60,7 @@ export default function Timeline() {
         if (response.status === 200) {
             navigate('/voice-data', {
                 state: {
-                    url: response.url,
+                    url: response.data.url,
                     sender_id: sender_id,
                     voice_file_id: voice_file_id,
                     displayname: displayname
@@ -110,7 +109,9 @@ export default function Timeline() {
 
                         {
                             posts.map((data) => {
+
                                 return (
+
                                     <Container key={data.id}
                                                sx={{
                                                    width: 250,
@@ -119,14 +120,14 @@ export default function Timeline() {
                                                    borderRadius: 5,
                                                    margin: '8px auto',
                                                    alignContent: 'center'
-                                               }} onClick={() => getUrl(data.sender_id, data.id, data.displayname)}>
+                                               }} onClick={() => getUrl(data.sender_id, data.id, data.diplayname)}>
 
                                         <Stack
                                             justifyContent="space-between"
                                             direction="row"
                                             spacing={3}
                                         >
-                                            <UserIcon displayname={data.displayname}/>
+                                            <UserIcon displayname={data.diplayname}/>
                                             {data.first_played_at ? (
                                                 <img
                                                     src={read}
