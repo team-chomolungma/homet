@@ -15,6 +15,7 @@ import axiosInstance from '../../lib/axios.js';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import OneSignal from 'react-onesignal';
+import SendNotificationButton from '../SendNotificationButton.jsx';
 
 function Signup() {
     const navigate = useNavigate();
@@ -324,7 +325,7 @@ function Signup() {
                     >
                         {playerId ? 'アカウント作成' : '情報取得...'}
                     </Button>
-
+                    <SendNotificationButton/>
                 </Box>
 
             </Box>
