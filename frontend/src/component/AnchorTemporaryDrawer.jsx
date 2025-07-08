@@ -28,6 +28,7 @@ export default function AnchorTemporaryDrawer() {
                     await axiosInstance.post('/api/auth/logout');
 
                     alert('ログアウトしました。');
+                    localStorage.removeItem('SESSION_TOKEN')
                     navigate('/'); //ログアウト後/に遷移
                 } catch (err) {
                     alert('ログアウト失敗');

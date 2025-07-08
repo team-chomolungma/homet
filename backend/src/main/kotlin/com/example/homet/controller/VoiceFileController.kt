@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -32,7 +33,8 @@ data class VoiceFileController(
     @GetMapping("/voice-data/{voice-file-id}")
     fun getVoiceFileData(
         @PathVariable("voice-file-id") voiceFileId: Long,
-        @CookieValue("SESSION_TOKEN") token: String
+//        @CookieValue("SESSION_TOKEN") token: String
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ): ResponseEntity<Any> {
         val myId = sessionService.getUser(token).id
         val result = voiceFileService.getUrlFromS3(voiceFileId,myId)
@@ -47,7 +49,8 @@ data class VoiceFileController(
     fun postVoiceFile(
         @RequestParam("file") file: MultipartFile,
         @RequestParam("receiver_id") receiverId: Long,
-        @CookieValue("SESSION_TOKEN") token: String
+//        @CookieValue("SESSION_TOKEN") token: String
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ): ResponseEntity<Any> {
         val senderId = sessionService.getUser(token).id
         val request = VoiceFileRequest(
@@ -74,7 +77,8 @@ data class VoiceFileController(
     }
     @GetMapping("/voice/limit-status")
     fun getSendCount(
-        @CookieValue("SESSION_TOKEN") token: String
+//        @CookieValue("SESSION_TOKEN") token: String
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ):ResponseEntity<Any> {
         val myId = sessionService.getUser(token).id
         val count = voiceFileService.postCount(myId)
@@ -83,7 +87,8 @@ data class VoiceFileController(
 
     @PostMapping("/play-history")
     fun postPlayHistory(
-        @CookieValue("SESSION_TOKEN") token: String,
+//        @CookieValue("SESSION_TOKEN") token: String,
+        @RequestAttribute("SESSION_TOKEN") token: String,
         @RequestBody request: VoiceFileIdRequest,
     ): ResponseEntity<Any> {
         val myId = sessionService.getUser(token).id
@@ -98,7 +103,8 @@ data class VoiceFileController(
 
     @GetMapping("/voice-list")
     fun getVoiceFileListForMine(
-        @CookieValue("SESSION_TOKEN") token: String,
+//        @CookieValue("SESSION_TOKEN") token: String,
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ):ResponseEntity<Map<String,List<VoiceFileResponse>>> {
         val myId = sessionService.getUser(token).id
         val result = voiceFileService.getVoiceDataListForMine(myId)

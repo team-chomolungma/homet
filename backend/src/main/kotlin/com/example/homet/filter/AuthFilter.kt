@@ -27,12 +27,16 @@ data class AuthFilter(
             response.status = HttpServletResponse.SC_OK
             return
         }
-        val token = request.cookies?.find{it.name == "SESSION_TOKEN"}?.value?.takeIf { it.isNotBlank() }
+//        val token = request.cookies?.find{it.name == "SESSION_TOKEN"}?.value?.takeIf { it.isNotBlank() }
 
+        val authHeader = request.getHeader("Authorization") ?: ""
+        val token = authHeader.removePrefix("Bearer ").takeIf { it.isNotBlank() }
         if(token == null || !sessionService.isValidSession(token)) {
             response.status = HttpServletResponse.SC_UNAUTHORIZED
             return
         }
+
+        request.setAttribute("SESSION_TOKEN", token)
         filterChain.doFilter(request, response)
     }
 }

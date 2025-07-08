@@ -78,8 +78,9 @@ function Login() {
                 password: password,
             });
             if (res.status === 200) {
-                const {userID, displayname} = res.data;
+                const {userID, displayname,token} = res.data;
                 setUser({myUserID: userID, myDisplayname: displayname});
+                localStorage.setItem('SESSION_TOKEN',token);
                 navigate('/home');
             }
         } catch (err) {
