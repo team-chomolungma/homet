@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Button,useMediaQuery } from '@mui/material';
+import { Box, Button,useMediaQuery,Typography,Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AnchorTemporaryDrawer from './AnchorTemporaryDrawer.jsx';
 import NavigationBar from './NavigationBar.jsx';
 import HomeGraph from './HomeGraph.jsx';
+import CustomButton from './CustomButton.jsx';
 
 function Home() {
   const navigate = useNavigate();
@@ -46,10 +47,23 @@ function Home() {
       <Box
         sx={{
           position: 'relative',
-        //   overflow: "hidden",
+          overflow: "hidden",
           width: '100%',
         }}
       >
+        <Container sx={{
+            position:'absolute',
+            width: 1,
+            textAlign: 'center',
+            marginTop: '10%',
+            marginBottom: '5%'
+            }}>
+            <Typography sx={{
+                color: '#333333',
+                fontSize: {xs:20,sm:24,md:28},
+            }}
+            >タイムライン</Typography>
+            </Container>
         <Box
           component="img"
           src="/ホメット星.png"
@@ -112,30 +126,33 @@ function Home() {
       />
 
       {/* ホメットボタン（画面に収まるサイズに） */}
-      <Button
-        variant="contained"
+      <CustomButton
+        // variant="contained"
+        // sx={{
+        //   backgroundColor: '#DA63A5',
+        //   borderRadius: {xs:3,sm:5,md:5},
+        // //   width: '200px',
+        // //   height: '56px',
+        //   width: { xs: '120px', sm: '142px' },
+        // //   width: isLargeXs ? '200px' : '160px',
+        //   height: { xs: '55px', sm: '67px' },
+        // //   height: isLargeXs ? '56px' : '48px',
+        // // height:'7vh',
+        //   fontWeight: 'bold',
+        //   fontSize: {xs:"18px",sm:"24px",md:"24px"},
+        //   textTransform: 'none',
+        //   mb: 8,
+        // }}
         sx={{
-          backgroundColor: '#DA63A5',
-          borderRadius: '24px',
-        //   width: '200px',
-        //   height: '56px',
-        //   width: { xs: '160px', sm: '200px' },
-          width: isLargeXs ? '200px' : '160px',
-        //   height: { xs: '48px', sm: '56px' },
-        //   height: isLargeXs ? '56px' : '48px',
-        height:'7vh',
-          fontWeight: 'bold',
-          fontSize: '20px',
-          textTransform: 'none',
-          mb: 8,
+            width: { xs: '120px', sm: '142px' },
         }}
         onClick={() => navigate('/friendlist')}
       >
         ホメット
-      </Button>
+      </CustomButton>
 
       {/* ナビゲーションバー */}
-      <Box
+      {/* <Box
         sx={{
             width: '100%',
             height: '20vh',
@@ -143,7 +160,7 @@ function Home() {
             left:0
 
         }}
-      />
+      /> */}
         <NavigationBar />
     </Box>
     </>
