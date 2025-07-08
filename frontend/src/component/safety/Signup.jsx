@@ -114,45 +114,20 @@ function Signup() {
             }
         }
     };
-
+    
 
     useEffect(() => {
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        window.OneSignalDeferred.push(function (OneSignal) {
-            (async () => {
-                try {
-                    if (!window.OneSignalInitialized) {
-                        await OneSignal.init({
-                            appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
-                            notifyButton: {enable: true},
-                            allowLocalhostAsSecureOrigin: true,
-                            autoResubscribe: true,
-                            promptOptions: {
-                                enableWelcomeNotification: false,
-                            },
-                        });
-                        window.OneSignalInitialized = true;
-                    }
-
-                    // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
-                    // const uid = await OneSignal.getUserId?.();
-                    // setUserId(uid);
-                    const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
-                    // const playerId = await OneSignal.getUserId();
-                    console.log('✅ OneSignal ID:', playerId);
-                    setplayerId(playerId);
-
-
-                    //UIに通知許可してください見たいな表示を出すためにステータス管理できる
-                    // OneSignal.on('notificationPermissionChange', async () => {
-                    //     const updated = await OneSignal.isPushNotificationsEnabled?.();
-                    //     setEnabled(updated);
-                    // });
-                } catch (e) {
-                    console.log(e.message || 'Unknown error');
-                }
-            })();
-        });
+        const getPlayerId = async () => {
+            try {
+                const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
+                // const playerId = await OneSignal.getUserId();
+                console.log('✅ OneSignal ID:', playerId);
+                setplayerId(playerId);
+            } catch (e) {
+                console.error('❌ OneSignal ID取得失敗:', e);
+            }
+        };
+        getPlayerId();
     }, []);
 
     return (
