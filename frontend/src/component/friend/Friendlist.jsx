@@ -19,7 +19,7 @@ export default function Friendlist() {
         const fetchData = async () => {
             const response = await axiosInstance.get('/api/friend');
             if (response.status === 200) {
-                setFriendList(response.result);
+                setFriendList(response.data.result);
                 setRes(true);
             }
         };

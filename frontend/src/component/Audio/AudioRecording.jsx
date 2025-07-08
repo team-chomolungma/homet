@@ -4,11 +4,15 @@ import kimeranian from '../../../public/homeranian/kimeranian.png'
 import recordingIcon from '../../../public/icons/recording.png'
 import stopIcon from '../../../public/icons/stop.png'
 import sendIcon from '../../../public/icons/send.png'
+import retakeIcon from '../../../public/icons/retake.png'
 import whiteCircle from '../../../public/whiteCircle.png';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import speechBubbleRecording from '../../../public/speechBubble/recording.png';
 import speechBubbleStop from '../../../public/speechBubble/stop.png';
 import speechBubbleSend from '../../../public/speechBubble/send.png';
+import support1 from '../../../public/speechBubble/support1.png';
+import support2 from '../../../public/speechBubble/support2.png';
+import support3 from '../../../public/speechBubble/support3.png';
+import support4 from '../../../public/speechBubble/support4.png';
 import {Box, Container, Stack, Typography} from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {useNavigate, useLocation} from 'react-router-dom';
@@ -23,6 +27,15 @@ const COUNT_MS = 15;
 const AudioRecording = () => {
     const navigate = useNavigate();
     const location = useLocation();
+
+    //褒めサポ
+    const [currentImage, setCurrentImage] = useState(speechBubbleRecording);
+    const support = [support1, support2, support3, support4];
+    const handleClick = () => {
+        const filterSupport = support.filter(image => image !== currentImage);
+        const randomIndex = Math.floor(Math.random() * filterSupport.length);
+        setCurrentImage(filterSupport[randomIndex]);
+    };
 
     const [req, setReq] = useState(false);
 
@@ -177,7 +190,8 @@ const AudioRecording = () => {
                 >
                     {recording === 'idle' && (
                         <img
-                            src={speechBubbleRecording}
+                            onClick={handleClick}
+                            src={currentImage}
                             alt="speechBubbleRecording"
                         />
                     )}
@@ -233,14 +247,27 @@ const AudioRecording = () => {
                             position: 'relative',
                         }}>
 
-                            {recording === 'recorded' ? (
-                                <RefreshIcon
-                                    sx={{height: 50, width: 50, color: '#F24B32'}}
-                                    onClick={reshoot}
-                                />
-                            ) : (
-                                <Box sx={{width: 50}}/>
-                            )}
+                            {recording === 'recorded' &&
+                                <Box sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    // justifyContent: 'space-between',
+                                    width: '100%',
+                                }}>
+                                    <img
+                                        src={retakeIcon}
+                                        alt="retakeIcon"
+                                    />
+                                    <img
+                                        src={sendIcon}
+                                        alt="sendIcon"
+                                        onClick={() => {
+                                            sendVoice();
+                                            // navigate('/loading', {state: {pass: 'voice-after'}})
+                                        }}/>
+                                    <Box sx={{width: 50}}></Box>
+                                </Box>
+                            }
 
                             {recording === 'idle' && (
                                 <img
@@ -265,23 +292,23 @@ const AudioRecording = () => {
                                     <Pulse/>
                                 </Box>
                             )}
-                            {recording === 'recorded' && (
-                                <img
-                                    src={sendIcon}
-                                    alt="sendIcon"
-                                    onClick={() => {
-                                        sendVoice();
-                                        // navigate('/loading', {state: {pass: 'voice-after'}})
-                                    }}
-                                />
-                            )}
+                            {/*{recording === 'recorded' && (*/}
+                            {/*    <img*/}
+                            {/*        src={sendIcon}*/}
+                            {/*        alt="sendIcon"*/}
+                            {/*        onClick={() => {*/}
+                            {/*            sendVoice();*/}
+                            {/*            // navigate('/loading', {state: {pass: 'voice-after'}})*/}
+                            {/*        }}*/}
+                            {/*    />*/}
+                            {/*)}*/}
                             {/*<Box sx={{width: 50}}/>*/}
                         </Box>
                     </Stack>
 
 
-                    {recording === 'idle' && <Typography sx={{height: 36}}
-                                                         color={'#B7B7B7'}>ボタンをタップして録音してください</Typography>}
+                    {recording === 'idle' && <Typography sx={{height: 36, fontSize: 14}}
+                                                         color={'#896464'}>マイクをタップして録音してください</Typography>}
                     {recording === 'recording' && <Typography sx={{fontSize: '24px', fontWeight: 'bold'}}
                                                               color={'#878484'}>{remainingTime < 10 ? `0 0 : 0 ${remainingTime}` : `0 0 : ${remainingTime.toString().slice(0, 1)} ${remainingTime.toString().slice(-1)}`}</Typography>}
 

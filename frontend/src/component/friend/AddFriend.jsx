@@ -13,13 +13,13 @@ export default function AddFriend() {
     const navigate = useNavigate();
 
 
-    const [searchResult, setSearchResult] = useState()
+    const [searchResult, setSearchResult] = useState([])
 
     //No5  { result: [{ id,displayname }]
     const userSearch = async (userId) => {
         if (!userId) return;
-        const response = await axiosInstance.get(`/api/users/search${userId}`)
-        setSearchResult(response.result)
+        const response = await axiosInstance.get(`/api/users/search?userID=${userId}`)
+        setSearchResult(response.data.result)
     }
 
     return (
