@@ -115,9 +115,10 @@ function Signup() {
             });
 
             console.log('🟢 サーバーからのレスポンス:', res);
-
             if (res.status === 201) {
                 console.log('🟢成功');
+                const {userID, displayname,token} = res.data;
+                localStorage.setItem('SESSION_TOKEN',token);
                 navigate('/home');
             } else {
                 alert(`予期せぬエラーが発生しました（status: ${res.status}）`);
