@@ -48,13 +48,16 @@ function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('🔵 アカウント作成ボタン押下');
 
         let hasError = false;
 
         if (!playerId) {
             alert('OneSignalの初期化中です。少し待ってからもう一度お試しください。');
+            console.warn('⛔ playerId が null。OneSignal未初期化');
             return;
         }
+        console.log('2');
 
         if (!userId.trim()) {
             setUserIdError('ユーザーIDを入力してください');
@@ -62,6 +65,7 @@ function Signup() {
         } else {
             setUserIdError('');
         }
+        console.log('3');
 
         if (!password.trim()) {
             setPasswordError('パスワードを入力してください');
@@ -73,6 +77,7 @@ function Signup() {
             setPasswordError('');
         }
 
+        console.log('4');
         if (!userName.trim()) {
             setUserNameError('ユーザー名を入力してください');
             hasError = true;
@@ -85,38 +90,47 @@ function Signup() {
         } else {
             setUserNameError('');
         }
+        console.log('5');
 
         if (!security) {
-            console.log('同意ボタン押していません')
-            return
+            console.warn('⛔ 同意チェックがされていません');
+            return;
         }
+        console.log('6');
 
-        if (!hasError) {
-            try {
-                const res = await axiosInstance.post('/api/auth/signup', {
-                    userID: userId,
-                    displayname: userName,
-                    password: password,
-                    playerID: playerId
-                });
+        if (hasError) {
+            console.warn('⛔ バリデーションエラーあり');
+            return;
+        }
+        console.log('7');
 
-                if (res.status === 200) {
-                    navigate('/home');
-                } else {
-                    alert(`予期せぬエラーが発生しました（status: ${res.status}）`);
-                    console.error('⚠️ サーバーレスポンス:', res);
-                }
-            } catch (err) {
-                console.error('❌ サインアップエラー詳細:', err); // ← これが重要！
+        try {
+            console.log('✅ サインアップリクエスト送信中...');
+            const res = await axiosInstance.post('/api/auth/signup', {
+                userID: userId,
+                displayname: userName,
+                password: password,
+                playerID: playerId
+            });
 
-                const status = err.response?.status;
-                if (status === 409) {
-                    alert('このユーザーIDはすでに使われています');
-                } else if (status) {
-                    alert(`サーバーエラー（${status}）が発生しました`);
-                } else {
-                    alert('ネットワークまたは予期せぬエラーが発生しました');
-                }
+            console.log('🟢 サーバーからのレスポンス:', res);
+
+            if (res.status === 200) {
+                console.log('🟢成功');
+                navigate('/home');
+            } else {
+                alert(`予期せぬエラーが発生しました（status: ${res.status}）`);
+            }
+        } catch (err) {
+            console.error('❌ サインアップ通信失敗:', err);
+
+            const status = err.response?.status;
+            if (status === 409) {
+                alert('このユーザーIDはすでに使われています');
+            } else if (status) {
+                alert(`サーバーエラー（${status}）が発生しました`);
+            } else {
+                alert('ネットワークまたは予期せぬエラーが発生しました');
             }
         }
     };
