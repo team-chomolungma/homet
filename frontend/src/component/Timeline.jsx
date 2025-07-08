@@ -110,7 +110,7 @@ export default function Timeline() {
             }}>
                 <Typography sx={{
                     color: '#333333',
-                    fontSize: {xs: 18, sm: 24, md: 26}
+                    fontSize: {xs: 24, sm: 24, md: 26}
                 }}
                 >タイムライン</Typography>
             </Container>
@@ -138,7 +138,7 @@ export default function Timeline() {
                         <Container sx={{width: '75vw'}}>
                             <Typography sx={{
                                 marginBottom: '16px',
-                                fontSize: {xs: 12, sm: 14, md: 14}
+                                fontSize: {xs: 14, sm: 14, md: 14}
                             }}>{groupKey}</Typography>
 
                         </Container>
@@ -155,7 +155,7 @@ export default function Timeline() {
                                                    borderRadius: 5,
                                                    margin: '8px auto',
                                                    alignContent: 'center',
-                                                   height: {xs: 65, sm: 80, md: 90}
+                                                   height: {xs: 80, sm: 80, md: 90}
 
                                                }}
                                                onClick={() => data.play_flag && getUrl(data.sender_id, data.id, data.displayname)}>

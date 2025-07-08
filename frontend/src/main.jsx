@@ -18,6 +18,7 @@ import Friendlist from './component/friend/Friendlist.jsx';
 import AudioSendAfter from './component/Audio/AudioSendAfter.jsx';
 import {createTheme} from '@mui/material';
 import {ThemeProvider} from '@mui/material/styles';
+import ZoomDog from './component/ZoomDog.jsx';
 
 const theme = createTheme({
     breakpoints: {
@@ -49,6 +50,7 @@ createRoot(document.getElementById('root')).render(
                             <Route path="/timeline" element={<Timeline/>}/>
                             <Route path="/friendlist" element={<Friendlist/>}/>
                             <Route path="/addfriend" element={<AddFriend/>}/>
+                            <Route path="/zoomdog" element={<ZoomDog/>}/>
                         </Routes>
                     </SessionChecker>
                 </AuthProvider>
