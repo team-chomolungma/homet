@@ -15,6 +15,9 @@ export default function HomeGraph() {
       const res = await axiosInstance.get('/api/connection');
       const resFriendsArray = res.data.result;
 
+      if(resFriendsArray.length===0){
+        return null
+      }
       // 最後に送信した人を抽出し、それ以外でランダム4人を抽出する
       const lastSender = resFriendsArray
         .slice() // 元配列は汚さない
