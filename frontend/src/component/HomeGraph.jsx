@@ -8,7 +8,8 @@ export default function HomeGraph() {
   const fgRef = useRef();
   const [data, setData] = useState({ nodes: [], links: [] });
   const isLargeXs = useMediaQuery('(min-width:400px)');
-  // const nodeSize = isLargeXs ? 14 : 14;
+  const graphHeight = isLargeXs ? 350 :250
+
   useEffect(() => {
     (async () => {
       const res = await axiosInstance.get('/api/connection');
@@ -21,10 +22,8 @@ export default function HomeGraph() {
 
       const others = resFriendsArray.filter((f) => f.id !== lastSender.id);
       const randomFour = others.sort(() => Math.random() - 0.5).slice(0, 4);
-
       const friendsArray = [...randomFour, lastSender];
       
-
       const nodes = [
         // meは完全に消したいのでここでは入れないか、size=0にしてもOK
         { id: 'me', name: 'me', size: 0 },
@@ -32,6 +31,7 @@ export default function HomeGraph() {
           id: f.id,
           name: f.displayname,
           size: 14,
+          color: f.id === lastSender.id ? '#A0E3AA' : '#D8F3DC',
         })),
       ];
       const links = friendsArray.map((f) => ({ source: 'me', target: f.id }));
@@ -59,18 +59,11 @@ export default function HomeGraph() {
 
     fgRef.current.d3ReheatSimulation();
   }, [data]);
-  // const graphHeight = useTheme().breakpoints.down('xs') ? 150 : 300;
-  const graphHeight = isLargeXs ? 350 :250
   return (
     <div style={{ width: '100%', height: '300px', position: 'relative' }}>
       <ForceGraph2D
         ref={fgRef}
         graphData={data}
-        // nodeColor={node => 
-        //   node.id === Number(lastSender.id) ? '#A0E3AA' : '#D8F3DC'
-        // }
-        nodeColor='#A0E3AA'
-        // const lastSendcolor = { node => node.id === lastSender.id}
 
         // エッジを完全非表示
         linkWidth={() => 0}
@@ -90,9 +83,7 @@ export default function HomeGraph() {
           // 円を描く
           ctx.beginPath();
           ctx.arc(node.x, node.y, node.size, 0, 2 * Math.PI, false);
-          // ctx.fillStyle = '#D8F3DC';
-          // ctx.fillStyle =  lastSendcolor ? '#A0E3AA' : '#D8F3DC';
-          ctx.fillStyle = node.nodeColor
+          ctx.fillStyle =  node.color;
           ctx.fill();
 
           // ラベル

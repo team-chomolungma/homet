@@ -135,16 +135,6 @@ function Home() {
       </Button>
 
       {/* ナビゲーションバー */}
-      {/* <Box
-        sx={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            width: '100%',
-            zIndex: 999,
-            }}
-            > */}
-      {/* </Box> */}
       <Box
         sx={{
             width: '100%',
