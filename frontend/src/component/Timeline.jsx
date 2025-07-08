@@ -1,4 +1,4 @@
-import {Box, Container, Stack, Typography} from '@mui/material';
+import {Box, Container, Stack, Typography, useMediaQuery} from '@mui/material';
 import NavigationBar from './NavigationBar.jsx';
 import UserIcon from './UserIcon.jsx'
 import React, {useEffect, useState} from 'react';
@@ -12,6 +12,7 @@ import {ja} from 'date-fns/locale';
 import axiosInstance from '../lib/axios.js';
 
 export default function Timeline() {
+    const isLargeXs = useMediaQuery('(min-width:390px)');
 
     const navigate = useNavigate();
 
@@ -103,6 +104,7 @@ export default function Timeline() {
     return (
         <>
             <Container sx={{
+
                 width: 1,
                 textAlign: 'center',
                 marginTop: '10%',
@@ -110,8 +112,7 @@ export default function Timeline() {
             }}>
                 <Typography sx={{
                     color: '#333333',
-                    '@media (max-width: 375px)': {fontSize: 20},
-                    '@media (min-width: 376px) and (max-width: 390px)': {fontSize: 24},
+                    fontSize: isLargeXs ? 24 : 20,
                 }}
                 >タイムライン</Typography>
             </Container>
@@ -204,7 +205,7 @@ export default function Timeline() {
 
 
             {/*NavigationBarとの要素被り防止*/}
-            <Box sx={{height: '81px'}}/>
+            <Box sx={{height: 81}}/>
             <NavigationBar/>
         </>
     )
