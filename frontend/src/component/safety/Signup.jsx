@@ -27,7 +27,7 @@ function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [userNameError, setUserNameError] = useState('');
-    const [playerId, setplayerId] = useState(null)
+    const [playerId, setPlayerId] = useState(null);
     const [security, setSecurity] = useState(false);
 
     // ユーザーIDの重複チェック（入力欄からフォーカスが外れたタイミングしてます）
@@ -128,7 +128,7 @@ function Signup() {
 
                     if (playerId) {
                         console.log('✅ Player ID:', playerId);
-                        setplayerId(playerId);
+                        setPlayerId(playerId);
                         return;
                     }
                 } catch (e) {
@@ -332,7 +332,6 @@ function Signup() {
                     >
                         {playerId ? 'アカウント作成' : '情報取得...'}
                     </Button>
-                    <SendNotificationButton/>
                 </Box>
 
             </Box>
