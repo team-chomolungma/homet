@@ -20,10 +20,11 @@ import UserIcon from '../UserIcon.jsx';
 import Loading from '../Loading.jsx';
 import Pulse from '../Pulse.jsx';
 import axiosInstance from '../../lib/axios.js';
+import SendNotificationButton from '../SendNotificationButton.jsx';
 
 const COUNT_MS = 15;
 
-//props id userid receiver_id　ホメット
+//props id userid receiver_id ホメット
 const AudioRecording = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -52,6 +53,10 @@ const AudioRecording = () => {
     //録音関係
     const recorderRef = useRef(null);
     const audioContextRef = useRef(null);
+
+    //通知
+    const [playerId, setPlayerId] = useState(null);
+    const notificationRef = useRef();
 
     const startRecording = async () => {
         setRecording('recording')
@@ -134,7 +139,12 @@ const AudioRecording = () => {
                     },
                 })
             if (response.status === 200) {
-                console.log('送信成功')
+                // console.log('送信成功')
+                const playerId = response.data.playerID;
+                setPlayerId(playerId);
+                notificationRef.current?.sendNotification(); //通知送信発火
+
+
             }
         } catch (err) {
             console.error('送信失敗', err)
@@ -314,6 +324,10 @@ const AudioRecording = () => {
 
                 </Box>
             </Container>
+            <SendNotificationButton
+                ref={notificationRef}
+                targetPlayerId={playerId}
+            />
         </>
 
     );

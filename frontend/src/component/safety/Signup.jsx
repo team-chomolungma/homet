@@ -14,6 +14,7 @@ import {useNavigate} from 'react-router-dom';
 import axiosInstance from '../../lib/axios.js';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import SendNotificationButton from '../SendNotificationButton.jsx';
 
 function Signup() {
     const navigate = useNavigate();
@@ -48,13 +49,16 @@ function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('🔵 アカウント作成ボタン押下');
 
         let hasError = false;
 
         if (!playerId) {
             alert('OneSignalの初期化中です。少し待ってからもう一度お試しください。');
+            console.warn('⛔ playerId が null。OneSignal未初期化');
             return;
         }
+        console.log('2');
 
         if (!userId.trim()) {
             setUserIdError('ユーザーIDを入力してください');
@@ -62,6 +66,7 @@ function Signup() {
         } else {
             setUserIdError('');
         }
+        console.log('3');
 
         if (!password.trim()) {
             setPasswordError('パスワードを入力してください');
@@ -73,6 +78,7 @@ function Signup() {
             setPasswordError('');
         }
 
+        console.log('4');
         if (!userName.trim()) {
             setUserNameError('ユーザー名を入力してください');
             hasError = true;
@@ -85,74 +91,64 @@ function Signup() {
         } else {
             setUserNameError('');
         }
+        console.log('5');
 
         if (!security) {
-            return
+            console.warn('⛔ 同意チェックがされていません');
+            return;
         }
+        console.log('6');
 
-        if (!hasError) {
-            try {
-                const res = await axiosInstance.post('/api/auth/signup', {
-                    userID: userId,
-                    displayname: userName,
-                    password: password,
-                    playerID: playerId
-                });
+        if (hasError) {
+            console.warn('⛔ バリデーションエラーあり');
+            return;
+        }
+        console.log('7');
 
-                if (res.status === 200) {
-                    navigate('/home');
-                } else {
-                    alert('予期せぬエラー');
-                }
-            } catch (err) {
-                if (err.response?.status === 409) {
-                    alert('新規アカウント作成失敗　　時間をあけてもう一度お試しください');
-                } else {
-                    console.error('サインアップ失敗', err);
-                    alert('予期せぬエラー');
-                }
+        try {
+            console.log('✅ サインアップリクエスト送信中...');
+            const res = await axiosInstance.post('/api/auth/signup', {
+                userID: userId,
+                displayname: userName,
+                password: password,
+                playerID: playerId
+            });
+
+            console.log('🟢 サーバーからのレスポンス:', res);
+
+            if (res.status === 201) {
+                console.log('🟢成功');
+                navigate('/home');
+            } else {
+                alert(`予期せぬエラーが発生しました（status: ${res.status}）`);
+            }
+        } catch (err) {
+            console.error('❌ サインアップ通信失敗:', err);
+
+            const status = err.response?.status;
+            if (status === 409) {
+                alert('このユーザーIDはすでに使われています');
+            } else if (status) {
+                alert(`サーバーエラー（${status}）が発生しました`);
+            } else {
+                alert('ネットワークまたは予期せぬエラーが発生しました');
             }
         }
     };
 
 
     useEffect(() => {
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        window.OneSignalDeferred.push(function (OneSignal) {
-            (async () => {
-                try {
-                    if (!window.OneSignalInitialized) {
-                        await OneSignal.init({
-                            appId: '05282da3-68ed-47b9-b3c2-1267595c8b09',
-                            notifyButton: {enable: true},
-                            allowLocalhostAsSecureOrigin: true,
-                            autoResubscribe: true,
-                            promptOptions: {
-                                enableWelcomeNotification: false,
-                            },
-                        });
-                        window.OneSignalInitialized = true;
-                    }
-
-                    // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
-                    // const uid = await OneSignal.getUserId?.();
-                    // setUserId(uid);
-
-                    const playerId = await OneSignal.getUserId();
-                    console.log('✅ OneSignal ID:', playerId);
-                    setplayerId(playerId);
-
-
-                    //UIに通知許可してください見たいな表示を出すためにステータス管理できる
-                    // OneSignal.on('notificationPermissionChange', async () => {
-                    //     const updated = await OneSignal.isPushNotificationsEnabled?.();
-                    //     setEnabled(updated);
-                    // });
-                } catch (e) {
-                    console.log(e.message || 'Unknown error');
-                }
-            })();
-        });
+        const getPlayerId = async () => {
+            try {
+                const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
+                // const playerId = await OneSignal.getUserId();
+                console.log('✅ OneSignal ID:', playerId);
+                setplayerId(playerId);
+            } catch (e) {
+                console.error('❌ OneSignal ID取得失敗:', e);
+            }
+        };
+        getPlayerId();
     }, []);
 
     return (
@@ -311,21 +307,27 @@ function Signup() {
                             {userNameError || '　'}
                         </Typography>
                     </Box>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={security}
-                                onChange={(e) => setSecurity(e.target.checked)}
-                            />
-                        }
-                        label="個人情報の取り扱いに同意します"
-                    />
+                    <Box sx={{mb: 1}}>
+                        <Typography variant="body2" sx={{mb: 1}}>
+                            ユーザー名にはニックネームなど、<br/>
+                            個人を特定できない情報を使用ください
+                        </Typography>
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={security}
+                                    onChange={(e) => setSecurity(e.target.checked)}
+                                />
+                            }
+                            label="個人情報の取り扱いに同意します"
+                        />
+                    </Box>
                     <Button
-                        disabled={!security}
+                        disabled={!security || !playerId}
                         type="submit"
                         variant="contained"
                         sx={{
-                            // mt: 2,
                             width: 228,
                             height: 76,
                             borderRadius: '20px',
@@ -334,12 +336,13 @@ function Signup() {
                             justifyContent: 'center',
                         }}
                     >
-                        アカウント作成
+                        {playerId ? 'アカウント作成' : '情報取得...'}
                     </Button>
 
                 </Box>
 
             </Box>
+            {/*<SendNotificationButton/>*/}
         </Box>
     );
 }
