@@ -16,7 +16,7 @@ data class VoiceFileIdRequest(
 data class VoiceFileResponse(
     val id: Long,
     val sender_id: Long,
-    val diplayname: String,
+    val displayname: String,
     val sent_at: Instant?,
     val first_played_at: Instant?,
     val play_flag: Boolean,

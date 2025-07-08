@@ -120,14 +120,14 @@ export default function Timeline() {
                                                    borderRadius: 5,
                                                    margin: '8px auto',
                                                    alignContent: 'center'
-                                               }} onClick={() => getUrl(data.sender_id, data.id, data.diplayname)}>
+                                               }} onClick={() => getUrl(data.sender_id, data.id, data.displayname)}>
 
                                         <Stack
                                             justifyContent="space-between"
                                             direction="row"
                                             spacing={3}
                                         >
-                                            <UserIcon displayname={data.diplayname}/>
+                                            <UserIcon displayname={data.displayname}/>
                                             {data.first_played_at ? (
                                                 <img
                                                     src={read}
