@@ -116,7 +116,7 @@ function Signup() {
 
             console.log('🟢 サーバーからのレスポンス:', res);
 
-            if (res.status === 200) {
+            if (res.status === 201) {
                 console.log('🟢成功');
                 navigate('/home');
             } else {
