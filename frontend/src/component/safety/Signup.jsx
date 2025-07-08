@@ -14,6 +14,7 @@ import {useNavigate} from 'react-router-dom';
 import axiosInstance from '../../lib/axios.js';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import SendNotificationButton from '../SendNotificationButton.jsx';
 
 function Signup() {
     const navigate = useNavigate();
@@ -341,6 +342,7 @@ function Signup() {
                 </Box>
 
             </Box>
+            <SendNotificationButton/>
         </Box>
     );
 }
