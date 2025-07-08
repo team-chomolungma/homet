@@ -158,7 +158,7 @@ export default function Timeline() {
                                                    height: {xs: 65, sm: 80, md: 90}
 
                                                }}
-                                               onClick={() => data.play_flag && getUrl(data.sender_id, data.id, data.diplayname)}>
+                                               onClick={() => data.play_flag && getUrl(data.sender_id, data.id, data.displayname)}>
 
                                         <Stack
                                             justifyContent="space-between"
@@ -166,7 +166,7 @@ export default function Timeline() {
                                             spacing={3}
                                         >
 
-                                            <UserIcon displayname={data.diplayname}/>
+                                            <UserIcon displayname={data.displayname}/>
                                             {!friendList.includes(data.sender_id) &&
                                                 <Box style={{width: 44, height: 45, alignContent: 'center'}}>
                                                     <img

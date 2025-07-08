@@ -30,7 +30,9 @@ export default defineConfig(({mode}) => {
     // }
 
     return {
+        publicDir: 'public',
         plugins: [
+
             react(),
             VitePWA({
                 registerType: 'autoUpdate',
