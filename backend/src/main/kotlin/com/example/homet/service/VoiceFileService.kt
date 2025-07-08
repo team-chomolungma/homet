@@ -22,18 +22,19 @@ data class VoiceFileService(
     private val voiceFileRepository: VoiceFileRepository,
     private val userService: UserService,
     private val amazonS3: AmazonS3,
-    ){
+) {
     val bucketName = System.getenv("S3_BUCKET_NAME")
-    fun getVoiceAllFiles(): List<VoiceFile>{
+    fun getVoiceAllFiles(): List<VoiceFile> {
         return voiceFileRepository.findAll()
     }
-    fun getUrlFromS3(voiceFileId: Long,userDbId:Long): String? {
-        val s3Key = if(voiceFileId == 0L) {
+
+    fun getUrlFromS3(voiceFileId: Long, userDbId: Long): String? {
+        val s3Key = if (voiceFileId == 0L) {
             "audio/tutorial.mp3"
-        }else{
+        } else {
             val voiceFile = voiceFileRepository.findByIdOrNull(voiceFileId)
 
-            if(voiceFile == null || voiceFile.receiverId != userDbId){
+            if (voiceFile == null || voiceFile.receiverId != userDbId) {
                 return null
             }
             voiceFile.s3Key
@@ -42,19 +43,19 @@ data class VoiceFileService(
         // JAVA,Kotlin,S3もUTCで処理(有効期限は取得時より60分)
         val expiredAt = Date.from(Instant.now().plus(60, ChronoUnit.MINUTES))
 
-        try{
+        try {
             val url = amazonS3.generatePresignedUrl(bucketName, s3Key, expiredAt)
             return url.toString()
-        }catch (e: AmazonServiceException){
+        } catch (e: AmazonServiceException) {
             println("failed to download audio file(AmazonServiceException): ${e.message}")
             return ""
-        }catch (e: SdkClientException){
+        } catch (e: SdkClientException) {
             println("failed to download audio file(SdkClientException): ${e.message}")
             return ""
         }
     }
 
-    fun putVoiceForS3(request: VoiceFileRequest):Result<Unit>{
+    fun putVoiceForS3(request: VoiceFileRequest): Result<Unit> {
         // create s3_key
         val s3Key = "audio/${UUID.randomUUID()}.mp3"
         val file = request.file
@@ -77,47 +78,48 @@ data class VoiceFileService(
             voiceFileRepository.save(voice)
         }
     }
-    fun postCount(userDbId:Long): Long{
+
+    fun postCount(userDbId: Long): Long {
         val todayStart = Instant.now().truncatedTo(ChronoUnit.DAYS)
         val todayEnd = todayStart.plus(1, ChronoUnit.DAYS)
         val voiceFiles = voiceFileRepository.findBySenderId(userDbId)
-        if(voiceFiles != null) {
+        if (voiceFiles != null) {
             val result = voiceFiles.filter {
                 it.sentAt!!.isAfter(todayStart) && it.sentAt!!.isBefore(todayEnd)
             }
             return result.size.toLong()
-        }else{
+        } else {
             return 0L
         }
     }
 
-    fun upadtePlayHistory(userDbId:Long,voiceFileId: Long): String{
+    fun upadtePlayHistory(userDbId: Long, voiceFileId: Long): String {
         val voiceFile = voiceFileRepository.findByIdOrNull(voiceFileId)
-        if(voiceFile != null && voiceFile.receiverId == userDbId){
-            if(voiceFile.firstPlayedAt != null){
+        if (voiceFile != null && voiceFile.receiverId == userDbId) {
+            if (voiceFile.firstPlayedAt != null) {
                 return "ALREADY_EXISTS"
             }
             try {
                 voiceFile.firstPlayedAt = Instant.now()
                 voiceFileRepository.save(voiceFile)
                 return "SUCCESS"
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 return "ERROR"
             }
-        }else{
+        } else {
             return "NOT_FOUND"
         }
     }
 
-    fun getVoiceDataListForMine(userDbId:Long): List<VoiceFileResponse>{
+    fun getVoiceDataListForMine(userDbId: Long): List<VoiceFileResponse> {
         val voiceFiles = voiceFileRepository.findByReceiverId(userDbId)
-        if(voiceFiles == null){
+        if (voiceFiles == null) {
             return emptyList()
         }
         val threshold = Instant.now().minus(72, ChronoUnit.HOURS)
         val updateVoiceFile = voiceFiles.map { voiceFile ->
-            voiceFile.firstPlayedAt?.let{ firstPlayedAt ->
-                if(firstPlayedAt.isBefore(threshold)){
+            voiceFile.firstPlayedAt?.let { firstPlayedAt ->
+                if (firstPlayedAt.isBefore(threshold)) {
                     voiceFile.playFlag = false
                     voiceFileRepository.save(voiceFile)
                 }
@@ -126,7 +128,7 @@ data class VoiceFileService(
             VoiceFileResponse(
                 id = voiceFile.id,
                 sender_id = voiceFile.senderId,
-                diplayname = findUser!!.displayname,
+                displayname = findUser!!.displayname,
                 sent_at = voiceFile.sentAt,
                 first_played_at = voiceFile.firstPlayedAt,
                 play_flag = voiceFile.playFlag,
