@@ -1,9 +1,10 @@
-import {Container, Stack, Typography} from '@mui/material';
+import {Box, Container, Stack, Typography, useMediaQuery} from '@mui/material';
 import NavigationBar from './NavigationBar.jsx';
 import UserIcon from './UserIcon.jsx'
 import React, {useEffect, useState} from 'react';
 import read from '../../public/icons/read.png'
 import unread from '../../public/icons/unread.png'
+import addfriend from '../../public/icons/addfriend.png'
 import {useNavigate} from 'react-router-dom';
 import Loading from './Loading.jsx';
 import {format, isYesterday} from 'date-fns';
@@ -11,14 +12,17 @@ import {ja} from 'date-fns/locale';
 import axiosInstance from '../lib/axios.js';
 
 export default function Timeline() {
+    const isLargeXs = useMediaQuery('(min-width:390px)');
 
     const navigate = useNavigate();
 
     const [res, setRes] = useState(false);
 
-
     const [voiceList, setVoiceList] = useState()
+    const [friendList, setFriendList] = useState()
+
     //No11 [{id,sender_id,displayname,sent_at,first_played_at,play_flag}...]}
+    //タイムライン用データ取得
     useEffect(() => {
         const fetchData = async () => {
             const response = await axiosInstance.get('/api/homet/voice-list');
@@ -53,37 +57,67 @@ export default function Timeline() {
         fetchData();
     }, []);
 
+    //No13 友達取得
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await axiosInstance.get('/api/friend');
+            if (response.status === 200) {
+                const idArray = response.data.result.map(user => user.id)
+                setFriendList(idArray)
+            }
+        }
+        fetchData();
+    }, []);
+
 
     // No12 idでurl取得
     const getUrl = async (sender_id, voice_file_id, displayname) => {
         const response = await axiosInstance.get(`/api/homet/voice-data/${voice_file_id}`);
+        const frinedFlag = !friendList.includes(sender_id)
         if (response.status === 200) {
             navigate('/voice-data', {
                 state: {
                     url: response.data.url,
                     sender_id: sender_id,
                     voice_file_id: voice_file_id,
-                    displayname: displayname
+                    displayname: displayname,
+                    frinedFlag: frinedFlag,
                 }
             })
         }
     }
 
-    if (!res) return <Loading/>;
+    //No14　相互友達
+    const mutualFriends = async (sender_id) => {
+        try {
+            const response = await axiosInstance.post('/api/friend', {
+                id: sender_id
+            });
+            if (response.status === 201) alert('ともだちに追加できました！');
+        } catch (error) {
+            if (error.response.status === 409) console.log('すでに登録済み');
+        }
+    }
 
+    if (!res) return <Loading/>;
 
     return (
         <>
             <Container sx={{
+
                 width: 1,
                 textAlign: 'center',
                 marginTop: '10%',
                 marginBottom: '5%'
             }}>
-                <Typography sx={{fontSize: 24, color: '#333333'}}>タイムライン</Typography>
+                <Typography sx={{
+                    color: '#333333',
+                    fontSize: isLargeXs ? 24 : 20,
+                }}
+                >タイムライン</Typography>
             </Container>
 
-            {voiceList && Object.entries(voiceList).sort(([aKey], [bKey]) => {
+            {(voiceList && friendList) && Object.entries(voiceList).sort(([aKey], [bKey]) => {
                 // カスタム並び順を定義
                 const order = ['今日', '昨日'];
 
@@ -104,7 +138,11 @@ export default function Timeline() {
                 return (
                     <React.Fragment key={groupKey}>
                         <Container sx={{width: 250,}}>
-                            <Typography sx={{marginBottom: '16px'}}>{groupKey}</Typography>
+                            <Typography sx={{
+                                marginBottom: '16px', '@media (max-width: 375px)': {fontSize: 12},
+                                '@media (min-width: 376px) and (max-width: 390px)': {fontSize: 14},
+                            }}>{groupKey}</Typography>
+
                         </Container>
 
                         {
@@ -115,19 +153,31 @@ export default function Timeline() {
                                     <Container key={data.id}
                                                sx={{
                                                    width: 250,
-                                                   height: 80,
-                                                   bgcolor: data.play_flag ? '#AFADAD' : 'white',
+                                                   bgcolor: data.play_flag ? 'white' : '#AFADAD',
                                                    borderRadius: 5,
                                                    margin: '8px auto',
-                                                   alignContent: 'center'
-                                               }} onClick={() => getUrl(data.sender_id, data.id, data.diplayname)}>
+                                                   alignContent: 'center',
+                                                   '@media (max-width: 375px)': {height: 70},
+                                                   '@media (min-width: 376px) and (max-width: 390px)': {height: 80},
+                                               }}
+                                               onClick={() => data.play_flag && getUrl(data.sender_id, data.id, data.diplayname)}>
 
                                         <Stack
                                             justifyContent="space-between"
                                             direction="row"
                                             spacing={3}
                                         >
+
                                             <UserIcon displayname={data.diplayname}/>
+                                            {!friendList.includes(data.sender_id) &&
+                                                <img
+                                                    onClick={() => mutualFriends(data.sender_id)}
+                                                    src={addfriend}
+                                                    alt="addfriend"
+                                                    style={{width: 35, height: 24}}
+                                                />
+                                            }
+
                                             {data.first_played_at ? (
                                                 <img
                                                     src={read}
@@ -154,6 +204,8 @@ export default function Timeline() {
             })}
 
 
+            {/*NavigationBarとの要素被り防止*/}
+            <Box sx={{height: 81}}/>
             <NavigationBar/>
         </>
     )

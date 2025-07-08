@@ -4,23 +4,22 @@ import hohoemian from '../../../public/homeranian/hohoemian.png'
 import giraranian from '../../../public/homeranian/giraranian.png'
 import whiteCircle from '../../../public/whiteCircle.png'
 import playIcon from '../../../public/icons/play.png'
+import playAfterIcon from '../../../public/icons/playafter.png'
 import playingIcon from '../../../public/icons/playing.png'
 import speechBubbleBefore from '../../../public/speechBubble/before.png';
 import speechBubblePlaying from '../../../public/speechBubble/playing.png';
 import speechBubbleAfter from '../../../public/speechBubble/after.png';
+import speechBubbleSendback from '../../../public/speechBubble/sendback.png';
 import React, {useState, useRef, useEffect} from 'react';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {useNavigate, useLocation} from 'react-router-dom';
 import axiosInstance from '../../lib/axios.js';
 import UserIcon from '../UserIcon.jsx';
 
-
-//getUrl()の実行タイミング　
-
 export default function AudioListen() {
+
     const navigate = useNavigate();
     const location = useLocation();
-    console.log(location.state.url)
 
     const audioRef = useRef(null);
 
@@ -34,64 +33,71 @@ export default function AudioListen() {
 
     const [duration, setDuration] = useState(0);
 
-    console.log(location.state.url)
-    //手紙をクリック→getUrlして音声が読み込まれたら再生する
     useEffect(() => {
-        console.log(2)
+        sets3Url(location.state.url);
+    }, []);
 
-        if (location.state?.url) {
-            sets3Url(location.state.url);  // ★ これが必要
-        }
+    useEffect(() => {
+
         if (!s3Url || !audioRef.current) return;
 
-
-        console.log(3)
         const audio = audioRef.current;
 
         const onLoadedMetadata = () => {
-            setDuration(Math.floor(audio.duration))
-            setPlaying('playing')
+            const d = Math.floor(audio.duration);
+
+            // durationが0またはNaNならfallback
+            if (d === 0 || isNaN(d)) {
+                setDuration(1);
+                setPlaying('playing');
+
+                // 1秒後に 'after' に遷移（手動）
+                setTimeout(() => {
+                    setPlaying('after');
+                    firstPlay();
+                }, 1000);
+            } else {
+                setDuration(d);
+            }
         };
 
-        //初回再生 No10
-        const firstPlay = async () => {
-            const response = axiosInstance.post('/api/homet/play-history',
-                {
-                    voice_file_id: location.state.voice_file_id
-                })
-            if ((await response).status === 201) {
-                console.log('初回再生')
-            } else if ((await response).status === 409) {
-                console.log('2回目以降')
-            } else if (response.status === 404) {
-                console.log('存在しないId')
-            }
-        }
+        const onEnded = () => {
+            setPlaying('after');
+            firstPlay();
+        };
 
         const onTimeUpdate = () => {
             const current = Math.floor(audio.currentTime);
-            setCurrentTime(current);        // 再生終了時に after に移行
-            //duration　全体の長さ  currentTime　現在の再生位置    =>duration　再生位置が全体の長さまで到達したか
-            //再生終了したか？
+            setCurrentTime(current);
+        };
 
-            if (audio.duration && audio.currentTime >= audio.duration) {
-                setPlaying('after');
-                firstPlay()
+        const firstPlay = async () => {
+            try {
+                const response = await axiosInstance.post('/api/homet/play-history', {
+                    voice_file_id: location.state.voice_file_id,
+                });
+                if (response.status === 201) console.log('初回再生');
+            } catch (error) {
+                if (error.response.status === 409) {
+                    console.log('2回目以降');
+                } else if (error.response.status === 404) {
+                    console.log('存在しないId');
+                }
             }
 
         };
 
-
-        audioRef.current.addEventListener('loadedmetadata', onLoadedMetadata);
-        audioRef.current.addEventListener('timeupdate', onTimeUpdate);
+        audio.addEventListener('loadedmetadata', onLoadedMetadata);
+        audio.addEventListener('timeupdate', onTimeUpdate);
+        audio.addEventListener('ended', onEnded);
 
         return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('loadedmetadata', onLoadedMetadata);
-                audioRef.current.removeEventListener('timeupdate', onTimeUpdate);
-            }
+            audio.removeEventListener('loadedmetadata', onLoadedMetadata);
+            audio.removeEventListener('timeupdate', onTimeUpdate);
+            audio.removeEventListener('ended', onEnded);
         };
-    }, []);
+    }, [s3Url]);
+
 
     const handlePlay = () => {
         if (audioRef.current) {
@@ -112,8 +118,15 @@ export default function AudioListen() {
     }, [playing]);
 
     //No14　相互友達
-    const mutualFriends = () => {
-        //まだ
+    const mutualFriends = async () => {
+        try {
+            const response = await axiosInstance.post('/api/friend', {
+                id: location.state.sender_id
+            });
+            if (response.status === 201) alert('ともだちに追加できました！');
+        } catch (error) {
+            if (error.response.status === 409) console.log('すでに登録済み');
+        }
     }
 
 
@@ -124,16 +137,7 @@ export default function AudioListen() {
             }} onClick={() => navigate('/timeline')}
             />
             <UserIcon displayname={location.state.displayname}/>
-            <Button sx={{
-                bgcolor: '#DA63A5',
-                color: 'white',
-                height: 32,
-                width: 88,
-                borderRadius: 5,
-                fontSize: 16
-            }}
-                    onClick={mutualFriends}
-            >友達追加</Button>
+
             <Box
                 display="flex" // レイアウトモード
                 flexDirection="column" // 縦並び
@@ -152,7 +156,7 @@ export default function AudioListen() {
                     <img src={speechBubbleAfter} alt="speechBubbleAfter"/>
                 )}
                 {playing === 'sendback' && (
-                    <img src={speechBubblePlaying} alt="speechBubblePlaying"/>
+                    <img src={speechBubbleSendback} alt="speechBubblePlaying"/>
                 )}
 
                 {/* 白丸とキャラ画像 */}
@@ -176,8 +180,11 @@ export default function AudioListen() {
                         />
                     )}
                 </Box>
-                <Box>
-                    <audio src={location.state.url} ref={audioRef}/>
+                <Box display="flex"
+                     flexDirection="column"
+                     alignItems="center"
+                     gap={2}>
+                    <audio src={s3Url} ref={audioRef}/>
 
                     {playing === 'before' && (
                         <img
@@ -194,10 +201,29 @@ export default function AudioListen() {
                     )}
                     {playing === 'after' && (
                         <img
-                            src={playingIcon}
-                            alt="playingIcon"
+                            src={playAfterIcon}
+                            alt="playAfterIcon"
                         />
                     )}
+                    {(location.state.frinedFlag && playing === 'sendback') &&
+                        <>
+                            <Typography sx={{
+                                fontSize: 14,
+                                color: '#906D6D',
+                            }}>まだともだちになっていないユーザーです</Typography>
+                            <Button sx={{
+                                bgcolor: 'white',
+                                color: '#DA63A5',
+                                border: '2px solid #DA63A5',
+                                height: 43,
+                                width: 156,
+                                borderRadius: 3,
+                                fontSize: 16
+                            }}
+                                    onClick={mutualFriends}
+                            >ともだち追加</Button>
+                        </>
+                    }
                     {playing === 'sendback' && (
                         <Button sx={{
                             bgcolor: '#DA63A5',
