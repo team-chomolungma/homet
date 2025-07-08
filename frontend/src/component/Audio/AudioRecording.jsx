@@ -121,6 +121,9 @@ const AudioRecording = () => {
                     },
                 })
             if (response.status === 200) {
+                const playerId = response.data.playerID;
+                setPlayerId(playerId);
+                notificationRef.current?.sendNotification(); //通知送信発火
                 console.log('送信成功')
             }
         } catch (err) {
