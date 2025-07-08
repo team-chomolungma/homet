@@ -123,23 +123,17 @@ function Signup() {
 
 
     useEffect(() => {
-        let retries = 0;
-        const tryGetPlayerId = async () => {
-            while (retries < 10) {
-                const id = await window?.OneSignal?.getUserId?.();
-                if (id) {
-                    console.log('✅ OneSignal ID取得成功:', id);
-                    setplayerId(id);
-                    return;
-                }
-                console.log('⏳ OneSignal ID待機中...');
-                retries++;
-                await new Promise(res => setTimeout(res, 500)); // 0.5秒待つ
+        const getPlayerId = async () => {
+            try {
+                const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
+                // const playerId = await OneSignal.getUserId();
+                console.log('✅ OneSignal ID:', playerId);
+                setplayerId(playerId);
+            } catch (e) {
+                console.error('❌ OneSignal ID取得失敗:', e);
             }
-            console.warn('⚠️ OneSignal IDが取得できませんでした（タイムアウト）');
         };
-
-        tryGetPlayerId();
+        getPlayerId();
     }, []);
 
     return (
