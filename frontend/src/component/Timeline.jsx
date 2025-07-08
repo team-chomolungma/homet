@@ -160,7 +160,7 @@ export default function Timeline() {
                                                    '@media (max-width: 375px)': {height: 70},
                                                    '@media (min-width: 376px) and (max-width: 390px)': {height: 80},
                                                }}
-                                               onClick={() => data.play_flag && getUrl(data.sender_id, data.id, data.diplayname)}>
+                                               onClick={() => data.play_flag && getUrl(data.sender_id, data.id, data.displayname)}>
 
                                         <Stack
                                             justifyContent="space-between"
@@ -168,7 +168,7 @@ export default function Timeline() {
                                             spacing={3}
                                         >
 
-                                            <UserIcon displayname={data.diplayname}/>
+                                            <UserIcon displayname={data.displayname}/>
                                             {!friendList.includes(data.sender_id) &&
                                                 <img
                                                     onClick={() => mutualFriends(data.sender_id)}
