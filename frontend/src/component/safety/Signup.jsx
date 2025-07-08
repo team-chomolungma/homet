@@ -118,7 +118,7 @@ function Signup() {
 
             if (res.status === 201) {
                 console.log('🟢成功');
-                navigate('/home');
+                navigate('/start-animation');
             } else {
                 alert(`予期せぬエラーが発生しました（status: ${res.status}）`);
             }
@@ -136,19 +136,28 @@ function Signup() {
         }
     };
 
-
     useEffect(() => {
-        const getPlayerId = async () => {
-            try {
-                const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
-                // const playerId = await OneSignal.getUserId();
-                console.log('✅ OneSignal ID:', playerId);
+        let retryCount = 0;
+        const maxRetries = 5;//とりま５回
+        const interval = 1000;
+
+        const intervalId = setInterval(() => {
+            const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
+            console.log('✅ OneSignal ID:', playerId);
+
+            if (playerId) {
                 setplayerId(playerId);
-            } catch (e) {
-                console.error('❌ OneSignal ID取得失敗:', e);
+                clearInterval(intervalId);
             }
-        };
-        getPlayerId();
+
+            retryCount++;
+            if (retryCount >= maxRetries) {
+                console.warn('⚠️ OneSignal ID取得リトライ終了');
+                clearInterval(intervalId);
+            }
+        }, interval);
+
+        return () => clearInterval(intervalId); // クリーンアップ
     }, []);
 
     return (
@@ -159,22 +168,26 @@ function Signup() {
                 justifyContent: 'center',
                 alignItems: 'center',
                 px: 2,
+                position: 'relative',
+                backgroundColor: '#FFF1F4',
             }}
         >
             <IconButton
                 onClick={() => navigate(-1)}
-                sx={{position: 'absolute', top: 24, left: 24}}
+                sx={{
+                    position: 'absolute',
+                    top: {xs: 16, sm: 24},
+                    left: {xs: 16, sm: 24},
+                }}
             >
                 <ArrowBackIcon/>
             </IconButton>
+
             <Box
                 sx={{
                     width: '100%',
                     maxWidth: 400,
-                    position: 'relative',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    px: 2,
                 }}
             >
                 <Box
@@ -183,17 +196,26 @@ function Signup() {
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: 2,
+                        gap: {xs: 2, sm: 3},
                         alignItems: 'center',
                         width: '100%',
                     }}
                 >
-                    <Typography sx={{fontSize: 40, lineHeight: '53px', color: '#333333'}}>
+                    {/* タイトル */}
+                    <Typography
+                        sx={{
+                            fontSize: {xs: 32, sm: 40},
+                            lineHeight: '1.3',
+                            color: '#333333',
+                            mb: {xs: 1, sm: 2},
+                        }}
+                    >
                         Homet
                     </Typography>
 
-                    <Box sx={{width: 300}}>
-                        <Typography sx={{fontSize: 16, mb: 0.5}}>ユーザーID</Typography>
+                    {/* ===== ユーザーID ===== */}
+                    <Box sx={{width: '80%', maxWidth: 300}}>
+                        <Typography sx={{fontSize: 14, mb: 0.5}}>ユーザーID</Typography>
                         <TextField
                             fullWidth
                             value={userId}
@@ -205,7 +227,7 @@ function Signup() {
                                 backgroundColor: '#fff',
                                 borderRadius: 1,
                                 '& .MuiOutlinedInput-root': {
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     height: 48,
                                 },
                             }}
@@ -217,7 +239,7 @@ function Signup() {
                                 mt: '2px',
                                 minHeight: '1.5em',
                                 color: userIdError ? '#e53935' : 'transparent',
-                                backgroundColor: '#fff1f3',
+                                backgroundColor: userIdError ? '#fff1f3' : 'transparent',
                                 pl: 1,
                                 borderRadius: 1,
                             }}
@@ -226,10 +248,9 @@ function Signup() {
                         </Typography>
                     </Box>
 
-                    <Box sx={{width: 300}}>
-                        <Typography sx={{fontSize: 16, color: '#333', mt: 3}}>
-                            パスワード
-                        </Typography>
+                    {/* ===== パスワード ===== */}
+                    <Box sx={{width: '80%', maxWidth: 300}}>
+                        <Typography sx={{fontSize: 14, mt: 2, mb: 0.5}}>パスワード</Typography>
                         <TextField
                             type={showPassword ? 'text' : 'password'}
                             fullWidth
@@ -249,7 +270,7 @@ function Signup() {
                                     </InputAdornment>
                                 ),
                                 sx: {
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     height: 48,
                                     backgroundColor: '#fff',
                                     borderRadius: 1,
@@ -263,7 +284,7 @@ function Signup() {
                                 mt: '2px',
                                 minHeight: '1.5em',
                                 color: passwordError ? '#e53935' : 'transparent',
-                                backgroundColor: '#fff1f3',
+                                backgroundColor: passwordError ? '#fff1f3' : 'transparent',
                                 pl: 1,
                                 borderRadius: 1,
                             }}
@@ -272,10 +293,9 @@ function Signup() {
                         </Typography>
                     </Box>
 
-                    <Box sx={{width: 300}}>
-                        <Typography sx={{fontSize: 16, color: '#333', mt: 4}}>
-                            ユーザー名
-                        </Typography>
+                    {/* ===== ユーザー名 ===== */}
+                    <Box sx={{width: '80%', maxWidth: 300}}>
+                        <Typography sx={{fontSize: 14, mt: 2, mb: 0.5}}>ユーザー名</Typography>
                         <TextField
                             fullWidth
                             value={userName}
@@ -286,7 +306,7 @@ function Signup() {
                                 backgroundColor: '#fff',
                                 borderRadius: 1,
                                 '& .MuiOutlinedInput-root': {
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     height: 48,
                                 },
                             }}
@@ -298,17 +318,26 @@ function Signup() {
                                 mt: '2px',
                                 minHeight: '1.5em',
                                 color: userNameError ? '#e53935' : 'transparent',
-                                backgroundColor: '#fff1f3',
+                                backgroundColor: userNameError ? '#fff1f3' : 'transparent',
                                 pl: 1,
                                 borderRadius: 1,
                             }}
-
                         >
                             {userNameError || '　'}
                         </Typography>
                     </Box>
-                    <Box sx={{mb: 1}}>
-                        <Typography variant="body2" sx={{mb: 1}}>
+
+                    {/* ===== 注意書き + チェック ===== */}
+                    <Box sx={{width: '80%', maxWidth: 300, mt: 1, mb: 1}}>
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                fontSize: 12,
+                                mb: 1,
+                                color: '#666',
+                                lineHeight: 1.4,
+                            }}
+                        >
                             ユーザー名にはニックネームなど、<br/>
                             個人を特定できない情報を使用ください
                         </Typography>
@@ -323,27 +352,29 @@ function Signup() {
                             label="個人情報の取り扱いに同意します"
                         />
                     </Box>
+
+                    {/* ===== 送信ボタン ===== */}
                     <Button
                         disabled={!security || !playerId}
                         type="submit"
                         variant="contained"
                         sx={{
-                            width: 228,
-                            height: 76,
+                            width: {xs: 200, sm: 228},
+                            height: 64,
                             borderRadius: '20px',
-                            fontSize: 24,
+                            fontSize: 20,
                             backgroundColor: '#DA63A5',
                             justifyContent: 'center',
+                            textTransform: 'none',
                         }}
                     >
-                        {playerId ? 'アカウント作成' : '情報取得...'}
+                        {playerId ? 'アカウント作成' : '情報取得中...'}
                     </Button>
-
                 </Box>
-
             </Box>
-            {/*<SendNotificationButton/>*/}
         </Box>
+
+
     );
 }
 
