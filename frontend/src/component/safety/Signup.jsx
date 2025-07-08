@@ -306,21 +306,27 @@ function Signup() {
                             {userNameError || '　'}
                         </Typography>
                     </Box>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={security}
-                                onChange={(e) => setSecurity(e.target.checked)}
-                            />
-                        }
-                        label="個人情報の取り扱いに同意します"
-                    />
+                    <Box sx={{mb: 1}}>
+                        <Typography variant="body2" sx={{mb: 1}}>
+                            ユーザー名にはニックネームなど、<br/>
+                            個人を特定できない情報を使用ください
+                        </Typography>
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={security}
+                                    onChange={(e) => setSecurity(e.target.checked)}
+                                />
+                            }
+                            label="個人情報の取り扱いに同意します"
+                        />
+                    </Box>
                     <Button
-                        disabled={!security}
+                        disabled={!security || !playerId}
                         type="submit"
                         variant="contained"
                         sx={{
-                            // mt: 2,
                             width: 228,
                             height: 76,
                             borderRadius: '20px',
@@ -329,7 +335,7 @@ function Signup() {
                             justifyContent: 'center',
                         }}
                     >
-                        アカウント作成
+                        {playerId ? 'アカウント作成' : '情報取得...'}
                     </Button>
 
                 </Box>
