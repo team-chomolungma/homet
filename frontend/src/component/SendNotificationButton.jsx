@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const SendNotificationButton = () => {
     const sendNotification = async () => {
-        const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfycyu6hdxjuzymgf6ecqhfusahyxwu54vz43y3hrut6ybn3dltid2vmme6o2dlptoam4xwinb2xjkq'; // ←安全な場所に保管するべき
+        const restApiKey = 'os_v2_app_auuc3i3i5vd3tm6ccjtvsxelbfndbus3bgzunnmscru63y6teypfumubtdhck7zzfo3z4dqs2xp5uqd7w3k4g3kdecjkzn5nwoicwwy'; // ←安全な場所に保管するべき
         const appId = '05282da3-68ed-47b9-b3c2-1267595c8b09';
         const targetPlayerId = [
             '0fa068ed-edf9-494f-81b6-dbd27d11f8d5',
@@ -18,7 +18,7 @@ const SendNotificationButton = () => {
                     include_player_ids: targetPlayerId,
                     headings: {en: '📢 お知らせ'},
                     contents: {en: '通知が届きました！'},
-                    url: 'https://homet-frontend-699a294558eb.herokuapp.com/', // 通知をタップしたときのURL
+                    url: 'https://homet-onesignal-test-6a11abc942d3.herokuapp.com/', // 通知をタップしたときのURL
                 },
                 {
                     headers: {

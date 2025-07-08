@@ -342,7 +342,7 @@ function Signup() {
                 </Box>
 
             </Box>
-            <SendNotificationButton/>
+            {/*<SendNotificationButton/>*/}
         </Box>
     );
 }
