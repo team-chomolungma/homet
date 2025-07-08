@@ -137,8 +137,8 @@ function Signup() {
                     // const isEnabled = await OneSignal.isPushNotificationsEnabled?.();
                     // const uid = await OneSignal.getUserId?.();
                     // setUserId(uid);
-
-                    const playerId = await OneSignal.getUserId();
+                    const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
+                    // const playerId = await OneSignal.getUserId();
                     console.log('✅ OneSignal ID:', playerId);
                     setplayerId(playerId);
 
