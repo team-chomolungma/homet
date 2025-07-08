@@ -9,7 +9,7 @@ export default function NavigationBar() {
 
     return (
         <BottomNavigation
-            sx={{bgcolor: '#F5E6D3', height: 81, position: 'fixed', bottom: 0, width: 1}}
+            sx={{bgcolor: '#F5E6D3', height: {xs: 66,sm: 81,md:81}, position: 'fixed', bottom: 0, width: 1}}
         >
             <BottomNavigationAction label="home" icon={<img
                 src={homeIcon}
