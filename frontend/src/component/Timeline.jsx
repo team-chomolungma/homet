@@ -1,4 +1,4 @@
-import {Box, Container, Stack, Typography, useMediaQuery} from '@mui/material';
+import {Box, Container, Stack, Typography} from '@mui/material';
 import NavigationBar from './NavigationBar.jsx';
 import UserIcon from './UserIcon.jsx'
 import React, {useEffect, useState} from 'react';
@@ -12,7 +12,6 @@ import {ja} from 'date-fns/locale';
 import axiosInstance from '../lib/axios.js';
 
 export default function Timeline() {
-    const isLargeXs = useMediaQuery('(min-width:390px)');
 
     const navigate = useNavigate();
 
@@ -104,7 +103,6 @@ export default function Timeline() {
     return (
         <>
             <Container sx={{
-
                 width: 1,
                 textAlign: 'center',
                 marginTop: '10%',
@@ -112,7 +110,7 @@ export default function Timeline() {
             }}>
                 <Typography sx={{
                     color: '#333333',
-                    fontSize: isLargeXs ? 24 : 20,
+                    fontSize: {xs: 18, sm: 24, md: 26}
                 }}
                 >タイムライン</Typography>
             </Container>
@@ -137,10 +135,10 @@ export default function Timeline() {
             }).map(([groupKey, posts]) => {
                 return (
                     <React.Fragment key={groupKey}>
-                        <Container sx={{width: 250,}}>
+                        <Container sx={{width: '75vw'}}>
                             <Typography sx={{
-                                marginBottom: '16px', '@media (max-width: 375px)': {fontSize: 12},
-                                '@media (min-width: 376px) and (max-width: 390px)': {fontSize: 14},
+                                marginBottom: '16px',
+                                fontSize: {xs: 12, sm: 14, md: 14}
                             }}>{groupKey}</Typography>
 
                         </Container>
@@ -152,13 +150,13 @@ export default function Timeline() {
 
                                     <Container key={data.id}
                                                sx={{
-                                                   width: 250,
+                                                   width: '75vw',
                                                    bgcolor: data.play_flag ? 'white' : '#AFADAD',
                                                    borderRadius: 5,
                                                    margin: '8px auto',
                                                    alignContent: 'center',
-                                                   '@media (max-width: 375px)': {height: 70},
-                                                   '@media (min-width: 376px) and (max-width: 390px)': {height: 80},
+                                                   height: {xs: 65, sm: 80, md: 90}
+
                                                }}
                                                onClick={() => data.play_flag && getUrl(data.sender_id, data.id, data.diplayname)}>
 
@@ -170,12 +168,14 @@ export default function Timeline() {
 
                                             <UserIcon displayname={data.diplayname}/>
                                             {!friendList.includes(data.sender_id) &&
-                                                <img
-                                                    onClick={() => mutualFriends(data.sender_id)}
-                                                    src={addfriend}
-                                                    alt="addfriend"
-                                                    style={{width: 35, height: 24}}
-                                                />
+                                                <Box style={{width: 44, height: 45, alignContent: 'center'}}>
+                                                    <img
+                                                        onClick={() => mutualFriends(data.sender_id)}
+                                                        src={addfriend}
+                                                        alt="addfriend"
+                                                        style={{width: 35, height: 24}}
+                                                    />
+                                                </Box>
                                             }
 
                                             {data.first_played_at ? (
@@ -205,7 +205,7 @@ export default function Timeline() {
 
 
             {/*NavigationBarとの要素被り防止*/}
-            <Box sx={{height: 81}}/>
+            <Box sx={{height: {xs: 65, sm: 80, md: 90}}}/>
             <NavigationBar/>
         </>
     )
