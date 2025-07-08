@@ -87,6 +87,7 @@ function Signup() {
         }
 
         if (!security) {
+            console.log('同意ボタン押していません')
             return
         }
 
