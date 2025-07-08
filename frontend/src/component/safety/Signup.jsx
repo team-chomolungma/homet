@@ -102,32 +102,43 @@ function Signup() {
                 if (res.status === 200) {
                     navigate('/home');
                 } else {
-                    alert('予期せぬエラー');
+                    alert(`予期せぬエラーが発生しました（status: ${res.status}）`);
+                    console.error('⚠️ サーバーレスポンス:', res);
                 }
             } catch (err) {
-                if (err.response?.status === 409) {
-                    alert('新規アカウント作成失敗　　時間をあけてもう一度お試しください');
+                console.error('❌ サインアップエラー詳細:', err); // ← これが重要！
+
+                const status = err.response?.status;
+                if (status === 409) {
+                    alert('このユーザーIDはすでに使われています');
+                } else if (status) {
+                    alert(`サーバーエラー（${status}）が発生しました`);
                 } else {
-                    console.error('サインアップ失敗', err);
-                    alert('予期せぬエラー');
+                    alert('ネットワークまたは予期せぬエラーが発生しました');
                 }
             }
         }
     };
-    
+
 
     useEffect(() => {
-        const getPlayerId = async () => {
-            try {
-                const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
-                // const playerId = await OneSignal.getUserId();
-                console.log('✅ OneSignal ID:', playerId);
-                setplayerId(playerId);
-            } catch (e) {
-                console.error('❌ OneSignal ID取得失敗:', e);
+        let retries = 0;
+        const tryGetPlayerId = async () => {
+            while (retries < 10) {
+                const id = await window?.OneSignal?.getUserId?.();
+                if (id) {
+                    console.log('✅ OneSignal ID取得成功:', id);
+                    setplayerId(id);
+                    return;
+                }
+                console.log('⏳ OneSignal ID待機中...');
+                retries++;
+                await new Promise(res => setTimeout(res, 500)); // 0.5秒待つ
             }
+            console.warn('⚠️ OneSignal IDが取得できませんでした（タイムアウト）');
         };
-        getPlayerId();
+
+        tryGetPlayerId();
     }, []);
 
     return (
