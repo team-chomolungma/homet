@@ -18,8 +18,8 @@ export default function AddFriend() {
     //No5  { result: [{ id,displayname }]
     const userSearch = async (userId) => {
         if (!userId) return;
-        const response = await axiosInstance.get(`/api/users/search${userId}`)
-        setSearchResult(response.result)
+        const response = await axiosInstance.get(`/api/users/search?userID=${userId}`)
+        setSearchResult(response.data.result)
     }
 
     return (
