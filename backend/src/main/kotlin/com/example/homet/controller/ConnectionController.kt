@@ -7,6 +7,7 @@ import com.example.homet.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -18,7 +19,8 @@ data class ConnectionController(
 ){
     @GetMapping
     fun getConnection(
-        @CookieValue(name = "SESSION_TOKEN") token: String,
+//        @CookieValue(name = "SESSION_TOKEN") token: String,
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ): ResponseEntity<Map<String,List<Connection>>> {
         val myId = sessionService.getUser(token).id
         val result = connectionService.getConnections(myId)

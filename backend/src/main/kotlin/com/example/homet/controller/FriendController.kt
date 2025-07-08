@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -25,7 +26,8 @@ data class FriendController(
 ){
     @GetMapping
     fun getFriends(
-        @CookieValue(name="SESSION_TOKEN") token: String,
+//        @CookieValue(name="SESSION_TOKEN") token: String,
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ): ResponseEntity<Map<String, List<FriendDto>>> {
         val user = sessionService.getUser(token)
         val result = friendService.getFriends(user.id)
@@ -34,7 +36,8 @@ data class FriendController(
 
     @PostMapping
     fun createFriend(
-        @CookieValue(name="SESSION_TOKEN") token: String,
+//        @CookieValue(name="SESSION_TOKEN") token: String,
+        @RequestAttribute("SESSION_TOKEN") token: String,
         @RequestBody request: FriendRequest,
     ): ResponseEntity<Any>{
         val myId = sessionService.getUser(token).id
