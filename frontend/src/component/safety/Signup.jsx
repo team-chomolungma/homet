@@ -301,15 +301,22 @@ function Signup() {
                             {userNameError || '　'}
                         </Typography>
                     </Box>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={security}
-                                onChange={(e) => setSecurity(e.target.checked)}
-                            />
-                        }
-                        label="個人情報の取り扱いに同意します"
-                    />
+                    <Box sx={{mb: 1}}>
+                        <Typography variant="body2" sx={{mb: 1}}>
+                            ユーザー名にはニックネームなど、<br/>
+                            個人を特定できない情報を使用ください
+                        </Typography>
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={security}
+                                    onChange={(e) => setSecurity(e.target.checked)}
+                                />
+                            }
+                            label="個人情報の取り扱いに同意します"
+                        />
+                    </Box>
                     <Button
                         disabled={!security || !playerId}
                         type="submit"
