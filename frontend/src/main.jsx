@@ -17,7 +17,7 @@ import AddFriend from './component/friend/AddFriend.jsx';
 import Friendlist from './component/friend/Friendlist.jsx';
 import AudioSendAfter from './component/Audio/AudioSendAfter.jsx';
 import {createTheme} from '@mui/material';
-import {ThemeProvider} from '@mui/material/styles';
+import {ThemeProvider} from '@mui/material/styles'
 
 const theme = createTheme({
     breakpoints: {
