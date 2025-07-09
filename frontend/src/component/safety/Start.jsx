@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -13,6 +13,14 @@ import Login from './Login.jsx';
 function Start() {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, []);
+
     return (
         <Box
             sx={{
@@ -24,6 +32,7 @@ function Start() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                height: '100vh',
             }}
         >
             <Box
@@ -33,6 +42,7 @@ function Start() {
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1,
+                    overflow: 'hidden',
                 }}
             >
                 <Box
@@ -53,6 +63,7 @@ function Start() {
                     color: '#333333',
                     zIndex: 2,
                     mb: 5,
+                    overflow: 'hidden',
                 }}
             >
                 Homet
