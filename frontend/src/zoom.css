@@ -15,14 +15,19 @@
         transform: translateX(-50%) scale(2.5);
         opacity: 0;
     }
-    50% {
+    20% {
         bottom: 2%;
         transform: translateX(-50%) scale(2.5);
         opacity: 1;
     }
+    40% {
+        bottom: 5%;
+        transform: translateX(-50%) scale(0.6); /* 👈 ズームアウトここで完了 */
+        opacity: 1;
+    }
     100% {
-        bottom: 10%; /* 👈 上方向にズレる */
-        transform: translateX(-50%) scale(0.6); /* 👈 小さくズームアウト */
+        bottom: 5%; /* 👈 上にさらにゆっくり移動 */
+        transform: translateX(-50%) scale(0.6); /* 👈 ズームは変わらず */
         opacity: 1;
     }
 }
