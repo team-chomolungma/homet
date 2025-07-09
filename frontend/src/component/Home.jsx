@@ -115,15 +115,22 @@ function Home() {
                     }}
                 />
 
-                <CustomButton
+                <Box
                     sx={{
-                        width: {xs: '120px', sm: '142px'},
-                        mb: {xs: 10, sm: 15},
+                        position: 'absolute',
+                        top: {xs: '80vh', sm: '81vh', md: '82vh',},
+                        zIndex: 20,
                     }}
-                    onClick={() => navigate('/friendlist')}
                 >
-                    ホメット
-                </CustomButton>
+                    <CustomButton
+                        sx={{
+                            width: {xs: '120px', sm: '142px'},
+                        }}
+                        onClick={() => navigate('/friendlist')}
+                    >
+                        ホメット
+                    </CustomButton>
+                </Box>
 
                 <NavigationBar
                     sx={{
