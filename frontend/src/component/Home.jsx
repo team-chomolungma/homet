@@ -62,7 +62,7 @@ function Home() {
                             color: '#333333',
                             fontSize: {xs: 20, sm: 24, md: 28},
                         }}
-                        >タイムライン</Typography>
+                        >つながり</Typography>
                     </Container>
                     <Box
                         component="img"

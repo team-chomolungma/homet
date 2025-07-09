@@ -38,8 +38,10 @@ export default function Friendlist() {
                     spacing={1}
                     sx={{margin: 2}}
                 >
-                    <Typography sx={{fontSize: 24, color: '#333333'}}>ともだちリスト</Typography>
-                    <GroupAddOutlinedIcon sx={{color: '#333333'}} onClick={() => navigate('/addfriend')}/>
+                    <Typography sx={{fontSize: {xs: 24, sm: 24, md: 26}, color: '#333333'}}>ともだちリスト</Typography>
+                    <GroupAddOutlinedIcon
+                        sx={{color: '#333333', height: 25, width: 35}}//fontSize: {xs: 20, sm: 24, md: 26}
+                        onClick={() => navigate('/addfriend')}/>
                 </Stack>
 
                 {friendList && (friendList.map((data) => {

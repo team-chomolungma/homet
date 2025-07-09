@@ -35,8 +35,13 @@ data class SessionService(
         )
     }
     fun isValidSession(token: String): Boolean {
-        val isSession = sessionRepository.findByToken(token)
-        return isSession != null
+        val session= sessionRepository.findByToken(token)?: return false
+        return if (session.expiresAt.isBefore(Instant.now())) {
+            sessionRepository.delete(session)
+            false
+        }else{
+            true
+        }
     }
     fun getUserFromSession(token: String): SessionResponse {
         val session = sessionRepository.findByToken(token)

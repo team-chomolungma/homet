@@ -1,4 +1,4 @@
-import {Box, Button, Typography} from '@mui/material';
+import {Box, Button, Stack, Typography} from '@mui/material';
 import NavigationBar from '../NavigationBar.jsx';
 import hohoemian from '../../../public/homeranian/hohoemian.png'
 import giraranian from '../../../public/homeranian/giraranian.png'
@@ -15,6 +15,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {useNavigate, useLocation} from 'react-router-dom';
 import axiosInstance from '../../lib/axios.js';
 import UserIcon from '../UserIcon.jsx';
+import CustomButton from '../CustomButton.jsx';
+
 
 export default function AudioListen() {
 
@@ -132,133 +134,161 @@ export default function AudioListen() {
 
     return (
         <>
-            <ArrowBackIosNewIcon sx={{
-                height: 24, width: 24, color: '#333333', top: 20, position: 'absolute'
-            }} onClick={() => navigate('/timeline')}
-            />
-            <UserIcon displayname={location.state.displayname}/>
-
-            <Box
-                display="flex" // レイアウトモード
-                flexDirection="column" // 縦並び
-                alignItems="center" // 横中央揃え
-                justifyContent="center" // 縦中央揃え
-                minHeight="100vh" // 画面縦いっぱい中央揃え
-            >
-                {/* 吹き出し（状態ごとに画像切替） */}
-                {playing === 'before' && (
-                    <img src={speechBubbleBefore} alt="speechBubbleBefore"/>
-                )}
-                {playing === 'playing' && (
-                    <img src={speechBubblePlaying} alt="speechBubblePlaying"/>
-                )}
-                {playing === 'after' && (
-                    <img src={speechBubbleAfter} alt="speechBubbleAfter"/>
-                )}
-                {playing === 'sendback' && (
-                    <img src={speechBubbleSendback} alt="speechBubblePlaying"/>
-                )}
-
-                {/* 白丸とキャラ画像 */}
-                <Box sx={{position: 'relative'}}>
-                    <img
-                        src={whiteCircle}
-                        style={{height: 283, width: 283, position: 'absolute'}}
-                        alt="whiteCircle"
+            <Box minHeight="100vh" sx={{
+                overflow: 'hidden',
+            }}>
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={3}
+                    sx={{width: '100%', margin: 2, marginBottom: {xs: 3, sm: 7, md: 14}}}
+                >
+                    <ArrowBackIosNewIcon sx={{
+                        height: 24, width: 24, color: '#333333'
+                    }} onClick={() => navigate('/timeline')}
                     />
-                    {playing === 'after' ? (
-                        <img
-                            src={hohoemian}
-                            style={{height: 300, width: 300, position: 'relative'}}
-                            alt="hohoemian"
-                        />
-                    ) : (
-                        <img
-                            src={giraranian}
-                            style={{height: 300, width: 300, position: 'relative'}}
-                            alt="giraranian"
-                        />
-                    )}
-                </Box>
-                <Box display="flex"
-                     flexDirection="column"
-                     alignItems="center"
-                     gap={2}>
-                    <audio src={s3Url} ref={audioRef}/>
+                    <UserIcon displayname={location.state.displayname}/>
+                </Stack>
+                <Box
+                    display="flex" // レイアウトモード
+                    flexDirection="column" // 縦並び
+                    alignItems="center" // 横中央揃え
+                    justifyContent="center" // 縦中央揃え
+                >
+                    {/* 吹き出し（状態ごとに画像切替） */}
+                    <Box sx={{width: {xs: 260, sm: 294, md: 294}, height: {xs: 119, sm: 135, md: 135}}}>
+                        {playing === 'before' && (
+                            <img src={speechBubbleBefore} alt="speechBubbleBefore"
+                                 style={{height: '100%', width: '100%'}}/>
+                        )}
+                        {playing === 'playing' && (
+                            <img src={speechBubblePlaying} alt="speechBubblePlaying"
+                                 style={{height: '100%', width: '100%'}}/>
+                        )}
+                        {playing === 'after' && (
+                            <img src={speechBubbleAfter} alt="speechBubbleAfter"
+                                 style={{height: '100%', width: '100%'}}/>
+                        )}
+                        {playing === 'sendback' && (
+                            <img src={speechBubbleSendback} alt="speechBubblePlaying"
+                                 style={{height: '100%', width: '100%'}}/>
+                        )}
+                    </Box>
 
-                    {playing === 'before' && (
+                    {/* 白丸とキャラ画像 */}
+                    <Box sx={{
+                        position: 'relative',
+                        width: {xs: 230, sm: 300, md: 300},
+                        height: {xs: 230, sm: 300, md: 300}
+                    }}>
                         <img
-                            onClick={handlePlay}
-                            src={playIcon}
-                            alt="playIcon"
+                            src={whiteCircle}
+                            style={{height: '100%', width: '100%', position: 'absolute'}}
+                            alt="whiteCircle"
                         />
-                    )}
-                    {playing === 'playing' && (
-                        <img
-                            src={playingIcon}
-                            alt="playingIcon"
-                        />
-                    )}
-                    {playing === 'after' && (
-                        <img
-                            src={playAfterIcon}
-                            alt="playAfterIcon"
-                        />
-                    )}
-                    {(location.state.frinedFlag && playing === 'sendback') &&
-                        <>
-                            <Typography sx={{
-                                fontSize: 14,
-                                color: '#906D6D',
-                            }}>まだともだちになっていないユーザーです</Typography>
-                            <Button sx={{
-                                bgcolor: 'white',
-                                color: '#DA63A5',
-                                border: '2px solid #DA63A5',
-                                height: 43,
-                                width: 156,
-                                borderRadius: 3,
-                                fontSize: 16
-                            }}
-                                    onClick={mutualFriends}
-                            >ともだち追加</Button>
-                        </>
-                    }
-                    {playing === 'sendback' && (
-                        <Button sx={{
-                            bgcolor: '#DA63A5',
-                            color: 'white',
-                            height: 76,
-                            width: 156,
-                            borderRadius: 5,
-                            fontSize: 24
+                        {playing === 'after' ? (
+                            <img
+                                src={hohoemian}
+                                style={{height: '100%', width: '100%', position: 'relative'}}
+                                alt="hohoemian"
+                            />
+                        ) : (
+                            <img
+                                src={giraranian}
+                                style={{height: '100%', width: '100%', position: 'relative'}}
+                                alt="giraranian"
+                            />
+                        )}
+                    </Box>
+                    <Box
+                        sx={{
+                            width: {xs: 135, sm: 164, md: 164},
+                            height: {xs: 109, sm: 132, md: 132}
                         }}
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        gap={2}>
+                        <audio src={s3Url} ref={audioRef}/>
+
+                        {playing === 'before' && (
+                            <img
+                                style={{height: '100%', width: '100%'}}
+                                onClick={handlePlay}
+                                src={playIcon}
+                                alt="playIcon"
+                            />
+                        )}
+                        {playing === 'playing' && (
+                            <img
+                                style={{height: '100%', width: '100%'}}
+                                src={playingIcon}
+                                alt="playingIcon"
+                            />
+                        )}
+                        {playing === 'after' && (
+                            <img
+                                style={{height: '100%', width: '100%'}}
+                                src={playAfterIcon}
+                                alt="playAfterIcon"
+                            />
+                        )}
+                        {(location.state.frinedFlag && playing === 'sendback') ?
+                            (<>
+                                <Typography
+                                    sx={{
+                                        textAlign: 'center',
+                                        width: '75vw',
+                                        fontSize: 14,
+                                        color: '#906D6D',
+                                    }}>まだともだちになっていないユーザーです</Typography>
+                                <Button sx={{
+                                    bgcolor: 'white',
+                                    color: '#DA63A5',
+                                    border: '2px solid #DA63A5',
+                                    height: 43,
+                                    width: 156,
+                                    borderRadius: 3,
+                                    fontSize: 16
+                                }}
+                                        onClick={mutualFriends}
+                                >ともだち追加</Button>
+                            </>) : (
+                                <Box sx={{marginBottom: '64px'}}></Box>
+                            )
+                        }
+                        {playing === 'sendback' && (
+                            <CustomButton
+                                sx={{
+                                    // width: {xs: 121, sm: 156, md: 156},
+                                    // height: {xs: 59, sm: 76, md: 76},
+                                }}
                                 onClick={() => navigate('/voice', {
                                     state: {
-                                        receiver_id: location.state.receiver_id,
+                                        receiver_id: location.state.sender_id,
                                         displayname: location.state.displayname
                                     }
-                                })}>ホメット</Button>
+                                })}
+                            >ホメット</CustomButton>
+                        )}
+
+
+                    </Box>
+                    {playing !== 'sendback' && (
+                        <Typography sx={{fontSize: '24px', fontWeight: 'bold'}} color="#878484">
+                            {(() => {
+                                const time = playing === 'playing' ? currentTime : duration;
+                                if (playing === 'playing') {
+                                    return time < 10 ? `0 0 : 0 ${time}` : `0 0 : ${time.toString().slice(0, 1)} ${time.toString().slice(-1)}`;
+                                } else {
+                                    return duration < 10 ? `0 0 : 0 ${duration}` : `0 0 : ${duration.toString().slice(0, 1)} ${duration.toString().slice(-1)}`;
+                                }
+                            })()}
+
+                        </Typography>
                     )}
-
-
                 </Box>
-                {playing !== 'sendback' && (
-                    <Typography sx={{fontSize: '24px', fontWeight: 'bold'}} color="#878484">
-                        {(() => {
-                            const time = playing === 'playing' ? currentTime : duration;
-                            if (playing === 'playing') {
-                                return time < 10 ? `0 0 : 0 ${time}` : `0 0 : ${time.toString().slice(0, 1)} ${time.toString().slice(-1)}`;
-                            } else {
-                                return duration < 10 ? `0 0 : 0 ${duration}` : `0 0 : ${duration.toString().slice(0, 1)} ${duration.toString().slice(-1)}`;
-                            }
-                        })()}
-
-                    </Typography>
-                )}
             </Box>
-
-
             <NavigationBar/>
 
         </>

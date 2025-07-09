@@ -24,6 +24,7 @@ const SessionChecker = ({children}) => {
             } catch (err) {
                 if (err.response?.status === 401) {
                     console.log('未ログイン、またはセッション切れ');
+                    localStorage.removeItem('SESSION_TOKEN')
                     navigate('/'); //トップページへリダイレクト
                 } else {
                     console.error('予期しないエラー', err);

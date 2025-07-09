@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -37,7 +39,8 @@ data class GroupController(
     @PostMapping
     fun createGroup(
         @RequestBody request: GroupRequest,
-        @CookieValue("SESSION_TOKEN") token: String
+//        @CookieValue("SESSION_TOKEN") token: String
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ): ResponseEntity<GroupResponse> {
         val finalMembers = filteredFriends(token,request.memberID)
         val result = groupService.createGroup(request.groupname, finalMembers)
@@ -46,7 +49,8 @@ data class GroupController(
 
     @GetMapping
     fun getGroupList(
-        @CookieValue("SESSION_TOKEN") token: String
+//        @CookieValue("SESSION_TOKEN") token: String
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ):ResponseEntity<Map<String,List<GroupResponse>>>{
         val myId = sessionService.getUser(token).id
         val result = groupService.getGroupList(myId)
@@ -56,7 +60,8 @@ data class GroupController(
     @PostMapping("/member")
     fun addMember(
         @RequestBody request: MemberRequest,
-        @CookieValue("SESSION_TOKEN") token: String
+//        @CookieValue("SESSION_TOKEN") token: String
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ):ResponseEntity<GroupResponse>{
         val finalMembers = filteredFriends(token,request.memberID)
         val result = groupService.addMember(request.groupID,finalMembers)
@@ -69,7 +74,8 @@ data class GroupController(
     @DeleteMapping("/member")
     fun delMember(
         @RequestBody request: MemberRequest,
-        @CookieValue("SESSION_TOKEN") token: String
+//        @CookieValue("SESSION_TOKEN") token: String
+        @RequestAttribute("SESSION_TOKEN") token: String,
     ):ResponseEntity<GroupResponse>{
         val myId = sessionService.getUser(token).id
         var finalMembers = filteredFriends(token,request.memberID)
