@@ -203,7 +203,7 @@ export default function AudioListen() {
                     <Box
                         sx={{
                             width: {xs: 135, sm: 164, md: 164},
-                            height: {xs: 109, sm: 132, md: 132}
+                            height: {xs: 122, sm: 149, md: 149}
                         }}
                         display="flex"
                         flexDirection="column"
@@ -258,18 +258,16 @@ export default function AudioListen() {
                             )
                         }
                         {playing === 'sendback' && (
-                            <CustomButton
-                                sx={{
-                                    // width: {xs: 121, sm: 156, md: 156},
-                                    // height: {xs: 59, sm: 76, md: 76},
-                                }}
-                                onClick={() => navigate('/voice', {
-                                    state: {
-                                        receiver_id: location.state.sender_id,
-                                        displayname: location.state.displayname
-                                    }
-                                })}
-                            >ホメット</CustomButton>
+                            <Box sx={{width: {xs: '121px', sm: '156px', md: '156px'}}}>
+                                <CustomButton
+                                    onClick={() => navigate('/voice', {
+                                        state: {
+                                            receiver_id: location.state.sender_id,
+                                            displayname: location.state.displayname
+                                        }
+                                    })}
+                                >ホメット</CustomButton>
+                            </Box>
                         )}
 
 

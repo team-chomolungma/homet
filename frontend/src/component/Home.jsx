@@ -126,30 +126,32 @@ function Home() {
                 />
 
                 {/* ホメットボタン（画面に収まるサイズに） */}
-                <CustomButton
-                    // variant="contained"
-                    // sx={{
-                    //   backgroundColor: '#DA63A5',
-                    //   borderRadius: {xs:3,sm:5,md:5},
-                    // //   width: '200px',
-                    // //   height: '56px',
-                    //   width: { xs: '120px', sm: '142px' },
-                    // //   width: isLargeXs ? '200px' : '160px',
-                    //   height: { xs: '55px', sm: '67px' },
-                    // //   height: isLargeXs ? '56px' : '48px',
-                    // // height:'7vh',
-                    //   fontWeight: 'bold',
-                    //   fontSize: {xs:"18px",sm:"24px",md:"24px"},
-                    //   textTransform: 'none',
-                    //   mb: 8,
-                    // }}
-                    sx={{
-                        width: {xs: '120px', sm: '142px'},
-                    }}
-                    onClick={() => navigate('/friendlist')}
-                >
-                    ホメット
-                </CustomButton>
+                <Box sx={{
+                    width: {xs: '120px', sm: '142px'},
+                }}>
+                    <CustomButton
+                        // variant="contained"
+                        // sx={{
+                        //   backgroundColor: '#DA63A5',
+                        //   borderRadius: {xs:3,sm:5,md:5},
+                        // //   width: '200px',
+                        // //   height: '56px',
+                        //   width: { xs: '120px', sm: '142px' },
+                        // //   width: isLargeXs ? '200px' : '160px',
+                        //   height: { xs: '55px', sm: '67px' },
+                        // //   height: isLargeXs ? '56px' : '48px',
+                        // // height:'7vh',
+                        //   fontWeight: 'bold',
+                        //   fontSize: {xs:"18px",sm:"24px",md:"24px"},
+                        //   textTransform: 'none',
+                        //   mb: 8,
+                        // }}
+
+                        onClick={() => navigate('/friendlist')}
+                    >
+                        ホメット
+                    </CustomButton>
+                </Box>
 
                 {/* ナビゲーションバー */}
                 {/* <Box
