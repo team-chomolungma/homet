@@ -39,3 +39,9 @@ data class SignupResponse(
     val userID: String,
     val displayname: String
 )
+
+data class AuthResponseClient(
+    val userID: String,
+    val displayname: String,
+    val token: String
+)

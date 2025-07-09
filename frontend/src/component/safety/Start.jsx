@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -13,20 +13,36 @@ import Login from './Login.jsx';
 function Start() {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, []);
+
     return (
         <Box
             sx={{
-                height: '100vh',
+                minHeight: '100vh',
+                backgroundColor: '#FFF1F4',
                 position: 'relative',
+                overflow: 'hidden',
+                pt: {xs: '60vh', sm: '65vh'},
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                height: '100vh',
             }}
         >
-            {/* ✅ 画像だけ中央に配置 */}
             <Box
                 sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
+                    zIndex: 1,
+                    overflow: 'hidden',
                 }}
             >
                 <Box
@@ -34,58 +50,54 @@ function Start() {
                     src="/run.png"
                     alt="ホメラニアンの画像"
                     sx={{
-                        width: 180,
-                        height: 180,
+                        width: {xs: 140, sm: 180},
+                        height: {xs: 140, sm: 180},
                     }}
                 />
             </Box>
 
-            {/* ✅ ボタン群を画像の下に一定距離で配置 */}
-            <Box
+            <Typography
                 sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, 0)', // 画像と中央を基準にY方向のみズラす
-                    mt: 10, // ← 画像からの距離（px単位）
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 5,
+                    fontSize: {xs: 28, sm: 40},
+                    lineHeight: 1.2,
+                    color: '#333333',
+                    zIndex: 2,
+                    mb: 5,
+                    overflow: 'hidden',
                 }}
             >
-                <Typography
-                    sx={{
-                        fontSize: 40,
-                        lineHeight: '53px',
-                        color: '#333333',
-                    }}
-                >
-                    Homet
-                </Typography>
+                Homet
+            </Typography>
 
-                <Button
-                    variant="contained"
-                    sx={{
-                        width: 156,
-                        height: 76,
-                        borderRadius: '20px',
-                        fontSize: 24,
-                        backgroundColor: '#DA63A5',
-                    }}
-                    onClick={() => navigate('/login')}
-                >
-                    ログイン
-                </Button>
+            <Button
+                variant="contained"
+                sx={{
+                    width: {xs: 140, sm: 156},
+                    height: {xs: 60, sm: 76},
+                    borderRadius: '20px',
+                    fontSize: {xs: 20, sm: 24},
+                    backgroundColor: '#DA63A5',
+                    textTransform: 'none',
+                    zIndex: 2,
+                    mb: 5,
+                }}
+                onClick={() => navigate('/login')}
+            >
+                ログイン
+            </Button>
 
-                <Typography
-                    sx={{fontSize: 24, color: '#333333', cursor: 'pointer'}}
-                    onClick={() => navigate('/signup')}
-                >
-                    新規登録
-                </Typography>
-            </Box>
+            <Typography
+                sx={{
+                    fontSize: {xs: 18, sm: 24},
+                    color: '#333333',
+                    cursor: 'pointer',
+                }}
+                onClick={() => navigate('/signup')}
+            >
+                新規登録
+            </Typography>
         </Box>
+
     );
 
 

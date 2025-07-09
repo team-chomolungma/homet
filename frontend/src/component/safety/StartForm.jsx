@@ -16,32 +16,37 @@ function StartForm() {
     return (
         <Box
             sx={{
-                height: '100vh',
+                minHeight: '100vh',
+                backgroundColor: '#FFF1F4',
+                position: 'relative',
+                overflow: 'hidden',
+                pt: {xs: '60vh', sm: '65vh'},
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',//横中央
-                flexDirection: 'column',//縦中央
+                flexDirection: 'column',
+                alignItems: 'center',
             }}
         >
             <Box
-                component="img"
-                src="/run.png"
-                alt="ホメラニアンの画像"
                 sx={{
-                    width: 180,
-                    height: 180,
-                }}
-            />
-            <Typography
-                sx={{
-                    fontSize: 40,
-                    lineHeight: '53px',
-                    color: '#333333',
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 1,
                 }}
             >
-                Homet
-            </Typography>
+                <Box
+                    component="img"
+                    src="/run.png"
+                    alt="ホメラニアンの画像"
+                    sx={{
+                        width: {xs: 140, sm: 180},
+                        height: {xs: 140, sm: 180},
+                    }}
+                />
+            </Box>
         </Box>
+            
     );
 }
 

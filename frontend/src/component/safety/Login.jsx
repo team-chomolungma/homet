@@ -15,6 +15,8 @@ import axiosInstance from '../../lib/axios.js';
 import {useAuth} from './AuthContext.jsx';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import Loading from '../Loading.jsx';
+import Zoom from '../Zoom.jsx';
 
 function Login() {
     const {setUser} = useAuth();
@@ -25,6 +27,7 @@ function Login() {
     const [userIdError, setUserIdError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [showLoading, setShowLoading] = useState(false);
 
     //マウント時自動ログイン処理
     useEffect(() => {
@@ -32,10 +35,15 @@ function Login() {
             try {
                 const res = await axiosInstance.get('/api/auth/session');
                 if (res.status === 200) {
-                    const {userID, displayname} = res.data; // レスポンスされるオブジェクトをセット{ userID, displayname }
+                    const {userID, displayname} = res.data;
                     setUser({myUserID: userID, myDisplayname: displayname});
                     console.log('セッション有効です');
-                    navigate('/home');
+
+                    // ✅ Loading表示フラグをtrueにして1秒後にホーム画面へ遷移
+                    setShowLoading(true);
+                    setTimeout(() => {
+                        navigate('/start-animation');
+                    }, 1000);
                 }
             } catch (err) {
                 if (err.response?.status === 401) {
@@ -78,8 +86,9 @@ function Login() {
                 password: password,
             });
             if (res.status === 200) {
-                const {userID, displayname} = res.data;
+                const {userID, displayname,token} = res.data;
                 setUser({myUserID: userID, myDisplayname: displayname});
+                localStorage.setItem('SESSION_TOKEN',token);
                 navigate('/home');
             }
         } catch (err) {
@@ -98,147 +107,201 @@ function Login() {
 
 
     return (
-        <Box
-            sx={{
-                minHeight: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                px: 2,
-            }}
-        >
-            <IconButton
-                onClick={() => navigate(-1)}
-                sx={{position: 'absolute', top: 24, left: 24}}
-            >
-                <ArrowBackIcon/>
-            </IconButton>
-            <Box
-                sx={{
-                    width: '100%',
-                    maxWidth: 400,
-                    position: 'relative',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
+        <>
+            {showLoading ? (
                 <Box
-                    component="form"
-                    onSubmit={handleSubmit}
                     sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                        alignItems: 'center',
+                        height: '100vh',
                         width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+
                     }}
                 >
-                    <Typography sx={{fontSize: 40, lineHeight: '53px', color: '#333333'}}>
-                        Homet
-                    </Typography>
-
-                    <Box sx={{width: 300}}>
-                        <Typography sx={{fontSize: 16, mb: 0.5}}>ユーザーID</Typography>
-                        <TextField
-                            fullWidth
-                            value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
-                            error={!!userIdError}
-                            variant="outlined"
-                            sx={{
-                                backgroundColor: '#fff',
-                                borderRadius: 1,
-                                '& .MuiOutlinedInput-root': {
-                                    fontSize: 18,
-                                    height: 48,
-                                },
-                            }}
-                            placeholder="英数字で入力"
-                        />
-                        <Typography
-                            sx={{
-                                fontSize: 12,
-                                mt: '2px',
-                                minHeight: '1.5em',
-                                color: userIdError ? '#e53935' : 'transparent',
-                                backgroundColor: '#fff1f3',
-                                pl: 1,
-                                borderRadius: 1,
-                            }}
-                        >
-                            {userIdError || '　'}
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{width: 300}}>
-                        <Typography sx={{fontSize: 16, color: '#333', mt: 3}}>
-                            パスワード
-                        </Typography>
-                        <TextField
-                            type={showPassword ? 'text' : 'password'}
-                            fullWidth
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            error={!!passwordError}
-                            variant="outlined"
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            onClick={() => setShowPassword((prev) => !prev)}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                                sx: {
-                                    fontSize: 18,
-                                    height: 48,
-                                    backgroundColor: '#fff',
-                                    borderRadius: 1,
-                                },
-                            }}
-                            placeholder="6文字の英数字で入力"
-                        />
-                        <Typography
-                            sx={{
-                                fontSize: 12,
-                                mt: '2px',
-                                minHeight: '1.5em',
-                                color: passwordError ? '#e53935' : 'transparent',
-                                backgroundColor: '#fff1f3',
-                                pl: 1,
-                                borderRadius: 1,
-                            }}
-                        >
-                            {passwordError || '　'}
-                        </Typography>
-                    </Box>
-
-
-                    <Button
-                        type="submit"
-                        variant="contained"
+                    <Box
                         sx={{
-                            // mt: 2,
-                            width: 156,
-                            height: 76,
-                            borderRadius: '20px',
-                            fontSize: 24,
-                            backgroundColor: '#DA63A5',
-                            justifyContent: 'center',
+                            height: '100vh',
+                            width: '100%',
+                            position: 'relative',
+
                         }}
                     >
-                        ログイン
-                    </Button>
 
+                        <Loading/>
+
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '60%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    fontSize: 18,
+                                    color: '#555',
+                                    textAlign: 'center',
+                                    mt: 3,
+                                }}
+                            >
+                                自動ログイン中...
+                            </Typography>
+                        </Box>
+                    </Box>
                 </Box>
+            ) : (
+                <Box
+                    sx={{
+                        minHeight: '100vh',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        px: 2,
+                        backgroundColor: '#FFF1F4',
+                        position: 'relative',
+                    }}
+                >
+                    {/* 戻るボタン */}
+                    <IconButton
+                        onClick={() => navigate(-1)}
+                        sx={{
+                            position: 'absolute',
+                            top: {xs: 16, sm: 24},
+                            left: {xs: 16, sm: 24},
+                        }}
+                    >
+                        <ArrowBackIcon/>
+                    </IconButton>
 
-            </Box>
-        </Box>
-    );
+                    {/* フォーム */}
+                    <Box sx={{width: '100%', maxWidth: 400, px: {xs: 2, sm: 0}}}>
+                        <Box
+                            component="form"
+                            onSubmit={handleSubmit}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: {xs: 2, sm: 3},
+                                alignItems: 'center',
+                                width: '100%',
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    fontSize: {xs: 32, sm: 40},
+                                    lineHeight: '1.3',
+                                    color: '#333333',
+                                    mb: {xs: 1, sm: 2},
+                                }}
+                            >
+                                Homet
+                            </Typography>
+
+                            {/* ユーザーID */}
+                            <Box sx={{width: '80%'}}>
+                                <Typography sx={{fontSize: 14, mb: 0.5}}>ユーザーID</Typography>
+                                <TextField
+                                    fullWidth
+                                    value={userId}
+                                    onChange={(e) => setUserId(e.target.value)}
+                                    error={!!userIdError}
+                                    variant="outlined"
+                                    sx={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: 1,
+                                        '& .MuiOutlinedInput-root': {
+                                            fontSize: 16,
+                                            height: 48,
+                                        },
+                                    }}
+                                    placeholder="英数字で入力"
+                                />
+                                <Typography
+                                    sx={{
+                                        fontSize: 12,
+                                        mt: '2px',
+                                        minHeight: '1.5em',
+                                        color: userIdError ? '#e53935' : 'transparent',
+                                        backgroundColor: userIdError ? '#fff1f3' : 'transparent',
+                                        pl: 1,
+                                        borderRadius: 1,
+                                    }}
+                                >
+                                    {userIdError || '　'}
+                                </Typography>
+                            </Box>
+
+                            {/* パスワード */}
+                            <Box sx={{width: '80%'}}>
+                                <Typography sx={{fontSize: 14, mt: 3, mb: 0.5}}>パスワード</Typography>
+                                <TextField
+                                    type={showPassword ? 'text' : 'password'}
+                                    fullWidth
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    error={!!passwordError}
+                                    variant="outlined"
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    onClick={() => setShowPassword((prev) => !prev)}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                        sx: {
+                                            fontSize: 16,
+                                            height: 48,
+                                            backgroundColor: '#fff',
+                                            borderRadius: 1,
+                                        },
+                                    }}
+                                    placeholder="6文字の英数字で入力"
+                                />
+                                <Typography
+                                    sx={{
+                                        fontSize: 12,
+                                        mt: '2px',
+                                        minHeight: '1.5em',
+                                        color: passwordError ? '#e53935' : 'transparent',
+                                        backgroundColor: passwordError ? '#fff1f3' : 'transparent',
+                                        pl: 1,
+                                        borderRadius: 1,
+                                    }}
+                                >
+                                    {passwordError || '　'}
+                                </Typography>
+                            </Box>
+
+                            {/* ログインボタン */}
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                sx={{
+                                    mt: {xs: 2, sm: 3},
+                                    width: {xs: 140, sm: 156},
+                                    height: {xs: 60, sm: 76},
+                                    borderRadius: '20px',
+                                    fontSize: {xs: 20, sm: 24},
+                                    backgroundColor: '#DA63A5',
+                                    justifyContent: 'center',
+                                    textTransform: 'none',
+                                }}
+                            >
+                                ログイン
+                            </Button>
+                        </Box>
+                    </Box>
+                </Box>
+            )}
+        </>
+
+    )
 }
 
 export default Login;
