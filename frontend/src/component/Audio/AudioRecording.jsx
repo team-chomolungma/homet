@@ -128,17 +128,17 @@ const AudioRecording = () => {
     const sendVoice = async () => {
         setReq(true)
         try {
-            // const formData = new FormData();
-            // const receiverId = location.state.receiver_id;
-            // formData.append('file', mp3Blob, 'recording.mp3');
-            // formData.append('receiver_id', receiverId.toString());
-            // const response = await axiosInstance.post('/api/homet/voice', formData)
-            // if (response.status === 200) {
-            //     // console.log('送信成功')
-            //     const playerId = response.data.playerID;
-            //     setPlayerId(playerId);
-            //     notificationRef.current?.sendNotification(); //通知送信発火
-            // }
+            const formData = new FormData();
+            const receiverId = location.state.receiver_id;
+            formData.append('file', mp3Blob, 'recording.mp3');
+            formData.append('receiver_id', receiverId.toString());
+            const response = await axiosInstance.post('/api/homet/voice', formData)
+            if (response.status === 200) {
+                // console.log('送信成功')
+                const playerId = response.data.playerID;
+                setPlayerId(playerId);
+                notificationRef.current?.sendNotification(); //通知送信発火
+            }
         } catch (err) {
             console.error('送信失敗', err)
         } finally {
@@ -276,6 +276,7 @@ const AudioRecording = () => {
                                                     style={{height: '100%', width: '100%'}}
                                                     src={retakeIcon}
                                                     alt="retakeIcon"
+                                                    onClick={reshoot}
                                                 />
                                             </Box>
                                             <Box
