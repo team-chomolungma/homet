@@ -17,7 +17,9 @@ import AddFriend from './component/friend/AddFriend.jsx';
 import Friendlist from './component/friend/Friendlist.jsx';
 import AudioSendAfter from './component/Audio/AudioSendAfter.jsx';
 import {createTheme} from '@mui/material';
-import {ThemeProvider} from '@mui/material/styles'
+import {ThemeProvider} from '@mui/material/styles';
+import Zoom from './component/Zoom.jsx';
+
 
 const theme = createTheme({
     breakpoints: {
@@ -49,6 +51,7 @@ createRoot(document.getElementById('root')).render(
                             <Route path="/timeline" element={<Timeline/>}/>
                             <Route path="/friendlist" element={<Friendlist/>}/>
                             <Route path="/addfriend" element={<AddFriend/>}/>
+                            <Route path="/start-animation" element={<Zoom/>}/>
                         </Routes>
                     </SessionChecker>
                 </AuthProvider>

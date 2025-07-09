@@ -70,9 +70,6 @@ function Home() {
                         alt="背景画像1"
                         sx={{
                             width: '100%',
-                            // height: 'auto',
-                            // height: { xs: 200, sm: 300, md: 'auto' },
-                            // height:isLargeXs ? '400px':'300px',
                             height: '50vh',
                             objectFit: 'cover',
                             objectPosition: 'top center',
@@ -92,7 +89,6 @@ function Home() {
                             pointerEvents: 'none', // 画像クリックを邪魔しない
                             zIndex: 10,
                             // mt: '10vh',
-                            // mt: { xs: '5vh', sm: '10vh' },
                             mt: isLargeXs ? '7vh' : '10vh'
                         }}
                     >
@@ -106,62 +102,34 @@ function Home() {
                     src="/home%20homeraniann.png"
                     alt="背景画像2"
                     sx={{
-                        //   width: '80%',
                         width: {xs: '100%', sm: '80%'},
-                        //   maxWidth: '500px',
                         maxWidth: {xs: '300px', sm: '500px'},
-                        //   height: '80%',
-                        //   height: 'auto',
-                        // height:isLargeXs ? 'auto':'190px',
+
                         height: '30vh',
 
                         objectFit: 'contain',
                         objectPosition: 'top center',
 
-                        //   mb: 2,
-                        //   mb: { xs: 4, sm: 2 },
                         mb: isLargeXs ? 2 : 4
 
                     }}
                 />
 
-                {/* ホメットボタン（画面に収まるサイズに） */}
                 <CustomButton
-                    // variant="contained"
-                    // sx={{
-                    //   backgroundColor: '#DA63A5',
-                    //   borderRadius: {xs:3,sm:5,md:5},
-                    // //   width: '200px',
-                    // //   height: '56px',
-                    //   width: { xs: '120px', sm: '142px' },
-                    // //   width: isLargeXs ? '200px' : '160px',
-                    //   height: { xs: '55px', sm: '67px' },
-                    // //   height: isLargeXs ? '56px' : '48px',
-                    // // height:'7vh',
-                    //   fontWeight: 'bold',
-                    //   fontSize: {xs:"18px",sm:"24px",md:"24px"},
-                    //   textTransform: 'none',
-                    //   mb: 8,
-                    // }}
                     sx={{
                         width: {xs: '120px', sm: '142px'},
+                        mb: {xs: 10, sm: 15},
                     }}
                     onClick={() => navigate('/friendlist')}
                 >
                     ホメット
                 </CustomButton>
 
-                {/* ナビゲーションバー */}
-                {/* <Box
-        sx={{
-            width: '100%',
-            height: '20vh',
-            bottom:0,
-            left:0
-
-        }}
-      /> */}
-                <NavigationBar/>
+                <NavigationBar
+                    sx={{
+                        pt: 10,
+                    }}
+                />
             </Box>
         </>
     );
