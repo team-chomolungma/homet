@@ -132,19 +132,12 @@ const AudioRecording = () => {
             const receiverId = location.state.receiver_id;
             formData.append('file', mp3Blob, 'recording.mp3');
             formData.append('receiver_id', receiverId.toString());
-            const response = await axiosInstance.post('/api/homet/voice', formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                })
+            const response = await axiosInstance.post('/api/homet/voice', formData)
             if (response.status === 200) {
                 // console.log('送信成功')
                 const playerId = response.data.playerID;
                 setPlayerId(playerId);
                 notificationRef.current?.sendNotification(); //通知送信発火
-
-
             }
         } catch (err) {
             console.error('送信失敗', err)
@@ -178,156 +171,176 @@ const AudioRecording = () => {
 
     return (
         <>
-            <Container sx={{position: 'relative'}}>
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={3}
-                    sx={{width: '100%', margin: 2}}
-                >
-                    <ArrowBackIosNewIcon sx={{
-                        height: 24, width: 24, color: '#333333'
-                    }} onClick={() => navigate(-1)}
-                    />
-                    <UserIcon displayname={location.state.displayname}/>
-                </Stack>
-                <Box
-                    display="flex"//レイアウトモード
-                    flexDirection="column"//縦並び
-                    alignItems="center"//横中央揃え
-                    justifyContent="center"//縦中央揃え
-                    minHeight="100vh" // 画面縦いっぱい中央揃えしたい場合。外したら上に揃える
-                >
-                    {recording === 'idle' && (
-                        <img
-                            onClick={handleClick}
-                            src={currentImage}
-                            alt="speechBubbleRecording"
-                        />
-                    )}
-                    {recording === 'recording' && (
-                        <img
-                            src={speechBubbleStop}
-                            alt="speechBubbleStop"
-                        />
-                    )}
-                    {recording === 'recorded' && (
-                        <img
-                            src={speechBubbleSend}
-                            alt="speechBubbleSend"
-                        />
-                    )}
-
-                    <Box sx={{
-                        position: 'relative',
-                    }}>
-
-                        <img
-                            src={kimeranian}
-                            style={{
-                                height: 300,
-                                width: 300,
-                                position: 'absolute',
-                            }}
-                            alt="kimeranian"
-                        />
-
-
-                        <img
-                            src={whiteCircle}
-                            style={{
-                                height: 283,
-                                width: 283,
-                            }}
-                            alt="white circle"
-                        />
-
-
-                    </Box>
-
-
+            <Box
+                sx={{
+                    height: '100vh',        // ← 明確に高さを指定
+                    overflow: 'hidden',     // ← スクロール禁止
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <Container sx={{position: 'relative'}}>
                     <Stack
                         direction="row"
                         alignItems="center"
-                        justifyContent="center"
                         spacing={3}
                         sx={{width: '100%', margin: 2}}
                     >
+                        <ArrowBackIosNewIcon sx={{
+                            height: 24, width: 24, color: '#333333'
+                        }} onClick={() => navigate(-1)}
+                        />
+                        <UserIcon displayname={location.state.displayname}/>
+                    </Stack>
+                    <Box
+                        display="flex"//レイアウトモード
+                        flexDirection="column"//縦並び
+                        alignItems="center"//横中央揃え
+                        justifyContent="center"//縦中央揃え
+                        sx={{marginTop: {xs: 5, sm: 10, md: 13}}}
+                        // minHeight="100vh" // 画面縦いっぱい中央揃えしたい場合。外したら上に揃える
+                    >
+                        <Box sx={{width: {xs: 260, sm: 294, md: 294}, height: {xs: 119, sm: 135, md: 135}}}>
+                            {recording === 'idle' && (
+                                <img
+                                    onClick={handleClick}
+                                    src={currentImage}
+                                    alt="speechBubbleRecording"
+                                    style={{height: '100%', width: '100%'}}
+                                />
+                            )}
+                            {recording === 'recording' && (
+                                <img
+                                    src={speechBubbleStop}
+                                    alt="speechBubbleStop"
+                                    style={{height: '100%', width: '100%'}}
+                                />
+                            )}
+                            {recording === 'recorded' && (
+                                <img
+                                    src={speechBubbleSend}
+                                    alt="speechBubbleSend"
+                                    style={{height: '100%', width: '100%'}}
+                                />
+                            )}
+                        </Box>
+
                         <Box sx={{
                             position: 'relative',
+                            width: {xs: 230, sm: 300, md: 300},
+                            height: {xs: 230, sm: 300, md: 300}
                         }}>
 
-                            {recording === 'recorded' &&
+                            <img
+                                src={kimeranian}
+                                style={{height: '100%', width: '100%', position: 'absolute'}}
+                                alt="kimeranian"
+                            />
+
+
+                            <img
+                                src={whiteCircle}
+                                style={{height: '100%', width: '100%'}}
+                                alt="white circle"
+                            />
+                        </Box>
+
+
+                        <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="center"
+                            spacing={3}
+                            sx={{width: '100%', margin: 2, marginTop: 5}}
+
+                        >
+                            <Box sx={{
+                                position: 'relative',
+                            }}>
+
                                 <Box sx={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    // justifyContent: 'space-between',
-                                    width: '100%',
                                 }}>
-                                    <img
-                                        src={retakeIcon}
-                                        alt="retakeIcon"
-                                    />
-                                    <img
-                                        src={sendIcon}
-                                        alt="sendIcon"
-                                        onClick={() => {
-                                            sendVoice();
-                                            // navigate('/loading', {state: {pass: 'voice-after'}})
-                                        }}/>
-                                    <Box sx={{width: 50}}></Box>
+                                    {recording === 'recorded' &&
+                                        <>
+                                            <Box
+                                                sx={{
+                                                    marginRight: 4,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    width: {xs: 57, sm: 64, md: 64},
+                                                    height: {xs: 57, sm: 64, md: 64}
+                                                }}>
+                                                <img
+                                                    style={{height: '100%', width: '100%'}}
+                                                    src={retakeIcon}
+                                                    alt="retakeIcon"
+                                                    onClick={reshoot}
+                                                />
+                                            </Box>
+                                            <Box
+
+                                                sx={{
+                                                    width: {xs: 135, sm: 164, md: 164},
+                                                    height: {xs: 109, sm: 133, md: 133}
+
+                                                }}>
+                                                <img
+                                                    style={{height: '100%', width: '100%'}}
+                                                    src={sendIcon}
+                                                    alt="sendIcon"
+                                                    onClick={() => {
+                                                        sendVoice();
+                                                        // navigate('/loading', {state: {pass: 'voice-after'}})
+                                                    }}/>
+                                            </Box>
+                                            <Box sx={{width: 50, marginLeft: 4}}></Box>
+                                        </>
+                                    }
+
+                                    {recording === 'idle' && (
+                                        <img
+                                            style={{height: '100%', width: '100%'}}
+                                            src={recordingIcon}
+                                            alt="recordingIcon"
+                                            onClick={startRecording}
+                                        />
+                                    )}
+
+                                    {recording === 'recording' && (
+                                        <Box>
+                                            <img
+                                                src={stopIcon}
+                                                alt="stopIcon"
+                                                onClick={stopRecording}
+                                                style={{
+                                                    position: 'absolute',
+                                                    zIndex: 1,
+                                                    height: '100%',
+                                                    width: '100%'
+                                                }}
+                                            />
+                                            <Pulse/>
+                                        </Box>
+                                    )}
                                 </Box>
-                            }
-
-                            {recording === 'idle' && (
-                                <img
-                                    src={recordingIcon}
-                                    alt="recordingIcon"
-                                    onClick={startRecording}
-                                />
-                            )}
-
-                            {recording === 'recording' && (
-
-                                <Box>
-                                    <img
-                                        src={stopIcon}
-                                        alt="stopIcon"
-                                        onClick={stopRecording}
-                                        style={{
-                                            position: 'absolute',
-                                            zIndex: 1
-                                        }}
-                                    />
-                                    <Pulse/>
-                                </Box>
-                            )}
-                            {/*{recording === 'recorded' && (*/}
-                            {/*    <img*/}
-                            {/*        src={sendIcon}*/}
-                            {/*        alt="sendIcon"*/}
-                            {/*        onClick={() => {*/}
-                            {/*            sendVoice();*/}
-                            {/*            // navigate('/loading', {state: {pass: 'voice-after'}})*/}
-                            {/*        }}*/}
-                            {/*    />*/}
-                            {/*)}*/}
-                            {/*<Box sx={{width: 50}}/>*/}
-                        </Box>
-                    </Stack>
+                            </Box>
+                        </Stack>
 
 
-                    {recording === 'idle' && <Typography sx={{height: 36, fontSize: 14}}
-                                                         color={'#896464'}>マイクをタップして録音してください</Typography>}
-                    {recording === 'recording' && <Typography sx={{fontSize: '24px', fontWeight: 'bold'}}
-                                                              color={'#878484'}>{remainingTime < 10 ? `0 0 : 0 ${remainingTime}` : `0 0 : ${remainingTime.toString().slice(0, 1)} ${remainingTime.toString().slice(-1)}`}</Typography>}
+                        {recording === 'idle' && <Typography sx={{height: 36, fontSize: 14}}
+                                                             color={'#896464'}>マイクをタップして録音してください</Typography>}
+                        {recording === 'recording' && <Typography sx={{fontSize: '24px', fontWeight: 'bold'}}
+                                                                  color={'#878484'}>{remainingTime < 10 ? `0 0 : 0 ${remainingTime}` : `0 0 : ${remainingTime.toString().slice(0, 1)} ${remainingTime.toString().slice(-1)}`}</Typography>}
 
-                </Box>
-            </Container>
-            <SendNotificationButton
-                ref={notificationRef}
-                targetPlayerId={playerId}
-            />
+                    </Box>
+                </Container>
+                <SendNotificationButton
+                    ref={notificationRef}
+                    targetPlayerId={playerId}
+                />
+            </Box>
         </>
 
     );
