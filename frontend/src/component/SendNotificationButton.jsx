@@ -11,9 +11,9 @@ const SendNotificationButton = forwardRef(({targetPlayerId}, ref) => {
                 {
                     app_id: appId,
                     include_player_ids: targetPlayerId,
-                    headings: {en: '📢 お知らせ'},
-                    contents: {en: '通知が届きました！'},
-                    url: 'https://homet-frontend-699a294558eb.herokuapp.com/', // 通知をタップしたときのURL
+                    headings: {en: '📢 通知が届きました!'},
+                    contents: {en: 'さっそくホメットを確認してみよう！'},
+                    url: 'https://homet-frontend-699a294558eb.herokuapp.com/timeline', // 通知をタップしたときのURL
                     priority: 10, // Android用優先度（即時通知）
                 },
                 {
