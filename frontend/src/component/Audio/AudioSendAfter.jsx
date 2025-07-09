@@ -6,6 +6,7 @@ import NavigationBar from '../NavigationBar.jsx';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {useNavigate} from 'react-router-dom';
 import React from 'react';
+import CustomButton from '../CustomButton.jsx';
 
 
 const AudioSendAfter = () => {
@@ -52,14 +53,11 @@ const AudioSendAfter = () => {
                             alt="white circle"
                         />
                     </Box>
-                    <Button sx={{
-                        bgcolor: '#DA63A5',
-                        color: 'white',
-                        height: 76,
-                        width: 156,
-                        borderRadius: 5,
-                        fontSize: 24
-                    }} onClick={() => navigate('/home')}>ホームへ</Button>
+                    <Box sx={{width: {xs: '121px', sm: '156px', md: '156px'}}}>
+                        <CustomButton
+                            onClick={() => navigate('/home')}
+                        >ホームへ</CustomButton>
+                    </Box>
                 </Box>
 
             </Container>

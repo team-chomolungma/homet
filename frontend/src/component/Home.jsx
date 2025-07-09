@@ -119,7 +119,8 @@ function Home() {
                     sx={{
                         position: 'absolute',
                         top: {xs: '80vh', sm: '81vh', md: '82vh',},
-                        zIndex: 20,
+                        //zIndex: 20,
+                        width: {xs: '120px', sm: '142px'}
                     }}
                 >
                     <CustomButton
@@ -131,6 +132,7 @@ function Home() {
                         ホメット
                     </CustomButton>
                 </Box>
+
 
                 <NavigationBar
                     sx={{

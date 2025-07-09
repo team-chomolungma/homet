@@ -197,7 +197,7 @@ const AudioRecording = () => {
                         flexDirection="column"//縦並び
                         alignItems="center"//横中央揃え
                         justifyContent="center"//縦中央揃え
-                        sx={{marginTop: {xs: 5, sm: 10, md: 13}}}
+                        sx={{marginTop: {xs: 0, sm: 5, md: 7}}}
                         // minHeight="100vh" // 画面縦いっぱい中央揃えしたい場合。外したら上に揃える
                     >
                         <Box sx={{width: {xs: 260, sm: 294, md: 294}, height: {xs: 119, sm: 135, md: 135}}}>
@@ -251,7 +251,7 @@ const AudioRecording = () => {
                             alignItems="center"
                             justifyContent="center"
                             spacing={3}
-                            sx={{width: '100%', margin: 2, marginTop: 5}}
+                            sx={{width: '100%', margin: 2, marginTop: 2}}
 
                         >
                             <Box sx={{
@@ -300,12 +300,20 @@ const AudioRecording = () => {
                                     }
 
                                     {recording === 'idle' && (
-                                        <img
-                                            style={{height: '100%', width: '100%'}}
-                                            src={recordingIcon}
-                                            alt="recordingIcon"
-                                            onClick={startRecording}
-                                        />
+                                        <Box
+
+                                            sx={{
+                                                width: {xs: 135, sm: 164, md: 164},
+                                                height: {xs: 122, sm: 149, md: 149}
+
+                                            }}>
+                                            <img
+                                                style={{height: '100%', width: '100%'}}
+                                                src={recordingIcon}
+                                                alt="recordingIcon"
+                                                onClick={startRecording}
+                                            />
+                                        </Box>
                                     )}
 
                                     {recording === 'recording' && (
