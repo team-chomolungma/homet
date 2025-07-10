@@ -62,7 +62,7 @@ function Start() {
                     lineHeight: 1.2,
                     color: '#333333',
                     zIndex: 2,
-                    mb: 5,
+                    mb: 2,
                     overflow: 'hidden',
                 }}
             >
@@ -79,7 +79,7 @@ function Start() {
                     backgroundColor: '#DA63A5',
                     textTransform: 'none',
                     zIndex: 2,
-                    mb: 5,
+                    mb: 2,
                 }}
                 onClick={() => navigate('/login')}
             >
