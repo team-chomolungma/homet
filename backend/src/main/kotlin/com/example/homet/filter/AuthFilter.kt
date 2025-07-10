@@ -15,7 +15,10 @@ data class AuthFilter(
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
         val path = request.servletPath
         return request.method.equals("OPTIONS", ignoreCase = true) ||
-                path.startsWith("/api/auth/login") || path.startsWith("/api/auth/signup")  || path == "/index.html"
+                path.startsWith("/api/auth/login")
+                || path.startsWith("/api/auth/signup")
+                || path.startsWith("/static")
+                || path == "/index.html"
     }
     override fun doFilterInternal(
         request: HttpServletRequest,
