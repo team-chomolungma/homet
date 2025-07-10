@@ -43,7 +43,7 @@ function Start() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 height: 'calc(var(--vh, 1vh) * 100)',
-                
+
             }}
         >
             <Box
@@ -75,6 +75,7 @@ function Start() {
                     zIndex: 2,
                     mb: 2,
                     // overflow: 'hidden',
+                    fontFamily: '"Rounded Mplus 1c"',
                 }}
             >
                 Homet
@@ -91,6 +92,7 @@ function Start() {
                     textTransform: 'none',
                     zIndex: 2,
                     mb: 2,
+                    fontFamily: '"Rounded Mplus 1c"',
                 }}
                 onClick={() => navigate('/login')}
             >
@@ -102,6 +104,7 @@ function Start() {
                     fontSize: {xs: 18, sm: 24},
                     color: '#333333',
                     cursor: 'pointer',
+                    fontFamily: '"Rounded Mplus 1c"',
                 }}
                 onClick={() => navigate('/signup')}
             >

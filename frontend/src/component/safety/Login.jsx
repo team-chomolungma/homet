@@ -86,9 +86,9 @@ function Login() {
                 password: password,
             });
             if (res.status === 200) {
-                const {userID, displayname,token} = res.data;
+                const {userID, displayname, token} = res.data;
                 setUser({myUserID: userID, myDisplayname: displayname});
-                localStorage.setItem('SESSION_TOKEN',token);
+                localStorage.setItem('SESSION_TOKEN', token);
                 navigate('/home');
             }
         } catch (err) {
@@ -116,7 +116,6 @@ function Login() {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
-
                     }}
                 >
                     <Box
@@ -194,6 +193,7 @@ function Login() {
                                     lineHeight: '1.3',
                                     color: '#333333',
                                     mb: {xs: 1, sm: 2},
+                                    fontFamily: '"Rounded Mplus 1c"',
                                 }}
                             >
                                 Homet
@@ -291,6 +291,7 @@ function Login() {
                                     backgroundColor: '#DA63A5',
                                     justifyContent: 'center',
                                     textTransform: 'none',
+                                    fontFamily: '"Rounded Mplus 1c"',
                                 }}
                             >
                                 ログイン
