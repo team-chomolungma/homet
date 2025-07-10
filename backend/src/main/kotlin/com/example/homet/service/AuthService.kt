@@ -22,6 +22,9 @@ data class AuthService(
     private val userRepository: UserRepository,
     private val playerService: PlayerService,
     private val sessionRepository: SessionRepository,
+    private val friendService: FriendService,
+    private val userService: UserService,
+    private val voiceFileService: VoiceFileService,
 ) {
     fun login(request: LoginRequest): LoginResponse? {
         val encoder = BCryptPasswordEncoder()
@@ -47,10 +50,15 @@ data class AuthService(
                 displayname = request.displayname,
                 passwordHash = hashedPassword,
             )
-            userRepository.save(signup)
+            val result = userRepository.save(signup)
             val registerResult = playerService.register(PlayerRequest(request.userID, request.playerID))
             if(registerResult.isFailure){ return null }
 
+            // ホメラニアンから受信
+            val home = userService.homeSearch("homeranian")
+            friendService.createFriend(result.id,home.id)
+            friendService.createFriend(home.id, result.id)
+            voiceFileService.tutorial(home.id,result.id)
             return SignupResponse(
                 userID = request.userID,
                 displayname = request.displayname,
