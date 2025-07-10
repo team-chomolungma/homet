@@ -24,7 +24,7 @@ function Start() {
     return (
         <Box
             sx={{
-                minHeight: '100vh',
+                minHeight: '90vh',
                 backgroundColor: '#FFF1F4',
                 position: 'relative',
                 overflow: 'hidden',
@@ -32,7 +32,7 @@ function Start() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                height: '100vh',
+                height: '90vh',
             }}
         >
             <Box
