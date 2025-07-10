@@ -71,7 +71,7 @@ function Signup() {
         if (!password.trim()) {
             setPasswordError('パスワードを入力してください');
             hasError = true;
-        } else if (!/^[a-zA-Z0-9]{7}$/.test(password)) {
+        } else if (!/^[a-zA-Z0-9]{6}$/.test(password)) {
             setPasswordError('6文字の英数字で入力してください');
             hasError = true;
         } else {
@@ -85,7 +85,7 @@ function Signup() {
         } else if (!/^[^\x01-\x7E]+$/.test(userName)) {
             setUserNameError('全角文字のみで入力してください');
             hasError = true;
-        } else if (Array.from(userName).length >= 6) {
+        } else if (Array.from(userName).length > 6) {
             setUserNameError('全角6文字以下で入力してください');
             hasError = true;
         } else {
