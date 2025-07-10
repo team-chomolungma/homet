@@ -71,7 +71,7 @@ function Signup() {
         if (!password.trim()) {
             setPasswordError('パスワードを入力してください');
             hasError = true;
-        } else if (!/^[a-zA-Z0-9]{6}$/.test(password)) {
+        } else if (!/^[a-zA-Z0-9]{7}$/.test(password)) {
             setPasswordError('6文字の英数字で入力してください');
             hasError = true;
         } else {
