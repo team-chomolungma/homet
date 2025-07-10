@@ -14,9 +14,19 @@ function Start() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const setViewportHeight = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', setViewportHeight);
         document.body.style.overflow = 'hidden';
 
         return () => {
+            window.removeEventListener('resize', setViewportHeight);
+            window.removeEventListener('orientationchange', setViewportHeight);
             document.body.style.overflow = '';
         };
     }, []);
@@ -24,7 +34,7 @@ function Start() {
     return (
         <Box
             sx={{
-                minHeight: '90vh',
+                minHeight: '100vh',
                 backgroundColor: '#FFF1F4',
                 position: 'relative',
                 overflow: 'hidden',
@@ -32,7 +42,7 @@ function Start() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                height: '90vh',
+                height: 'calc(var(--vh, 1vh) * 100)',
             }}
         >
             <Box
