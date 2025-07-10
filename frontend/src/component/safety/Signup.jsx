@@ -147,7 +147,7 @@ function Signup() {
             console.log('✅ OneSignal ID:', playerId);
 
             if (retryCount === 4) {
-                console.log('⚠️ 4回目のリトライで playerId = 0 を設定して終了します');
+                console.log('⚠️ 4回目のリトライでplayerId=1234を設定して終了します');
                 setplayerId(1234);
                 clearInterval(intervalId);
                 return;
@@ -161,7 +161,7 @@ function Signup() {
 
             retryCount++;
             if (retryCount >= maxRetries) {
-                console.warn('⚠️ OneSignal ID取得リトライ終了');
+                console.log('⚠️ OneSignal ID取得リトライ終了');
                 clearInterval(intervalId);
             }
         }, interval);
