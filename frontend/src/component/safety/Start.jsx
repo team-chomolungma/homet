@@ -38,21 +38,22 @@ function Start() {
                 backgroundColor: '#FFF1F4',
                 position: 'relative',
                 overflow: 'hidden',
-                pt: {xs: '60vh', sm: '65vh'},
+                pt: {xs: '50vh', sm: '55vh'},
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 height: 'calc(var(--vh, 1vh) * 100)',
+                
             }}
         >
             <Box
                 sx={{
                     position: 'fixed',
-                    top: '50%',
+                    top: '40%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     zIndex: 1,
-                    overflow: 'hidden',
+                    // overflow: 'hidden',
                 }}
             >
                 <Box
@@ -73,7 +74,7 @@ function Start() {
                     color: '#333333',
                     zIndex: 2,
                     mb: 2,
-                    overflow: 'hidden',
+                    // overflow: 'hidden',
                 }}
             >
                 Homet
