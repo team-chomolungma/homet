@@ -241,6 +241,7 @@ export default function AudioListen() {
                                         width: '75vw',
                                         fontSize: 14,
                                         color: '#906D6D',
+                                        fontFamily: '"Rounded Mplus 1c"',
                                     }}>まだともだちになっていないユーザーです</Typography>
                                 <Button sx={{
                                     bgcolor: 'white',
@@ -249,7 +250,8 @@ export default function AudioListen() {
                                     height: 43,
                                     width: 156,
                                     borderRadius: 3,
-                                    fontSize: 16
+                                    fontSize: 16,
+                                    fontFamily: '"Rounded Mplus 1c"',
                                 }}
                                         onClick={mutualFriends}
                                 >ともだち追加</Button>
@@ -258,7 +260,14 @@ export default function AudioListen() {
                             )
                         }
                         {playing === 'sendback' && (
-                            <Box sx={{width: {xs: '121px', sm: '156px', md: '156px'}}}>
+                            <Box sx={{
+                                width: {
+                                    xs: '121px',
+                                    sm: '156px',
+                                    md: '156px',
+                                    fontFamily: '"Rounded Mplus 1c"',
+                                }
+                            }}>
                                 <CustomButton
                                     onClick={() => navigate('/voice', {
                                         state: {
@@ -273,7 +282,8 @@ export default function AudioListen() {
 
                     </Box>
                     {playing !== 'sendback' && (
-                        <Typography sx={{fontSize: '24px', fontWeight: 'bold'}} color="#878484">
+                        <Typography sx={{fontSize: '24px', fontWeight: 'bold', fontFamily: '"Rounded Mplus 1c"',}}
+                                    color="#878484">
                             {(() => {
                                 const time = playing === 'playing' ? currentTime : duration;
                                 if (playing === 'playing') {
