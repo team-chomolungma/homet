@@ -29,4 +29,9 @@ data class UserService(
             return null
         }
     }
+
+    fun homeSearch(userID: String): User {
+        val findUser = userRepository.findByUserId(userID)
+        return findUser!!
+    }
 }

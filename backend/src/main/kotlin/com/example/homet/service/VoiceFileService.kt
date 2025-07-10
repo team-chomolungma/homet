@@ -136,4 +136,17 @@ data class VoiceFileService(
         }
         return updateVoiceFile
     }
+
+    fun tutorial(sender_id: Long, receiver_id: Long){
+        val s3Key = "audio/tutorial.mp3"
+        val voice = VoiceFile(
+            senderId = sender_id,
+            receiverId = receiver_id,
+            fileName = "tutorial.mp3",
+            s3Key = s3Key,
+            firstPlayedAt = null,
+            playFlag = true
+        )
+        voiceFileRepository.save(voice)
+    }
 }
