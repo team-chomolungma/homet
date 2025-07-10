@@ -61,6 +61,7 @@ function Home() {
                         <Typography sx={{
                             color: '#333333',
                             fontSize: {xs: 20, sm: 24, md: 28},
+                            fontFamily: '"Rounded Mplus 1c"',
                         }}
                         >つながり</Typography>
                     </Container>
@@ -126,6 +127,7 @@ function Home() {
                     <CustomButton
                         sx={{
                             width: {xs: '120px', sm: '142px'},
+                            fontFamily: '"Rounded Mplus 1c"',
                         }}
                         onClick={() => navigate('/friendlist')}
                     >

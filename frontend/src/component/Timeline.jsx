@@ -110,7 +110,8 @@ export default function Timeline() {
             }}>
                 <Typography sx={{
                     color: '#333333',
-                    fontSize: {xs: 24, sm: 24, md: 26}
+                    fontSize: {xs: 24, sm: 24, md: 26},
+                    fontFamily: '"Rounded Mplus 1c"',
                 }}
                 >タイムライン</Typography>
             </Container>

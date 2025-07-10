@@ -217,6 +217,7 @@ function Signup() {
                             lineHeight: '1.3',
                             color: '#333333',
                             mb: {xs: 1, sm: 2},
+                            fontFamily: '"Rounded Mplus 1c"',
                         }}
                     >
                         Homet
@@ -259,7 +260,12 @@ function Signup() {
 
                     {/* ===== パスワード ===== */}
                     <Box sx={{width: '80%', maxWidth: 300}}>
-                        <Typography sx={{fontSize: 14, mt: 2, mb: 0.5}}>パスワード</Typography>
+                        <Typography sx={{
+                            fontSize: 14,
+                            mt: 2,
+                            mb: 0.5,
+                            fontFamily: '"Rounded Mplus 1c"',
+                        }}>パスワード</Typography>
                         <TextField
                             type={showPassword ? 'text' : 'password'}
                             fullWidth
@@ -345,6 +351,7 @@ function Signup() {
                                 mb: 1,
                                 color: '#666',
                                 lineHeight: 1.4,
+                                fontFamily: '"Rounded Mplus 1c"',
                             }}
                         >
                             ユーザー名にはニックネームなど、<br/>
@@ -375,6 +382,7 @@ function Signup() {
                             backgroundColor: '#DA63A5',
                             justifyContent: 'center',
                             textTransform: 'none',
+                            fontFamily: '"Rounded Mplus 1c"',
                         }}
                     >
                         {playerId ? 'アカウント作成' : '情報取得中...'}
