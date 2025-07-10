@@ -38,9 +38,18 @@ export default function Friendlist() {
                     spacing={1}
                     sx={{margin: 2}}
                 >
-                    <Typography sx={{fontSize: {xs: 24, sm: 24, md: 26}, color: '#333333'}}>ともだちリスト</Typography>
+                    <Typography sx={{
+                        fontSize: {xs: 24, sm: 24, md: 26},
+                        color: '#333333',
+                        fontFamily: '"Rounded Mplus 1c"',
+                    }}>ともだちリスト</Typography>
                     <GroupAddOutlinedIcon
-                        sx={{color: '#333333', height: 25, width: 35}}//fontSize: {xs: 20, sm: 24, md: 26}
+                        sx={{
+                            color: '#333333',
+                            height: 25,
+                            width: 35,
+                            fontFamily: '"Rounded Mplus 1c"',
+                        }}//fontSize: {xs: 20, sm: 24, md: 26}
                         onClick={() => navigate('/addfriend')}/>
                 </Stack>
 

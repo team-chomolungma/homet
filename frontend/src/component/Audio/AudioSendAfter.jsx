@@ -53,7 +53,7 @@ const AudioSendAfter = () => {
                             alt="white circle"
                         />
                     </Box>
-                    <Box sx={{width: {xs: '121px', sm: '156px', md: '156px'}}}>
+                    <Box sx={{width: {xs: '121px', sm: '156px', md: '156px', fontFamily: '"Rounded Mplus 1c"',}}}>
                         <CustomButton
                             onClick={() => navigate('/home')}
                         >ホームへ</CustomButton>

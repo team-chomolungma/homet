@@ -134,13 +134,14 @@ export default function Timeline() {
                 // それ以外は日付（文字列）を新しい順にソート
                 return new Date(bKey) - new Date(aKey);
             }).map(([groupKey, posts]) => {
-                const sortedPost = posts.sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at));                
+                const sortedPost = posts.sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at));
                 return (
                     <React.Fragment key={groupKey}>
                         <Container sx={{width: '75vw'}}>
                             <Typography sx={{
                                 marginBottom: '16px',
-                                fontSize: {xs: 14, sm: 14, md: 14}
+                                fontSize: {xs: 14, sm: 14, md: 14},
+                                fontFamily: '"Rounded Mplus 1c"',
                             }}>{groupKey}</Typography>
 
                         </Container>
