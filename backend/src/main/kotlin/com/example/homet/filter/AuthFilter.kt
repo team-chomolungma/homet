@@ -17,7 +17,7 @@ data class AuthFilter(
         return request.method.equals("OPTIONS", ignoreCase = true) ||
                 path.startsWith("/api/auth/login")
                 || path.startsWith("/api/auth/signup")
-                || path.startsWith("/static")
+                || path.startsWith("/static/")
                 || path == "/index.html"
     }
     override fun doFilterInternal(
