@@ -134,6 +134,7 @@ export default function Timeline() {
                 // それ以外は日付（文字列）を新しい順にソート
                 return new Date(bKey) - new Date(aKey);
             }).map(([groupKey, posts]) => {
+                const sortedPost = posts.sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at));                
                 return (
                     <React.Fragment key={groupKey}>
                         <Container sx={{width: '75vw'}}>
@@ -145,7 +146,7 @@ export default function Timeline() {
                         </Container>
 
                         {
-                            posts.map((data) => {
+                            sortedPost.map((data) => {
 
                                 return (
 
