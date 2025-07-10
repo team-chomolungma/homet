@@ -18,7 +18,7 @@ data class AuthFilter(
                 path.startsWith("/api/auth/login")
                 || path.startsWith("/api/auth/signup")
 //                || path.startsWith("/static/")
-                || path.matches(Regex(""".*\.(png|jpg|jpeg)$"""))
+                || path.matches(Regex(""".*\.(png|jpg|jpeg|gif)$"""))
                 || path == "/index.html"
     }
     override fun doFilterInternal(
