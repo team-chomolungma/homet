@@ -117,8 +117,8 @@ function Signup() {
             console.log('🟢 サーバーからのレスポンス:', res);
             if (res.status === 201) {
                 console.log('🟢成功');
-                const {userID, displayname,token} = res.data;
-                localStorage.setItem('SESSION_TOKEN',token);
+                const {userID, displayname, token} = res.data;
+                localStorage.setItem('SESSION_TOKEN', token);
                 navigate('/start-animation');
             } else {
                 alert(`予期せぬエラーが発生しました（status: ${res.status}）`);
@@ -146,10 +146,18 @@ function Signup() {
             const playerId = window.OneSignal?.User?._currentUser?.onesignalId;
             console.log('✅ OneSignal ID:', playerId);
 
-            if (playerId) {
-                setplayerId(playerId);
+            if (retryCount === 4) {
+                console.log('⚠️ 4回目のリトライで playerId = 0 を設定して終了します');
+                setplayerId(1234);
                 clearInterval(intervalId);
+                return;
             }
+
+            if (retryCount)
+                if (playerId) {
+                    setplayerId(playerId);
+                    clearInterval(intervalId);
+                }
 
             retryCount++;
             if (retryCount >= maxRetries) {
